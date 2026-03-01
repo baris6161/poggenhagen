@@ -2,13 +2,9 @@
 
 import { motion } from "framer-motion";
 import { siteConfig } from "@/config/site";
-import { nextMatch, lastResults, tableData } from "@/data/matches";
-import { Calendar, MapPin, Trophy } from "lucide-react";
+import { Calendar } from "lucide-react";
 
 export default function HeroSection() {
-  const lastResult = lastResults[0];
-  const ourRank = tableData.find((t) => t.team.includes("Poggenhagen"))?.rank;
-
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden hero-gradient">
       {/* Animated glow orbs */}
@@ -48,45 +44,6 @@ export default function HeroSection() {
             >
               Instagram
             </a>
-          </div>
-        </motion.div>
-
-        {/* KPI Bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-          className="mt-16 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto"
-        >
-          <div className="card-surface p-5 text-center">
-            <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm mb-2">
-              <Trophy className="w-4 h-4" />
-              Letztes Spiel
-            </div>
-            <p className="font-display text-2xl font-bold text-foreground">
-              {lastResult.homeTeam.includes("Poggenhagen") ? "TSV" : lastResult.homeTeam.split(" ").pop()}{" "}
-              <span className="text-primary">{lastResult.result?.home} : {lastResult.result?.away}</span>{" "}
-              {lastResult.awayTeam.includes("Poggenhagen") ? "TSV" : lastResult.awayTeam.split(" ").pop()}
-            </p>
-          </div>
-          <div className="card-surface p-5 text-center">
-            <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm mb-2">
-              <Calendar className="w-4 h-4" />
-              Nächstes Spiel
-            </div>
-            <p className="font-display text-2xl font-bold text-foreground">
-              {new Date(nextMatch.date).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" })} – {nextMatch.time}
-            </p>
-            <p className="text-sm text-muted-foreground mt-1">vs {nextMatch.awayTeam}</p>
-          </div>
-          <div className="card-surface p-5 text-center">
-            <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm mb-2">
-              <MapPin className="w-4 h-4" />
-              Tabellenplatz
-            </div>
-            <p className="font-display text-4xl font-bold text-primary">
-              {ourRank}.
-            </p>
           </div>
         </motion.div>
       </div>

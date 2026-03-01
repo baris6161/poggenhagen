@@ -5,7 +5,21 @@ export const siteConfig = {
   region: "Neustadt",
   instagramHandle: "tsv.poggenhagen",
   instagramUrl: "https://www.instagram.com/tsv.poggenhagen/",
-  tableMode: "json" as "json" | "iframe",
+  // fussball.de Widget URLs
+  // Diese URLs müssen von fussball.de generiert werden
+  // Gehe zu: https://www.fussball.de/widgets
+  fussballWidgets: {
+    // Spielplan Widget URL
+    fixtures: "",
+    // Ergebnisse Widget URL
+    results: "",
+    // Tabelle Widget URL
+    table: "",
+    // Nächstes Spiel Widget URL (optional)
+    nextMatch: "",
+  },
+  // Legacy Support
+  tableMode: "iframe" as "json" | "iframe",
   tableIframeUrl: "",
   endpoints: {
     fixtures: "/api/fixtures",
