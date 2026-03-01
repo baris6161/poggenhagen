@@ -17,6 +17,46 @@ export default function HeroSection() {
       {/* Animated glow orbs */}
       <div className="glow-orb w-[500px] h-[500px] top-[-100px] left-[-100px] animate-glow-move" />
       <div className="glow-orb w-[400px] h-[400px] bottom-[-80px] right-[-80px] animate-glow-move-delayed" />
+      
+      {/* Additional animated glow orbs for flickering effect */}
+      <motion.div
+        className="glow-orb w-[350px] h-[350px] top-[20%] right-[10%]"
+        animate={{
+          opacity: [0.08, 0.15, 0.08],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      <motion.div
+        className="glow-orb w-[300px] h-[300px] bottom-[30%] left-[15%]"
+        animate={{
+          opacity: [0.1, 0.18, 0.1],
+          scale: [1, 1.15, 1],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 2,
+        }}
+      />
+      <motion.div
+        className="glow-orb w-[280px] h-[280px] top-[60%] left-[5%]"
+        animate={{
+          opacity: [0.06, 0.14, 0.06],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 7,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1,
+        }}
+      />
 
       {/* Animated Grid Pattern Background - sehr subtil */}
       <div className="absolute inset-0 z-0 opacity-[0.025]">
@@ -112,12 +152,12 @@ export default function HeroSection() {
           </div>
         </motion.div>
 
-        {/* Animated Scroll Arrow - visible on all devices */}
+        {/* Animated Scroll Arrow - 1.5cm weiter unten */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1, duration: 0.8 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10"
         >
           <motion.button
             onClick={scrollToNext}

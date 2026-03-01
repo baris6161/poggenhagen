@@ -25,7 +25,11 @@ function resultColor(label: string) {
 export default function ResultsSection() {
   const [filter, setFilter] = useState<Filter>("Alle");
   const filters: Filter[] = ["Alle", "Heim", "Auswärts"];
-  const filtered = lastResults.filter((m) => {
+  
+  // Nur die letzten 5 Ergebnisse anzeigen
+  const recentResults = lastResults.slice(0, 5);
+  
+  const filtered = recentResults.filter((m) => {
     if (filter === "Heim") return m.isHome;
     if (filter === "Auswärts") return !m.isHome;
     return true;
@@ -38,7 +42,7 @@ export default function ResultsSection() {
           <SectionHeading title="Ergebnisse" subtitle="Letzte Spiele" />
         </ScrollReveal>
 
-        {lastResults.length === 0 ? (
+        {recentResults.length === 0 ? (
           <ScrollReveal delay={0.1}>
             <div className="card-surface p-8 text-center">
               <p className="text-muted-foreground">Noch keine Ergebnisse verfügbar.</p>
@@ -85,7 +89,7 @@ export default function ResultsSection() {
                         </p>
                       </div>
                       <span className="text-xs text-muted-foreground hidden sm:block">
-                        Spieltag {match.matchday}
+                        {match.matchday ? `Spieltag ${match.matchday}` : ""}
                       </span>
                     </div>
                   </ScrollReveal>
