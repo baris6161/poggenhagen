@@ -1,0 +1,31 @@
+export const siteConfig = {
+  clubName: "TSV Poggenhagen",
+  teamName: "1. Herren",
+  league: "Kreisliga",
+  region: "Neustadt",
+  instagramHandle: "tsv.poggenhagen",
+  instagramUrl: "https://www.instagram.com/tsv.poggenhagen/",
+  tableMode: "json" as "json" | "iframe",
+  tableIframeUrl: "",
+  endpoints: {
+    fixtures: "/api/fixtures",
+    results: "/api/results",
+    table: "/api/table",
+    instagram: "/api/instagram",
+  },
+  venue: {
+    name: "Sportplatz Poggenhagen",
+    address: "Sportplatzweg 1, 31535 Neustadt am Rübenberge",
+    mapsUrl: "https://maps.google.com/?q=Sportplatz+Poggenhagen+Neustadt",
+  },
+  navItems: [
+    { label: "Start", href: "#hero" },
+    { label: "Spielplan", href: "#spielplan" },
+    { label: "Ergebnisse", href: "#ergebnisse" },
+    { label: "Tabelle", href: "#tabelle" },
+    { label: "Kader", href: "#kader" },
+    { label: "Trainerstab", href: "#trainerstab" },
+    { label: "Instagram", href: "#instagram" },
+    { label: "Kontakt", href: "#kontakt" },
+  ],
+};
