@@ -19,8 +19,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Teko", "sans-serif"],
-        body: ["Space Grotesk", "sans-serif"],
+        display: ["var(--font-teko)", "sans-serif"],
+        body: ["var(--font-space-grotesk)", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

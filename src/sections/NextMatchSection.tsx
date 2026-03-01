@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { nextMatch } from "@/data/matches";
 import { siteConfig } from "@/config/site";

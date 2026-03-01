@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { siteConfig } from "@/config/site";
 import { nextMatch, lastResults, tableData } from "@/data/matches";

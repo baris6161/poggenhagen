@@ -1,73 +1,123 @@
-# Welcome to your Lovable project
+# TSV Poggenhagen - 1. Herren
 
-## Project info
+Offizielle Website der 1. Herren des TSV Poggenhagen.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Technologien
 
-## How can I edit this code?
+- **Next.js 15** (App Router)
+- **TypeScript**
+- **Tailwind CSS**
+- **Framer Motion** (Animationen)
+- **shadcn/ui** (UI Components)
 
-There are several ways of editing your application.
+## Installation
 
-**Use Lovable**
+```bash
+# Dependencies installieren
+npm install
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Development Server starten
 npm run dev
+
+# Production Build
+npm run build
+npm start
 ```
 
-**Edit a file directly in GitHub**
+## Spieler hinzufügen
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+Spieler werden automatisch aus Bildern in `/public/bilder/` generiert.
 
-**Use GitHub Codespaces**
+### Schritte:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. **Bild hochladen**
+   - Dateiname: `Vorname-Nachname.jpg` (oder `.png`, `.webp`, `.jpeg`)
+   - Beispiel: `Jannik-Brosch.jpg`
+   - Unterstützte Formate: `.jpg`, `.jpeg`, `.png`, `.webp`
 
-## What technologies are used for this project?
+2. **Position definieren**
+   - Öffne `/src/data/playerMeta.ts`
+   - Füge den Spieler hinzu:
+     ```typescript
+     "Jannik Brosch": "Tor",
+     ```
+   - Verfügbare Positionen: `"Tor"`, `"Abwehr"`, `"Mittelfeld"`, `"Sturm"`
 
-This project is built with:
+3. **Wichtig**
+   - Nur Spieler mit **Bild UND Position-Mapping** werden angezeigt
+   - Dateiname muss exakt dem Namen in `playerMeta.ts` entsprechen (mit Leerzeichen statt Bindestrichen)
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Konfiguration
 
-## How can I deploy this project?
+### Fussball.de iFrame
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+In `/src/config/site.ts`:
 
-## Can I connect a custom domain to my Lovable project?
+```typescript
+tableMode: "iframe",
+tableIframeUrl: "https://www.fussball.de/...",
+```
 
-Yes, you can!
+### Instagram Feed
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+Posts in `/src/data/instagram.json` eintragen:
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+```json
+[
+  {
+    "id": "1",
+    "imageUrl": "/instagram/post1.jpg",
+    "permalink": "https://instagram.com/p/xyz",
+    "caption": "Derbysieg! 🔥",
+    "timestampISO": "2026-01-15T18:30:00Z"
+  }
+]
+```
+
+Bilder in `/public/instagram/` ablegen.
+
+## Projektstruktur
+
+```
+├── app/                    # Next.js App Router
+│   ├── layout.tsx         # Root Layout
+│   ├── page.tsx           # Homepage
+│   └── globals.css        # Globale Styles
+├── src/
+│   ├── components/        # React Components
+│   ├── sections/          # Page Sections
+│   ├── data/             # Daten & Config
+│   │   ├── playerMeta.ts  # Spieler-Positionen Mapping
+│   │   └── instagram.json # Instagram Posts
+│   └── lib/              # Utilities
+│       └── getPlayersFromImages.ts
+└── public/
+    ├── bilder/           # Spieler-Bilder
+    └── instagram/        # Instagram-Bilder
+```
+
+## Design-System
+
+- **Primary Color**: Gelb (`hsl(70 100% 50%)`)
+- **Dark Neon Look**: Dunkler Hintergrund mit subtilen Neon-Glow-Effekten
+- **Fokus States**: Gelb (Primary)
+- **Border Radius**: Einheitlich `0.75rem` (var(--radius))
+- **Animationen**: Framer Motion für sanfte Übergänge
+
+## Features
+
+- ✅ Automatische Spieler-Generierung aus Bildern
+- ✅ Fussball.de iFrame Integration
+- ✅ Instagram Feed (JSON-basiert)
+- ✅ Responsive Design
+- ✅ Dark Neon Look
+- ✅ Performance-optimiert (next/image)
+- ✅ Smooth Animations
+
+## Deployment
+
+Das Projekt kann auf Vercel, Netlify oder anderen Next.js-kompatiblen Plattformen deployed werden.
+
+```bash
+npm run build
+```

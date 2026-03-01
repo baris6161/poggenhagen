@@ -2,19 +2,18 @@ import { tableData } from "@/data/matches";
 import { siteConfig } from "@/config/site";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
+import FussballIframe from "@/components/FussballIframe";
 
 export default function TableSection() {
   if (siteConfig.tableMode === "iframe" && siteConfig.tableIframeUrl) {
     return (
-      <section id="tabelle" className="py-20 md:py-28">
+      <section id="tabelle" className="py-20 md:py-28 section-gradient">
         <div className="container">
           <ScrollReveal>
             <SectionHeading title="Tabelle" subtitle={siteConfig.league} />
           </ScrollReveal>
           <ScrollReveal delay={0.1}>
-            <div className="card-surface p-4 overflow-hidden">
-              <iframe src={siteConfig.tableIframeUrl} className="w-full min-h-[500px] border-0" title="Tabelle" />
-            </div>
+            <FussballIframe src={siteConfig.tableIframeUrl} title="Tabelle" />
           </ScrollReveal>
         </div>
       </section>
@@ -22,7 +21,7 @@ export default function TableSection() {
   }
 
   return (
-    <section id="tabelle" className="py-20 md:py-28">
+    <section id="tabelle" className="py-20 md:py-28 section-gradient">
       <div className="container">
         <ScrollReveal>
           <SectionHeading title="Tabelle" subtitle={siteConfig.league} />

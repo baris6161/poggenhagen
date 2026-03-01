@@ -1,3 +1,5 @@
+"use client";
+
 import { siteConfig } from "@/config/site";
 import { Instagram, ArrowUp } from "lucide-react";
 

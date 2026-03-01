@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "imageUrl": "/instagram/post1.jpg",
+    "permalink": "https://instagram.com/p/xyz",
+    "caption": "Derbysieg! 🔥 #TSVPoggenhagen #Kreisliga",
+    "timestampISO": "2026-01-15T18:30:00Z"
+  },
+  {
+    "id": "2",
+    "imageUrl": "/instagram/post2.jpg",
+    "permalink": "https://instagram.com/p/abc",
+    "caption": "Training unter Flutlicht 💪",
+    "timestampISO": "2026-01-12T19:00:00Z"
+  },
+  {
+    "id": "3",
+    "imageUrl": "/instagram/post3.jpg",
+    "permalink": "https://instagram.com/p/def",
+    "caption": "Teamfoto nach dem Sieg! 🏆",
+    "timestampISO": "2026-01-10T16:45:00Z"
+  },
+  {
+    "id": "4",
+    "imageUrl": "/instagram/post4.jpg",
+    "permalink": "https://instagram.com/p/ghi",
+    "caption": "Vorbereitung auf das nächste Spiel ⚽",
+    "timestampISO": "2026-01-08T14:20:00Z"
+  },
+  {
+    "id": "5",
+    "imageUrl": "/instagram/post5.jpg",
+    "permalink": "https://instagram.com/p/jkl",
+    "caption": "Auswärtssieg! 🎉",
+    "timestampISO": "2026-01-05T17:15:00Z"
+  },
+  {
+    "id": "6",
+    "imageUrl": "/instagram/post6.jpg",
+    "permalink": "https://instagram.com/p/mno",
+    "caption": "Heimspiel am Wochenende! 🏟️",
+    "timestampISO": "2026-01-03T12:00:00Z"
+  }
+]
