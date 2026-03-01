@@ -250,24 +250,21 @@ export const fixtures: Match[] = [
 ];
 
 /**
- * Findet das nächste Spiel (1 Tag nach Spieltag wird automatisch das nächste genommen)
+ * Findet das nächste Spiel (zeigt das nächste Spiel ab heute an)
  */
 export function getNextMatch(): Match {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
   
-  // Finde das erste Spiel, das noch nicht gespielt wurde (mindestens 1 Tag in der Zukunft)
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  
+  // Finde das erste Spiel, das noch nicht gespielt wurde (heute oder in der Zukunft)
   for (const fixture of fixtures) {
     if (fixture.isFree) continue; // Überspringe spielfrei
     
     const matchDate = new Date(fixture.date);
     matchDate.setHours(0, 0, 0, 0);
     
-    // Wenn Spiel mindestens 1 Tag in der Zukunft ist
-    if (matchDate >= tomorrow) {
+    // Wenn Spiel heute oder in der Zukunft ist
+    if (matchDate >= now) {
       return fixture;
     }
   }
