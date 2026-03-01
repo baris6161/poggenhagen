@@ -90,7 +90,7 @@ export default function ResultsSection() {
                           <span className="font-body font-medium text-foreground text-sm md:text-base">{match.awayTeam}</span>
                         </div>
                       </div>
-                      <span className="text-xs text-muted-foreground hidden sm:block text-right">
+                      <span className="text-xs text-muted-foreground hidden sm:block text-right whitespace-nowrap">
                         {new Date(match.date).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" })} · {match.venue}
                       </span>
                     </div>
