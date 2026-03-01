@@ -58,6 +58,30 @@ export default function HeroSection() {
         }}
       />
 
+      {/* Kariertes Muster - hinter den anderen Animationen */}
+      <div className="absolute inset-0 z-0 opacity-[0.02]">
+        <div 
+          className="absolute inset-0 animate-grid-move" 
+          style={{
+            backgroundImage: `
+              linear-gradient(hsl(70 100% 50% / 0.12) 1px, transparent 1px),
+              linear-gradient(90deg, hsl(70 100% 50% / 0.12) 1px, transparent 1px)
+            `,
+            backgroundSize: '60px 60px',
+          }} 
+        />
+        <div 
+          className="absolute inset-0 animate-grid-move-reverse" 
+          style={{
+            backgroundImage: `
+              linear-gradient(hsl(70 100% 50% / 0.08) 1px, transparent 1px),
+              linear-gradient(90deg, hsl(70 100% 50% / 0.08) 1px, transparent 1px)
+            `,
+            backgroundSize: '120px 120px',
+          }} 
+        />
+      </div>
+
       {/* Animated Grid Pattern Background - sehr subtil */}
       <div className="absolute inset-0 z-0 opacity-[0.025]">
         {/* Haupt-Grid */}
