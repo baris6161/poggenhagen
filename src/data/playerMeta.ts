@@ -10,30 +10,34 @@ import type { Position } from "./players";
  * 2. Hier den Namen (genau wie im Dateinamen, aber mit Leerzeichen statt Bindestrichen) und Position eintragen
  */
 export const playerMeta: Record<string, Position> = {
-  "Andreas Kögler": "Tor",
-  "Baris Aktas": "Mittelfeld",
-  "Ben Levin Sieg": "Sturm",
-  "Cihan Cinar": "Mittelfeld",
-  "David Bindhak": "Abwehr",
-  "Dennis Ahrbecker": "Mittelfeld",
-  "Felix Brieskorn": "Sturm",
-  "Florian Lange": "Mittelfeld",
-  "Jannes Segelke": "Abwehr",
+  // Tor
   "Jannik Brosch": "Tor",
-  "Justin Möller": "Mittelfeld",
-  "Kim Julien Wegner": "Sturm",
-  "Lasse Schröder": "Mittelfeld",
-  "Lennard Kern": "Abwehr",
-  "Luis-Alexis Villamonte-Reyes": "Sturm",
+  "Jannes Segelke": "Tor",
+  "Ben Levin Sieg": "Tor",
+  
+  // Abwehr
+  "Dennis Ahrbecker": "Abwehr",
+  "Lasse Schröder": "Abwehr",
   "Lukas Mager": "Abwehr",
-  "Malte Weidemann": "Mittelfeld",
-  "Marius Meineke": "Sturm",
-  "Maximilian Leon Schubert": "Mittelfeld",
-  "Mel Struß": "Abwehr",
-  "Moritz Weingartner": "Sturm",
-  "Steven Engel": "Mittelfeld",
-  "Steven Rohr": "Abwehr",
-  "Sven Potornyai": "Tor",
+  "Malte Weidemann": "Abwehr",
+  
+  // Mittelfeld
+  "Steven Rohr": "Mittelfeld",
+  "Cihan Cinar": "Mittelfeld",
+  "Marius Meineke": "Mittelfeld",
+  "Florian Lange": "Mittelfeld",
   "Theo Schlaphoff": "Mittelfeld",
+  "Baris Aktas": "Mittelfeld",
+  "Kim Julien Wegner": "Mittelfeld",
+  "Felix Brieskorn": "Mittelfeld",
+  "Mel Struß": "Mittelfeld",
+  "Steven Engel": "Mittelfeld",
+  "Justin Möller": "Mittelfeld",
+  "Maximilian Leon Schubert": "Mittelfeld",
+  
+  // Sturm
   "Tolka Tükkal": "Sturm",
+  "Moritz Weingartner": "Sturm",
+  "Luis-Alexis Villamonte-Reyes": "Sturm",
+  "Lennard Kern": "Sturm",
 };
