@@ -9,11 +9,13 @@ interface SectionBackgroundProps {
 /**
  * Wiederverwendbare Komponente für Section-Hintergründe
  * Variiert die Effekte leicht für jede Section
+ * Responsive: Gleiche Effekte auf Desktop und Mobile
  */
 export default function SectionBackground({ variant }: SectionBackgroundProps) {
   const bgClass = `section-bg-${variant}`;
   
   // Unterschiedliche Glow-Orb-Positionen und -Größen je nach Variante
+  // Gleiche Größen und Positionen für Mobile und Desktop
   const orbConfigs = {
     1: [
       { size: "w-[300px] h-[300px]", pos: "top-[10%] right-[15%]", anim: "animate-glow-move-2" },
@@ -62,7 +64,7 @@ export default function SectionBackground({ variant }: SectionBackgroundProps) {
 
   return (
     <div className={`absolute inset-0 overflow-hidden ${bgClass}`}>
-      {/* Glow Orbs */}
+      {/* Glow Orbs - Gleiche Größen und Positionen auf allen Geräten */}
       {orbs.map((orb, i) => (
         <div
           key={i}
@@ -70,7 +72,7 @@ export default function SectionBackground({ variant }: SectionBackgroundProps) {
         />
       ))}
 
-      {/* Animated Grid Pattern - heller gemacht */}
+      {/* Animated Grid Pattern - heller gemacht, gleiche auf Mobile und Desktop */}
       <div className="absolute inset-0 z-0 opacity-[0.04]">
         <div
           className={`absolute inset-0 ${grid.anim1}`}
@@ -94,7 +96,7 @@ export default function SectionBackground({ variant }: SectionBackgroundProps) {
         />
       </div>
 
-      {/* Subtle animated diagonal lines - heller gemacht */}
+      {/* Subtle animated diagonal lines - heller gemacht, gleiche auf Mobile und Desktop */}
       <div className="absolute inset-0 z-0 opacity-[0.025]">
         <motion.div
           className="absolute top-0 left-0 w-full h-full"

@@ -108,6 +108,7 @@
   }
 
   /* Section Backgrounds - Varianten des Hero-Gradients, aber heller */
+  /* Gleiche Effekte auf Mobile und Desktop */
   .section-bg-1 {
     background: 
       radial-gradient(ellipse 70% 45% at 30% 20%, hsl(70 100% 50% / 0.22) 0%, transparent 55%),
@@ -182,6 +183,8 @@
     background: radial-gradient(circle, hsl(70 100% 50% / 0.25) 0%, transparent 70%);
     filter: blur(50px);
     pointer-events: none;
+    /* Gleiche Größen und Positionen auf Mobile und Desktop */
+    transform: scale(1);
   }
 
   .nav-link {
