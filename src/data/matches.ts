@@ -26,35 +26,6 @@ export function getMapsUrl(match: Match): string {
   return `https://www.google.com/maps/search/?api=1&query=${searchQuery}`;
 }
 
-/**
- * Findet das nächste Spiel (1 Tag nach Spieltag wird automatisch das nächste genommen)
- */
-export function getNextMatch(): Match {
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  
-  // Finde das erste Spiel, das noch nicht gespielt wurde (mindestens 1 Tag in der Zukunft)
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  
-  for (const fixture of fixtures) {
-    if (fixture.isFree) continue; // Überspringe spielfrei
-    
-    const matchDate = new Date(fixture.date);
-    matchDate.setHours(0, 0, 0, 0);
-    
-    // Wenn Spiel mindestens 1 Tag in der Zukunft ist
-    if (matchDate >= tomorrow) {
-      return fixture;
-    }
-  }
-  
-  // Fallback: Erstes Spiel aus fixtures
-  return fixtures.find(f => !f.isFree) || fixtures[0];
-}
-
-export const nextMatch: Match = getNextMatch();
-
 export const lastResults: Match[] = [
   {
     id: "r1",
@@ -266,6 +237,36 @@ export const fixtures: Match[] = [
     matchday: 15,
   },
 ];
+
+/**
+ * Findet das nächste Spiel (1 Tag nach Spieltag wird automatisch das nächste genommen)
+ */
+export function getNextMatch(): Match {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  
+  // Finde das erste Spiel, das noch nicht gespielt wurde (mindestens 1 Tag in der Zukunft)
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  
+  for (const fixture of fixtures) {
+    if (fixture.isFree) continue; // Überspringe spielfrei
+    
+    const matchDate = new Date(fixture.date);
+    matchDate.setHours(0, 0, 0, 0);
+    
+    // Wenn Spiel mindestens 1 Tag in der Zukunft ist
+    if (matchDate >= tomorrow) {
+      return fixture;
+    }
+  }
+  
+  // Fallback: Erstes Spiel aus fixtures
+  return fixtures.find(f => !f.isFree) || fixtures[0];
+}
+
+// Exportiere nextMatch als Funktion, die beim Import aufgerufen wird
+export const nextMatch = getNextMatch();
 
 export interface TableEntry {
   rank: number;
