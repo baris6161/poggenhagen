@@ -250,23 +250,42 @@ export const fixtures: Match[] = [
 ];
 
 /**
- * Findet das nächste Spiel (zeigt das nächste Spiel ab heute an)
+ * Findet die nächsten 5 Spiele (ohne bereits gespielte)
+ * Wenn ein Spiel ein Ergebnis hat, wird es automatisch ausgeschlossen
  */
-export function getNextMatch(): Match {
+export function getNextFixtures(count: number = 5): Match[] {
   const now = new Date();
   now.setHours(0, 0, 0, 0);
   
-  // Finde das erste Spiel, das noch nicht gespielt wurde (heute oder in der Zukunft)
-  for (const fixture of fixtures) {
-    if (fixture.isFree) continue; // Überspringe spielfrei
+  // Sammle alle gespielten Spiele (mit Ergebnis)
+  const playedMatchIds = new Set(lastResults.map(r => r.id));
+  
+  // Filtere: Nur zukünftige Spiele ohne Ergebnis
+  const upcomingFixtures = fixtures.filter(f => {
+    // Überspringe spielfrei
+    if (f.isFree) return false;
     
-    const matchDate = new Date(fixture.date);
+    // Überspringe bereits gespielte Spiele (haben Ergebnis in lastResults)
+    if (playedMatchIds.has(f.id)) return false;
+    
+    const matchDate = new Date(f.date);
     matchDate.setHours(0, 0, 0, 0);
     
-    // Wenn Spiel heute oder in der Zukunft ist
-    if (matchDate >= now) {
-      return fixture;
-    }
+    // Nur Spiele heute oder in der Zukunft
+    return matchDate >= now;
+  });
+  
+  // Nimm die ersten N Spiele
+  return upcomingFixtures.slice(0, count);
+}
+
+/**
+ * Findet das nächste Spiel (zeigt das nächste Spiel ab heute an)
+ */
+export function getNextMatch(): Match {
+  const nextFixtures = getNextFixtures(1);
+  if (nextFixtures.length > 0) {
+    return nextFixtures[0];
   }
   
   // Fallback: Erstes Spiel aus fixtures

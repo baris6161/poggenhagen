@@ -60,7 +60,7 @@ export default function SquadSection({ players }: SquadSectionProps) {
               <div className="card-surface p-5 group">
                 {/* Player Image */}
                 {player.image ? (
-                  <div className="w-32 h-32 rounded-full overflow-hidden mx-auto mb-4 group-hover:neon-glow transition-shadow relative">
+                  <div className="w-32 h-32 rounded-lg overflow-hidden mx-auto mb-4 group-hover:neon-glow transition-shadow relative">
                     <Image
                       src={player.image}
                       alt={player.name}

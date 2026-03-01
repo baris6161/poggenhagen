@@ -1,9 +1,12 @@
-import { fixtures } from "@/data/matches";
+import { getNextFixtures } from "@/data/matches";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
 import { Calendar, MapPin } from "lucide-react";
 
 export default function ScheduleSection() {
+  // Zeige nur die nächsten 5 Spiele
+  const upcomingFixtures = getNextFixtures(5);
+
   return (
     <section id="spielplan" className="py-20 md:py-28 section-gradient">
       <div className="container">
@@ -25,7 +28,7 @@ export default function ScheduleSection() {
                 </tr>
               </thead>
               <tbody>
-                {fixtures.map((m) => (
+                {upcomingFixtures.map((m) => (
                   <tr key={m.id} className="border-b border-border/30 hover:bg-card/50 transition-colors">
                     <td className="py-4 text-muted-foreground text-sm">{m.matchday}</td>
                     <td className="py-4 text-foreground text-sm">
@@ -71,7 +74,7 @@ export default function ScheduleSection() {
 
         {/* Mobile Cards */}
         <div className="md:hidden grid gap-4">
-          {fixtures.map((m, i) => (
+          {upcomingFixtures.map((m, i) => (
             <ScrollReveal key={m.id} delay={i * 0.08}>
               <div className="card-surface p-4">
                 <div className="flex justify-between items-start mb-3">

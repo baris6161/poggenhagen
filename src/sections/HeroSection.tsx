@@ -2,9 +2,16 @@
 
 import { motion } from "framer-motion";
 import { siteConfig } from "@/config/site";
-import { Calendar } from "lucide-react";
+import { Calendar, ChevronDown } from "lucide-react";
 
 export default function HeroSection() {
+  const scrollToNext = () => {
+    const nextSection = document.getElementById("naechstes-spiel");
+    if (nextSection) {
+      nextSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden hero-gradient">
       {/* Animated glow orbs */}
@@ -45,6 +52,30 @@ export default function HeroSection() {
               Instagram
             </a>
           </div>
+        </motion.div>
+
+        {/* Animated Scroll Arrow */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1, duration: 0.8 }}
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+        >
+          <motion.button
+            onClick={scrollToNext}
+            className="flex flex-col items-center gap-2 text-primary hover:text-primary/80 transition-colors group"
+            animate={{
+              y: [0, 10, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <span className="text-xs font-body font-semibold uppercase tracking-wider">Scroll</span>
+            <ChevronDown className="w-6 h-6 group-hover:scale-110 transition-transform" />
+          </motion.button>
         </motion.div>
       </div>
     </section>
