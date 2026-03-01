@@ -89,12 +89,9 @@ export default function ResultsSection() {
                           </span>
                           <span className="font-body font-medium text-foreground text-sm md:text-base">{match.awayTeam}</span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {new Date(match.date).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" })} · {match.venue}
-                        </p>
                       </div>
-                      <span className="text-xs text-muted-foreground hidden sm:block">
-                        {match.matchday ? `Spieltag ${match.matchday}` : ""}
+                      <span className="text-xs text-muted-foreground hidden sm:block text-right">
+                        {new Date(match.date).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" })} · {match.venue}
                       </span>
                     </div>
                   </ScrollReveal>
