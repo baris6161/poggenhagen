@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { siteConfig } from "@/config/site";
+import { Instagram } from "lucide-react";
 
 interface InstagramSectionProps {
   images: string[];
@@ -17,6 +18,25 @@ export default function InstagramSection({ images }: InstagramSectionProps) {
   return (
     <section id="instagram" className="py-20 md:py-28 section-gradient">
       <div className="container">
+        <div className="flex flex-col items-center gap-4 mb-8">
+          {/* Instagram Icon + Handle */}
+          <div className="flex items-center gap-3">
+            <Instagram className="w-7 h-7 text-primary" />
+            <span className="font-body text-lg text-muted-foreground">@{siteConfig.instagramHandle}</span>
+          </div>
+          
+          {/* Button in eigener Zeile */}
+          <a
+            href={siteConfig.instagramUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-foreground font-body font-semibold rounded-lg hover:border-primary/50 hover:text-primary hover:bg-primary/5 transition-all w-full sm:w-auto"
+          >
+            <Instagram className="w-4 h-4" />
+            Auf Instagram öffnen
+          </a>
+        </div>
+
         <div className="flex justify-center">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl">
             {images.map((imageUrl, i) => (

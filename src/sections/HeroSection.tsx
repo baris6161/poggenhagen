@@ -18,7 +18,7 @@ export default function HeroSection() {
       <div className="glow-orb w-[500px] h-[500px] top-[-100px] left-[-100px] animate-glow-move" />
       <div className="glow-orb w-[400px] h-[400px] bottom-[-80px] right-[-80px] animate-glow-move-delayed" />
 
-      <div className="container relative z-10 pt-20 pb-16">
+      <div className="container relative z-10 pt-20 pb-24">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -54,7 +54,7 @@ export default function HeroSection() {
           </div>
         </motion.div>
 
-        {/* Animated Scroll Arrow */}
+        {/* Animated Scroll Arrow - visible on all devices */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -63,7 +63,7 @@ export default function HeroSection() {
         >
           <motion.button
             onClick={scrollToNext}
-            className="flex flex-col items-center gap-2 text-primary hover:text-primary/80 transition-colors group"
+            className="flex flex-col items-center gap-2 text-primary hover:text-primary/80 transition-colors group cursor-pointer"
             animate={{
               y: [0, 10, 0],
             }}
