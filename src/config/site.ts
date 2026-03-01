@@ -5,20 +5,12 @@ export const siteConfig = {
   region: "Neustadt",
   instagramHandle: "tsv.poggenhagen",
   instagramUrl: "https://www.instagram.com/tsv.poggenhagen/",
-  // fussball.de Widget URLs
-  // Diese URLs müssen von fussball.de generiert werden
-  // Gehe zu: https://www.fussball.de/widgets
   fussballWidgets: {
-    // Spielplan Widget URL
     fixtures: "",
-    // Ergebnisse Widget URL
     results: "",
-    // Tabelle Widget URL
     table: "",
-    // Nächstes Spiel Widget URL (optional)
     nextMatch: "",
   },
-  // Legacy Support
   tableMode: "iframe" as "json" | "iframe",
   tableIframeUrl: "",
   endpoints: {
@@ -29,8 +21,8 @@ export const siteConfig = {
   },
   venue: {
     name: "Sportplatz Poggenhagen",
-    address: "Sportplatzweg 1, 31535 Neustadt am Rübenberge",
-    mapsUrl: "https://maps.google.com/?q=Sportplatz+Poggenhagen+Neustadt",
+    address: "Ilschenheide 4, 31535 Neustadt am Rübenberge",
+    mapsUrl: "https://maps.app.goo.gl/sDquMmHoEzkxwv4W8?g_st=ic",
   },
   navItems: [
     { label: "Start", href: "#hero" },

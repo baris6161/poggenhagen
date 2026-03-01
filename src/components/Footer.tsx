@@ -1,6 +1,7 @@
 "use client";
 
-import { MapPin } from "lucide-react";
+import { siteConfig } from "@/config/site";
+import { Instagram, ArrowUp } from "lucide-react";
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -10,27 +11,43 @@ export default function Footer() {
   };
 
   return (
-    <footer className="border-t border-border bg-card/50 py-8 md:py-12">
+    <footer id="kontakt" className="border-t border-border py-12">
       <div className="container">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="text-center md:text-left">
-            <p className="font-display text-xl font-bold text-foreground mb-2">TSV Poggenhagen</p>
-            <p className="text-sm text-muted-foreground flex items-center justify-center md:justify-start gap-2">
-              <MapPin className="w-4 h-4" />
-              Ilschenheide 4, 31535 Neustadt am Rübenberge
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div>
+            <p className="font-display text-2xl font-bold text-foreground">
+              TSV <span className="text-primary">POGGENHAGEN</span>
+            </p>
+            <p className="text-sm text-muted-foreground mt-1">
+              {siteConfig.venue.address}
             </p>
           </div>
-          <div className="text-center md:text-right">
-            <p className="text-sm text-muted-foreground mb-2">
-              © {new Date().getFullYear()} TSV Poggenhagen. Alle Rechte vorbehalten.
-            </p>
-            <button
-              onClick={scrollToTop}
-              className="text-xs text-primary hover:text-primary/80 transition-colors"
+
+          <div className="flex items-center gap-6">
+            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Impressum</a>
+            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Datenschutz</a>
+            <a
+              href={siteConfig.instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-primary transition-colors"
             >
-              Nach oben ↑
-            </button>
+              <Instagram className="w-5 h-5" />
+            </a>
           </div>
+        </div>
+
+        <div className="mt-8 pt-6 border-t border-border/30 flex justify-between items-center">
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} {siteConfig.clubName}. Alle Rechte vorbehalten.
+          </p>
+          <button
+            onClick={scrollToTop}
+            className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-all"
+            aria-label="Nach oben scrollen"
+          >
+            <ArrowUp className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </footer>
