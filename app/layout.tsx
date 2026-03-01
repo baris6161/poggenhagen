@@ -16,11 +16,11 @@ export const metadata: Metadata = {
   description: "Offizielle Website der 1. Herren des TSV Poggenhagen",
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/icon.png", type: "image/png" },
+      { url: "/TSV-Poggenhagen.webp", type: "image/webp", sizes: "any" },
+      { url: "/TSV-Poggenhagen.webp", type: "image/webp" },
     ],
     apple: [
-      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/TSV-Poggenhagen.webp", sizes: "180x180", type: "image/webp" },
     ],
   },
 };
