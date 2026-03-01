@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { siteConfig } from "@/config/site";
 import { Instagram } from "lucide-react";
+import SectionBackground from "@/components/SectionBackground";
 
 interface InstagramSectionProps {
   images: string[];
@@ -16,8 +17,9 @@ export default function InstagramSection({ images }: InstagramSectionProps) {
   }
 
   return (
-    <section id="instagram" className="py-20 md:py-28 section-gradient">
-      <div className="container">
+    <section id="instagram" className="relative py-20 md:py-28 overflow-hidden">
+      <SectionBackground variant={7} />
+      <div className="container relative z-10">
         {/* Instagram Icon + Handle */}
         <div className="flex items-center justify-center gap-3 mb-8">
           <Instagram className="w-7 h-7 text-primary" />

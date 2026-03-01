@@ -107,6 +107,63 @@
       hsl(216 19% 5%);
   }
 
+  /* Section Backgrounds - Varianten des Hero-Gradients */
+  .section-bg-1 {
+    background: 
+      radial-gradient(ellipse 70% 45% at 30% 20%, hsl(70 100% 50% / 0.14) 0%, transparent 55%),
+      radial-gradient(ellipse 65% 50% at 70% 80%, hsl(70 100% 50% / 0.1) 0%, transparent 50%),
+      radial-gradient(ellipse 55% 40% at 10% 70%, hsl(70 100% 50% / 0.08) 0%, transparent 50%),
+      hsl(216 19% 5%);
+  }
+
+  .section-bg-2 {
+    background: 
+      radial-gradient(ellipse 75% 50% at 60% 10%, hsl(70 100% 50% / 0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 45% at 20% 90%, hsl(70 100% 50% / 0.1) 0%, transparent 55%),
+      radial-gradient(ellipse 50% 35% at 90% 30%, hsl(70 100% 50% / 0.08) 0%, transparent 50%),
+      hsl(216 19% 5%);
+  }
+
+  .section-bg-3 {
+    background: 
+      radial-gradient(ellipse 65% 40% at 40% 15%, hsl(70 100% 50% / 0.13) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 50% at 80% 70%, hsl(70 100% 50% / 0.09) 0%, transparent 50%),
+      radial-gradient(ellipse 55% 45% at 15% 50%, hsl(70 100% 50% / 0.07) 0%, transparent 50%),
+      hsl(216 19% 5%);
+  }
+
+  .section-bg-4 {
+    background: 
+      radial-gradient(ellipse 80% 45% at 50% 25%, hsl(70 100% 50% / 0.11) 0%, transparent 58%),
+      radial-gradient(ellipse 55% 40% at 25% 85%, hsl(70 100% 50% / 0.09) 0%, transparent 52%),
+      radial-gradient(ellipse 60% 50% at 85% 60%, hsl(70 100% 50% / 0.07) 0%, transparent 48%),
+      hsl(216 19% 5%);
+  }
+
+  .section-bg-5 {
+    background: 
+      radial-gradient(ellipse 70% 50% at 35% 30%, hsl(70 100% 50% / 0.12) 0%, transparent 56%),
+      radial-gradient(ellipse 65% 45% at 75% 15%, hsl(70 100% 50% / 0.1) 0%, transparent 54%),
+      radial-gradient(ellipse 50% 40% at 5% 75%, hsl(70 100% 50% / 0.08) 0%, transparent 50%),
+      hsl(216 19% 5%);
+  }
+
+  .section-bg-6 {
+    background: 
+      radial-gradient(ellipse 75% 45% at 45% 80%, hsl(70 100% 50% / 0.13) 0%, transparent 57%),
+      radial-gradient(ellipse 60% 50% at 15% 25%, hsl(70 100% 50% / 0.11) 0%, transparent 53%),
+      radial-gradient(ellipse 55% 40% at 90% 50%, hsl(70 100% 50% / 0.08) 0%, transparent 49%),
+      hsl(216 19% 5%);
+  }
+
+  .section-bg-7 {
+    background: 
+      radial-gradient(ellipse 65% 50% at 55% 40%, hsl(70 100% 50% / 0.12) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 45% at 30% 90%, hsl(70 100% 50% / 0.1) 0%, transparent 51%),
+      radial-gradient(ellipse 50% 35% at 80% 10%, hsl(70 100% 50% / 0.08) 0%, transparent 47%),
+      hsl(216 19% 5%);
+  }
+
   .section-gradient {
     background: linear-gradient(180deg, transparent 0%, hsl(70 100% 50% / 0.02) 50%, transparent 100%);
   }
@@ -116,6 +173,14 @@
     border-radius: 50%;
     background: radial-gradient(circle, hsl(70 100% 50% / 0.2) 0%, transparent 70%);
     filter: blur(60px);
+    pointer-events: none;
+  }
+
+  .glow-orb-sm {
+    position: absolute;
+    border-radius: 50%;
+    background: radial-gradient(circle, hsl(70 100% 50% / 0.15) 0%, transparent 70%);
+    filter: blur(50px);
     pointer-events: none;
   }
 
@@ -184,6 +249,18 @@
   66% { transform: translate(-20px, 15px) scale(0.9); opacity: 0.12; }
 }
 
+@keyframes glow-move-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.1; }
+  33% { transform: translate(-25px, 15px) scale(1.08); opacity: 0.16; }
+  66% { transform: translate(20px, -10px) scale(0.92); opacity: 0.08; }
+}
+
+@keyframes glow-move-3 {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.12; }
+  33% { transform: translate(15px, 25px) scale(1.12); opacity: 0.18; }
+  66% { transform: translate(-15px, -20px) scale(0.88); opacity: 0.1; }
+}
+
 @keyframes pulse-glow {
   0%, 100% { opacity: 0.4; }
   50% { opacity: 0.7; }
@@ -207,12 +284,38 @@
   }
 }
 
+@keyframes grid-move-2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-80px, 80px);
+  }
+}
+
+@keyframes grid-move-3 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(100px, -100px);
+  }
+}
+
 .animate-glow-move {
   animation: glow-move 8s ease-in-out infinite;
 }
 
 .animate-glow-move-delayed {
   animation: glow-move 10s ease-in-out 2s infinite;
+}
+
+.animate-glow-move-2 {
+  animation: glow-move-2 9s ease-in-out infinite;
+}
+
+.animate-glow-move-3 {
+  animation: glow-move-3 11s ease-in-out infinite;
 }
 
 .animate-pulse-glow {
@@ -225,4 +328,12 @@
 
 .animate-grid-move-reverse {
   animation: grid-move-reverse 25s linear infinite;
+}
+
+.animate-grid-move-2 {
+  animation: grid-move-2 22s linear infinite;
+}
+
+.animate-grid-move-3 {
+  animation: grid-move-3 18s linear infinite;
 }

@@ -5,7 +5,8 @@ import Image from "next/image";
 import type { Player, Position } from "@/data/players";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
-import { Search, ChevronDown, ChevronUp } from "lucide-react";
+import SectionBackground from "@/components/SectionBackground";
+import { Search } from "lucide-react";
 
 const positions: (Position | "Alle")[] = ["Alle", "Tor", "Abwehr", "Mittelfeld", "Sturm"];
 
@@ -24,8 +25,9 @@ export default function SquadSection({ players }: SquadSectionProps) {
   });
 
   return (
-    <section id="kader" className="py-20 md:py-28 section-gradient">
-      <div className="container">
+    <section id="kader" className="relative py-20 md:py-28 overflow-hidden">
+      <SectionBackground variant={2} />
+      <div className="container relative z-10">
         <ScrollReveal>
           <SectionHeading title="Kader" subtitle={`${players.length} Spieler`} />
         </ScrollReveal>

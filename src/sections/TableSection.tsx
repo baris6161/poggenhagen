@@ -1,12 +1,16 @@
+"use client";
+
 import { tableData } from "@/data/matches";
 import { siteConfig } from "@/config/site";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
+import SectionBackground from "@/components/SectionBackground";
 
 export default function TableSection() {
   return (
-    <section id="tabelle" className="py-20 md:py-28 section-gradient">
-      <div className="container">
+    <section id="tabelle" className="relative py-20 md:py-28 overflow-hidden">
+      <SectionBackground variant={6} />
+      <div className="container relative z-10">
         <ScrollReveal>
           <SectionHeading title="Tabelle" subtitle={siteConfig.league} />
         </ScrollReveal>

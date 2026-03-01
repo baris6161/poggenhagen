@@ -4,11 +4,13 @@ import Image from "next/image";
 import { staff } from "@/data/players";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
+import SectionBackground from "@/components/SectionBackground";
 
 export default function StaffSection() {
   return (
-    <section id="trainerstab" className="py-20 md:py-28 section-gradient">
-      <div className="container">
+    <section id="trainerstab" className="relative py-20 md:py-28 overflow-hidden">
+      <SectionBackground variant={3} />
+      <div className="container relative z-10">
         <ScrollReveal>
           <SectionHeading title="Trainerstab" subtitle="Das Team hinter dem Team" />
         </ScrollReveal>

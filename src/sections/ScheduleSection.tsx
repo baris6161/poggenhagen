@@ -1,6 +1,9 @@
+"use client";
+
 import { getNextFixtures } from "@/data/matches";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
+import SectionBackground from "@/components/SectionBackground";
 import { Calendar, MapPin } from "lucide-react";
 
 export default function ScheduleSection() {
@@ -8,8 +11,9 @@ export default function ScheduleSection() {
   const upcomingFixtures = getNextFixtures(5);
 
   return (
-    <section id="spielplan" className="py-20 md:py-28 section-gradient">
-      <div className="container">
+    <section id="spielplan" className="relative py-20 md:py-28 overflow-hidden">
+      <SectionBackground variant={4} />
+      <div className="container relative z-10">
         <ScrollReveal>
           <SectionHeading title="Spielplan" subtitle="Kommende Spiele" />
         </ScrollReveal>

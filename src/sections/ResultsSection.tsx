@@ -4,6 +4,7 @@ import { useState } from "react";
 import { lastResults } from "@/data/matches";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
+import SectionBackground from "@/components/SectionBackground";
 
 type Filter = "Alle" | "Heim" | "Auswärts";
 
@@ -36,8 +37,9 @@ export default function ResultsSection() {
   });
 
   return (
-    <section id="ergebnisse" className="py-20 md:py-28 section-gradient">
-      <div className="container">
+    <section id="ergebnisse" className="relative py-20 md:py-28 overflow-hidden">
+      <SectionBackground variant={5} />
+      <div className="container relative z-10">
         <ScrollReveal>
           <SectionHeading title="Ergebnisse" subtitle="Letzte Spiele" />
         </ScrollReveal>

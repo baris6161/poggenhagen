@@ -5,6 +5,7 @@ import { getNextMatch, getMapsUrl } from "@/data/matches";
 import { Calendar, MapPin, Clock, Download, Navigation } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
+import SectionBackground from "@/components/SectionBackground";
 
 function generateICS(match: ReturnType<typeof getNextMatch>) {
   if (typeof window === "undefined") return;
@@ -63,8 +64,9 @@ export default function NextMatchSection() {
   });
 
   return (
-    <section id="naechstes-spiel" className="py-20 md:py-28 section-gradient">
-      <div className="container">
+    <section id="naechstes-spiel" className="relative py-20 md:py-28 overflow-hidden">
+      <SectionBackground variant={1} />
+      <div className="container relative z-10">
         <ScrollReveal>
           <SectionHeading title="Nächstes Spiel" subtitle={`Spieltag ${match.matchday}`} />
         </ScrollReveal>
