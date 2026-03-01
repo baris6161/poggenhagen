@@ -28,6 +28,17 @@ export function getMapsUrl(match: Match): string {
 
 export const lastResults: Match[] = [
   {
+    id: "f1",
+    homeTeam: "Lohnde 96",
+    awayTeam: "TSV Poggenhagen",
+    date: "2026-03-01",
+    time: "14:00",
+    venue: "Lohnde",
+    isHome: false,
+    result: { home: 0, away: 1 },
+    matchday: 1,
+  },
+  {
     id: "r1",
     homeTeam: "SV 06 Lehrte",
     awayTeam: "TSV Poggenhagen",
@@ -96,16 +107,6 @@ export const lastResults: Match[] = [
 ];
 
 export const fixtures: Match[] = [
-  {
-    id: "f1",
-    homeTeam: "Lohnde 96",
-    awayTeam: "TSV Poggenhagen",
-    date: "2026-03-01",
-    time: "14:00",
-    venue: "Lohnde",
-    isHome: false,
-    matchday: 1,
-  },
   {
     id: "f2",
     homeTeam: "TSV Poggenhagen",
@@ -250,8 +251,40 @@ export const fixtures: Match[] = [
 ];
 
 /**
+ * Prüft, ob ein Spiel mehr als 1 Tag alt ist (für automatische Verschiebung)
+ */
+function isMatchMoreThanOneDayOld(match: Match): boolean {
+  const matchDate = new Date(match.date);
+  matchDate.setHours(0, 0, 0, 0);
+  
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  
+  // Berechne Differenz in Tagen
+  const diffTime = now.getTime() - matchDate.getTime();
+  const diffDays = diffTime / (1000 * 60 * 60 * 24);
+  
+  // Wenn mehr als 1 Tag vergangen ist
+  return diffDays > 1;
+}
+
+/**
+ * Gibt die letzten Ergebnisse zurück, sortiert nach Datum (neueste zuerst)
+ * Spiele, die mehr als 1 Tag alt sind und ein Ergebnis haben, werden automatisch angezeigt
+ */
+export function getLastResults(): Match[] {
+  // Sortiere nach Datum (neueste zuerst)
+  return [...lastResults].sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    return dateB - dateA;
+  });
+}
+
+/**
  * Findet die nächsten 5 Spiele (ohne bereits gespielte)
  * Wenn ein Spiel ein Ergebnis hat, wird es automatisch ausgeschlossen
+ * Spiele, die mehr als 1 Tag alt sind, werden automatisch als gespielt behandelt
  */
 export function getNextFixtures(count: number = 5): Match[] {
   const now = new Date();
@@ -270,6 +303,9 @@ export function getNextFixtures(count: number = 5): Match[] {
     
     const matchDate = new Date(f.date);
     matchDate.setHours(0, 0, 0, 0);
+    
+    // Überspringe Spiele, die mehr als 1 Tag alt sind (werden automatisch als gespielt behandelt)
+    if (isMatchMoreThanOneDayOld(f)) return false;
     
     // Nur Spiele heute oder in der Zukunft
     return matchDate >= now;
@@ -309,19 +345,19 @@ export interface TableEntry {
 }
 
 export const tableData: TableEntry[] = [
-  { rank: 1, team: "TSV Godshorn II", played: 13, won: 10, drawn: 0, lost: 3, goalsFor: 34, goalsAgainst: 12, goalDiff: 22, points: 30 },
-  { rank: 2, team: "TSV Poggenhagen", played: 13, won: 9, drawn: 2, lost: 2, goalsFor: 45, goalsAgainst: 14, goalDiff: 31, points: 29 },
-  { rank: 3, team: "TSV Kolenfeld", played: 14, won: 8, drawn: 3, lost: 3, goalsFor: 46, goalsAgainst: 28, goalDiff: 18, points: 27 },
-  { rank: 4, team: "Mellendorfer TV", played: 16, won: 8, drawn: 3, lost: 5, goalsFor: 42, goalsAgainst: 33, goalDiff: 9, points: 27 },
+  { rank: 1, team: "TSV Poggenhagen", played: 14, won: 10, drawn: 2, lost: 2, goalsFor: 46, goalsAgainst: 14, goalDiff: 32, points: 32 },
+  { rank: 2, team: "TSV Godshorn II", played: 14, won: 10, drawn: 1, lost: 3, goalsFor: 36, goalsAgainst: 14, goalDiff: 22, points: 31 },
+  { rank: 3, team: "Mellendorfer TV", played: 17, won: 9, drawn: 3, lost: 5, goalsFor: 48, goalsAgainst: 35, goalDiff: 13, points: 30 },
+  { rank: 4, team: "TSV Kolenfeld", played: 15, won: 8, drawn: 4, lost: 3, goalsFor: 48, goalsAgainst: 30, goalDiff: 18, points: 28 },
   { rank: 5, team: "TSV Berenbostel", played: 16, won: 7, drawn: 3, lost: 6, goalsFor: 44, goalsAgainst: 32, goalDiff: 12, points: 24 },
   { rank: 6, team: "SV Resse", played: 12, won: 7, drawn: 1, lost: 4, goalsFor: 37, goalsAgainst: 20, goalDiff: 17, points: 22 },
-  { rank: 7, team: "1.FC Brelingen", played: 13, won: 6, drawn: 3, lost: 4, goalsFor: 35, goalsAgainst: 31, goalDiff: 4, points: 21 },
-  { rank: 8, team: "SC Wedemark", played: 11, won: 6, drawn: 2, lost: 3, goalsFor: 25, goalsAgainst: 13, goalDiff: 12, points: 20 },
-  { rank: 9, team: "TSV Stelingen II", played: 13, won: 5, drawn: 4, lost: 4, goalsFor: 29, goalsAgainst: 28, goalDiff: 1, points: 19 },
-  { rank: 10, team: "Lohnde 96", played: 14, won: 4, drawn: 4, lost: 6, goalsFor: 45, goalsAgainst: 31, goalDiff: 14, points: 16 },
+  { rank: 7, team: "SC Wedemark", played: 12, won: 6, drawn: 3, lost: 3, goalsFor: 27, goalsAgainst: 15, goalDiff: 12, points: 21 },
+  { rank: 8, team: "1.FC Brelingen", played: 13, won: 6, drawn: 3, lost: 4, goalsFor: 35, goalsAgainst: 31, goalDiff: 4, points: 21 },
+  { rank: 9, team: "TSV Stelingen II", played: 14, won: 5, drawn: 4, lost: 5, goalsFor: 31, goalsAgainst: 34, goalDiff: -3, points: 19 },
+  { rank: 10, team: "Lohnde 96", played: 15, won: 4, drawn: 4, lost: 7, goalsFor: 45, goalsAgainst: 32, goalDiff: 13, points: 16 },
   { rank: 11, team: "TSV Mariensee-Wulfelade", played: 15, won: 4, drawn: 3, lost: 8, goalsFor: 27, goalsAgainst: 35, goalDiff: -8, points: 15 },
   { rank: 12, team: "SG Letter 05", played: 15, won: 4, drawn: 2, lost: 9, goalsFor: 20, goalsAgainst: 49, goalDiff: -29, points: 14 },
   { rank: 13, team: "SV Frielingen", played: 13, won: 4, drawn: 1, lost: 8, goalsFor: 18, goalsAgainst: 40, goalDiff: -22, points: 13 },
-  { rank: 14, team: "SV Türkay Sport Garbsen", played: 14, won: 3, drawn: 1, lost: 10, goalsFor: 23, goalsAgainst: 56, goalDiff: -33, points: 10 },
+  { rank: 14, team: "SV Türkay Sport Garbsen", played: 15, won: 3, drawn: 2, lost: 10, goalsFor: 25, goalsAgainst: 58, goalDiff: -33, points: 11 },
   { rank: 15, team: "FC Mecklenhorst", played: 12, won: 0, drawn: 2, lost: 10, goalsFor: 23, goalsAgainst: 71, goalDiff: -48, points: 2 },
 ];

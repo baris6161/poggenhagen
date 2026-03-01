@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { lastResults } from "@/data/matches";
+import { getLastResults } from "@/data/matches";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
 import SectionBackground from "@/components/SectionBackground";
@@ -27,8 +27,11 @@ export default function ResultsSection() {
   const [filter, setFilter] = useState<Filter>("Alle");
   const filters: Filter[] = ["Alle", "Heim", "Auswärts"];
   
+  // Hole die letzten Ergebnisse (inklusive automatisch verschobener Spiele)
+  const allResults = getLastResults();
+  
   // Nur die letzten 5 Ergebnisse anzeigen
-  const recentResults = lastResults.slice(0, 5);
+  const recentResults = allResults.slice(0, 5);
   
   const filtered = recentResults.filter((m) => {
     if (filter === "Heim") return m.isHome;
