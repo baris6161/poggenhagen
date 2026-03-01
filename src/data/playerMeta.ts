@@ -36,7 +36,7 @@ export const playerMeta: Record<string, Position> = {
   "Maximilian Leon Schubert": "Mittelfeld",
   
   // Sturm
-  "Tolka Tükkal": "Sturm",
+  "Tolga Tükkal": "Sturm", // Korrigiert von "Tolka" zu "Tolga"
   "Moritz Weingartner": "Sturm",
   "Luis-Alexis Villamonte-Reyes": "Sturm", // Bindestrich im Namen beibehalten
   "Lennard Kern": "Sturm",
