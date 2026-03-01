@@ -11,24 +11,31 @@ export async function getInstagramImages(): Promise<string[]> {
     const instagramDir = join(process.cwd(), "public", "instagram");
     const files = await readdir(instagramDir);
 
-    const images: string[] = [];
+    const imagePaths: string[] = [];
 
     for (const file of files) {
-      const ext = file.toLowerCase();
-      if (
-        ext.endsWith(".jpg") ||
-        ext.endsWith(".jpeg") ||
-        ext.endsWith(".png") ||
-        ext.endsWith(".webp")
-      ) {
-        images.push(`/instagram/${file}`);
+      // Prüfe Dateiendung (case-insensitive)
+      const lowerFile = file.toLowerCase();
+      const hasValidExtension = SUPPORTED_EXTENSIONS.some(ext => lowerFile.endsWith(ext));
+      
+      if (hasValidExtension) {
+        // Pfad für Next.js public folder
+        imagePaths.push(`/instagram/${file}`);
       }
     }
 
-    // Sortiere nach Dateiname (1.jpeg, 2.jpeg, 3.jpeg)
-    return images.sort();
+    // Sortiere die Bilder nach Dateinamen (z.B. 1.jpeg, 2.jpeg, 3.jpeg)
+    return imagePaths.sort((a, b) => {
+      const numA = parseInt(a.match(/\d+/)?.[0] || "0");
+      const numB = parseInt(b.match(/\d+/)?.[0] || "0");
+      return numA - numB;
+    });
   } catch (error) {
     console.error("Fehler beim Lesen der Instagram-Bilder:", error);
+    // Debug: Zeige mehr Details
+    if (error instanceof Error) {
+      console.error("Error details:", error.message, error.stack);
+    }
     return [];
   }
 }
