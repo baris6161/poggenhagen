@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { nextMatch } from "@/data/matches";
-import { siteConfig } from "@/config/site";
+import { getNextMatch, getMapsUrl } from "@/data/matches";
 import { Calendar, MapPin, Clock, Download, Navigation } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
 
-function generateICS(match: typeof nextMatch) {
+function generateICS(match: ReturnType<typeof getNextMatch>) {
   if (typeof window === "undefined") return;
   const dateStr = match.date.replace(/-/g, "");
   const [h, m] = match.time.split(":");
@@ -56,8 +55,9 @@ function useCountdown(targetDate: string, targetTime: string) {
 }
 
 export default function NextMatchSection() {
-  const match = nextMatch;
+  const match = getNextMatch();
   const countdown = useCountdown(match.date, match.time);
+  const mapsUrl = getMapsUrl(match);
   const dateFormatted = new Date(match.date).toLocaleDateString("de-DE", {
     weekday: "long", day: "2-digit", month: "long", year: "numeric",
   });
@@ -122,7 +122,7 @@ export default function NextMatchSection() {
                 In Kalender
               </button>
               <a
-                href={siteConfig.venue.mapsUrl}
+                href={mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-border text-foreground font-body font-semibold rounded-lg hover:border-primary/50 transition-all text-sm"

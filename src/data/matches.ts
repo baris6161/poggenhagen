@@ -11,16 +11,49 @@ export interface Match {
   isFree?: boolean; // Für spielfrei
 }
 
-export const nextMatch: Match = {
-  id: "next-1",
-  homeTeam: "Lohnde 96",
-  awayTeam: "TSV Poggenhagen",
-  date: "2026-03-01",
-  time: "14:00",
-  venue: "Lohnde",
-  isHome: false,
-  matchday: 1,
-};
+// Heimspiel Route-Link
+const HOME_VENUE_MAPS_URL = "https://maps.app.goo.gl/sDquMmHoEzkxwv4W8?g_st=ic";
+
+/**
+ * Generiert Google Maps URL für Auswärtsspiele
+ */
+export function getMapsUrl(match: Match): string {
+  if (match.isHome) {
+    return HOME_VENUE_MAPS_URL;
+  }
+  // Für Auswärtsspiele: Suche nach Gegner-Mannschaft
+  const searchQuery = encodeURIComponent(match.homeTeam);
+  return `https://www.google.com/maps/search/?api=1&query=${searchQuery}`;
+}
+
+/**
+ * Findet das nächste Spiel (1 Tag nach Spieltag wird automatisch das nächste genommen)
+ */
+export function getNextMatch(): Match {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+  
+  // Finde das erste Spiel, das noch nicht gespielt wurde (mindestens 1 Tag in der Zukunft)
+  const tomorrow = new Date(now);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  
+  for (const fixture of fixtures) {
+    if (fixture.isFree) continue; // Überspringe spielfrei
+    
+    const matchDate = new Date(fixture.date);
+    matchDate.setHours(0, 0, 0, 0);
+    
+    // Wenn Spiel mindestens 1 Tag in der Zukunft ist
+    if (matchDate >= tomorrow) {
+      return fixture;
+    }
+  }
+  
+  // Fallback: Erstes Spiel aus fixtures
+  return fixtures.find(f => !f.isFree) || fixtures[0];
+}
+
+export const nextMatch: Match = getNextMatch();
 
 export const lastResults: Match[] = [
   {

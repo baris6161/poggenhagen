@@ -1,6 +1,6 @@
 import { readdir } from "fs/promises";
 import { join } from "path";
-import type { Player } from "@/data/players";
+import type { Player, Position } from "@/data/players";
 import { playerMeta } from "@/data/playerMeta";
 
 const SUPPORTED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"];
@@ -54,30 +54,30 @@ function getImageExtension(filename: string): string | null {
 /**
  * Findet Position für einen Spielernamen durch verschiedene Matching-Strategien
  */
-function findPosition(name: string): string | null {
+function findPosition(name: string): Position | null {
   // 1. Exakter Match
   if (playerMeta[name]) {
-    return playerMeta[name];
+    return playerMeta[name] as Position;
   }
   
   // 2. Case-insensitive Match
   const lowerName = name.toLowerCase();
   for (const [metaName, position] of Object.entries(playerMeta)) {
     if (metaName.toLowerCase() === lowerName) {
-      return position;
+      return position as Position;
     }
   }
   
   // 3. Match mit Bindestrichen statt Leerzeichen
   const nameWithDashes = name.replace(/\s+/g, "-");
   if (playerMeta[nameWithDashes]) {
-    return playerMeta[nameWithDashes];
+    return playerMeta[nameWithDashes] as Position;
   }
   
   // 4. Match mit Leerzeichen statt Bindestrichen
   const nameWithSpaces = name.replace(/-/g, " ");
   if (playerMeta[nameWithSpaces]) {
-    return playerMeta[nameWithSpaces];
+    return playerMeta[nameWithSpaces] as Position;
   }
   
   // 5. Case-insensitive mit Varianten
@@ -91,7 +91,7 @@ function findPosition(name: string): string | null {
   for (const variant of variants) {
     for (const [metaName, position] of Object.entries(playerMeta)) {
       if (metaName.toLowerCase() === variant.toLowerCase()) {
-        return position;
+        return position as Position;
       }
     }
   }
