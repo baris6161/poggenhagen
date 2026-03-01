@@ -11,6 +11,7 @@ const SUPPORTED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"];
  * - "Jannik-Brosch.jpg" -> "Jannik Brosch"
  * - "maximilian-leon schubert.png" -> "Maximilian Leon Schubert"
  * - "Luis-Alexis Villamonte-Reyes.webp" -> "Luis-Alexis Villamonte-Reyes"
+ * - "tolga-tükkal.png" -> "Tolga Tükkal"
  */
 function filenameToName(filename: string): string {
   const nameWithoutExt = filename.replace(/\.(jpg|jpeg|png|webp)$/i, "");
@@ -91,6 +92,20 @@ function findPosition(name: string): Position | null {
   for (const variant of variants) {
     for (const [metaName, position] of Object.entries(playerMeta)) {
       if (metaName.toLowerCase() === variant.toLowerCase()) {
+        return position as Position;
+      }
+    }
+  }
+  
+  // 6. Spezialfall: "Tolka" -> "Tolga" (für alte Dateinamen)
+  if (name.toLowerCase().includes("tolka")) {
+    const correctedName = name.replace(/tolka/gi, "Tolga");
+    if (playerMeta[correctedName]) {
+      return playerMeta[correctedName] as Position;
+    }
+    // Auch case-insensitive prüfen
+    for (const [metaName, position] of Object.entries(playerMeta)) {
+      if (metaName.toLowerCase() === correctedName.toLowerCase()) {
         return position as Position;
       }
     }
