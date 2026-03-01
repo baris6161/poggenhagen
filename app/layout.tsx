@@ -14,15 +14,8 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space
 export const metadata: Metadata = {
   title: "TSV Poggenhagen - 1. Herren",
   description: "Offizielle Website der 1. Herren des TSV Poggenhagen",
-  icons: {
-    icon: [
-      { url: "/TSV-Poggenhagen.webp", type: "image/webp", sizes: "any" },
-      { url: "/TSV-Poggenhagen.webp", type: "image/webp" },
-    ],
-    apple: [
-      { url: "/TSV-Poggenhagen.webp", sizes: "180x180", type: "image/webp" },
-    ],
-  },
+  // Next.js erkennt automatisch icon.png, icon.ico, apple-icon.png im app/ Ordner
+  // und generiert alle notwendigen Favicon-Größen automatisch
 };
 
 export default function RootLayout({
