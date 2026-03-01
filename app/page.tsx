@@ -5,7 +5,7 @@ import ScheduleSection from "@/sections/ScheduleSection";
 import TableSection from "@/sections/TableSection";
 import SquadSectionWrapper from "@/sections/SquadSectionWrapper";
 import StaffSection from "@/sections/StaffSection";
-import InstagramSection from "@/sections/InstagramSection";
+import InstagramSectionWrapper from "@/sections/InstagramSectionWrapper";
 
 export default function Home() {
   return (
@@ -17,7 +17,7 @@ export default function Home() {
       <TableSection />
       <SquadSectionWrapper />
       <StaffSection />
-      <InstagramSection />
+      <InstagramSectionWrapper />
     </main>
   );
 }
