@@ -23,7 +23,61 @@ export const nextMatch: Match = {
 };
 
 export const lastResults: Match[] = [
-  // Hier können später echte Ergebnisse eingetragen werden
+  {
+    id: "r1",
+    homeTeam: "TSV Poggenhagen",
+    awayTeam: "SV Frielingen",
+    date: "2025-11-30",
+    time: "14:00",
+    venue: "Sportplatz Poggenhagen",
+    isHome: true,
+    result: { home: 5, away: 1 },
+    matchday: 12,
+  },
+  {
+    id: "r2",
+    homeTeam: "TSV Poggenhagen",
+    awayTeam: "Mellendorfer TV",
+    date: "2025-11-09",
+    time: "14:00",
+    venue: "Sportplatz Poggenhagen",
+    isHome: true,
+    result: { home: 3, away: 0 },
+    matchday: 11,
+  },
+  {
+    id: "r3",
+    homeTeam: "TSV Poggenhagen",
+    awayTeam: "SV Türkay Sport Garbsen",
+    date: "2025-11-02",
+    time: "14:00",
+    venue: "Sportplatz Poggenhagen",
+    isHome: true,
+    result: { home: 1, away: 2 },
+    matchday: 10,
+  },
+  {
+    id: "r4",
+    homeTeam: "TSV Poggenhagen",
+    awayTeam: "TSV Berenbostel",
+    date: "2025-10-19",
+    time: "15:00",
+    venue: "Sportplatz Poggenhagen",
+    isHome: true,
+    result: { home: 2, away: 1 },
+    matchday: 9,
+  },
+  {
+    id: "r5",
+    homeTeam: "SG Letter 05",
+    awayTeam: "TSV Poggenhagen",
+    date: "2025-10-12",
+    time: "15:00",
+    venue: "Letter",
+    isHome: false,
+    result: { home: 4, away: 2 },
+    matchday: 8,
+  },
 ];
 
 export const fixtures: Match[] = [
