@@ -38,6 +38,6 @@ export const playerMeta: Record<string, Position> = {
   // Sturm
   "Tolka Tükkal": "Sturm",
   "Moritz Weingartner": "Sturm",
-  "Luis-Alexis Villamonte-Reyes": "Sturm",
+  "Luis-Alexis Villamonte-Reyes": "Sturm", // Bindestrich im Namen beibehalten
   "Lennard Kern": "Sturm",
 };

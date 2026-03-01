@@ -6,12 +6,38 @@ import { playerMeta } from "@/data/playerMeta";
 const SUPPORTED_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"];
 
 /**
- * Konvertiert Dateinamen zu Spielernamen
- * Beispiel: "Jannik-Brosch.jpg" -> "Jannik Brosch"
+ * Konvertiert Dateinamen zu normalisiertem Spielernamen
+ * Beispiele:
+ * - "Jannik-Brosch.jpg" -> "Jannik Brosch"
+ * - "maximilian-leon schubert.png" -> "Maximilian Leon Schubert"
+ * - "Luis-Alexis Villamonte-Reyes.webp" -> "Luis-Alexis Villamonte-Reyes"
  */
 function filenameToName(filename: string): string {
   const nameWithoutExt = filename.replace(/\.(jpg|jpeg|png|webp)$/i, "");
-  return nameWithoutExt.replace(/-/g, " ");
+  
+  // Ersetze alle Bindestriche durch Leerzeichen
+  let name = nameWithoutExt.replace(/-/g, " ");
+  
+  // Normalisiere Leerzeichen (mehrere Leerzeichen zu einem)
+  name = name.replace(/\s+/g, " ").trim();
+  
+  // Großschreibung: Erster Buchstabe jedes Wortes groß, Rest klein
+  name = name
+    .split(" ")
+    .map(word => {
+      if (word.length === 0) return word;
+      // Spezialfall: Doppelnamen mit Bindestrich (z.B. "Luis-Alexis")
+      if (word.includes("-")) {
+        return word
+          .split("-")
+          .map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+          .join("-");
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(" ");
+  
+  return name;
 }
 
 /**
@@ -22,6 +48,54 @@ function getImageExtension(filename: string): string | null {
   if (ext.endsWith(".jpg") || ext.endsWith(".jpeg")) return ".jpg";
   if (ext.endsWith(".png")) return ".png";
   if (ext.endsWith(".webp")) return ".webp";
+  return null;
+}
+
+/**
+ * Findet Position für einen Spielernamen durch verschiedene Matching-Strategien
+ */
+function findPosition(name: string): string | null {
+  // 1. Exakter Match
+  if (playerMeta[name]) {
+    return playerMeta[name];
+  }
+  
+  // 2. Case-insensitive Match
+  const lowerName = name.toLowerCase();
+  for (const [metaName, position] of Object.entries(playerMeta)) {
+    if (metaName.toLowerCase() === lowerName) {
+      return position;
+    }
+  }
+  
+  // 3. Match mit Bindestrichen statt Leerzeichen
+  const nameWithDashes = name.replace(/\s+/g, "-");
+  if (playerMeta[nameWithDashes]) {
+    return playerMeta[nameWithDashes];
+  }
+  
+  // 4. Match mit Leerzeichen statt Bindestrichen
+  const nameWithSpaces = name.replace(/-/g, " ");
+  if (playerMeta[nameWithSpaces]) {
+    return playerMeta[nameWithSpaces];
+  }
+  
+  // 5. Case-insensitive mit Varianten
+  const variants = [
+    nameWithDashes,
+    nameWithSpaces,
+    name.replace(/\s+/g, "-").toLowerCase(),
+    name.replace(/-/g, " ").toLowerCase(),
+  ];
+  
+  for (const variant of variants) {
+    for (const [metaName, position] of Object.entries(playerMeta)) {
+      if (metaName.toLowerCase() === variant.toLowerCase()) {
+        return position;
+      }
+    }
+  }
+  
   return null;
 }
 
@@ -39,38 +113,23 @@ export async function getPlayersFromImages(): Promise<Player[]> {
     const files = await readdir(bilderDir);
 
     const players: Player[] = [];
+    const unmatchedFiles: string[] = [];
 
     for (const file of files) {
       const ext = getImageExtension(file);
       if (!ext || !SUPPORTED_EXTENSIONS.includes(ext)) continue;
 
       const name = filenameToName(file);
-      // Versuche zuerst exakten Match, dann Varianten
-      let position = playerMeta[name];
-      if (!position) {
-        // Versuche auch mit Bindestrichen statt Leerzeichen
-        const nameWithDashes = name.replace(/\s+/g, "-");
-        position = playerMeta[nameWithDashes];
-      }
-      if (!position) {
-        // Versuche auch Varianten mit gemischten Bindestrichen/Leerzeichen
-        const nameVariants = [
-          name.replace(/\s+/g, "-"),
-          name.replace(/-/g, " "),
-        ];
-        for (const variant of nameVariants) {
-          if (playerMeta[variant]) {
-            position = playerMeta[variant];
-            break;
-          }
-        }
-      }
+      const position = findPosition(name);
 
       // Nur Spieler mit Position-Mapping anzeigen
-      if (!position) continue;
+      if (!position) {
+        unmatchedFiles.push(`${file} -> "${name}"`);
+        continue;
+      }
 
       // Generiere eindeutige ID aus Namen
-      const id = name.toLowerCase().replace(/\s+/g, "-");
+      const id = name.toLowerCase().replace(/\s+/g, "-").replace(/-+/g, "-");
 
       players.push({
         id,
@@ -78,6 +137,11 @@ export async function getPlayersFromImages(): Promise<Player[]> {
         position,
         image: `/bilder/${file}`,
       });
+    }
+
+    // Debug: Zeige nicht gematchte Dateien
+    if (unmatchedFiles.length > 0) {
+      console.log("Nicht gematchte Spieler-Bilder:", unmatchedFiles);
     }
 
     // Sortiere nach Position (Tor, Abwehr, Mittelfeld, Sturm) und dann nach Name
