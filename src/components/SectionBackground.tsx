@@ -47,7 +47,7 @@ export default function SectionBackground({ variant }: SectionBackgroundProps) {
 
   const orbs = orbConfigs[variant] || orbConfigs[1];
   
-  // Unterschiedliche Grid-Patterns je nach Variante
+  // Unterschiedliche Grid-Patterns je nach Variante - heller gemacht
   const gridConfigs = {
     1: { size1: "90px", size2: "140px", anim1: "animate-grid-move", anim2: "animate-grid-move-reverse" },
     2: { size1: "85px", size2: "150px", anim1: "animate-grid-move-2", anim2: "animate-grid-move-reverse" },
@@ -70,14 +70,14 @@ export default function SectionBackground({ variant }: SectionBackgroundProps) {
         />
       ))}
 
-      {/* Animated Grid Pattern */}
-      <div className="absolute inset-0 z-0 opacity-[0.02]">
+      {/* Animated Grid Pattern - heller gemacht */}
+      <div className="absolute inset-0 z-0 opacity-[0.04]">
         <div
           className={`absolute inset-0 ${grid.anim1}`}
           style={{
             backgroundImage: `
-              linear-gradient(hsl(70 100% 50% / 0.12) 1px, transparent 1px),
-              linear-gradient(90deg, hsl(70 100% 50% / 0.12) 1px, transparent 1px)
+              linear-gradient(hsl(70 100% 50% / 0.2) 1px, transparent 1px),
+              linear-gradient(90deg, hsl(70 100% 50% / 0.2) 1px, transparent 1px)
             `,
             backgroundSize: `${grid.size1} ${grid.size1}`,
           }}
@@ -86,20 +86,20 @@ export default function SectionBackground({ variant }: SectionBackgroundProps) {
           className={`absolute inset-0 ${grid.anim2}`}
           style={{
             backgroundImage: `
-              linear-gradient(hsl(70 100% 50% / 0.08) 1px, transparent 1px),
-              linear-gradient(90deg, hsl(70 100% 50% / 0.08) 1px, transparent 1px)
+              linear-gradient(hsl(70 100% 50% / 0.15) 1px, transparent 1px),
+              linear-gradient(90deg, hsl(70 100% 50% / 0.15) 1px, transparent 1px)
             `,
             backgroundSize: `${grid.size2} ${grid.size2}`,
           }}
         />
       </div>
 
-      {/* Subtle animated diagonal lines */}
-      <div className="absolute inset-0 z-0 opacity-[0.01]">
+      {/* Subtle animated diagonal lines - heller gemacht */}
+      <div className="absolute inset-0 z-0 opacity-[0.025]">
         <motion.div
           className="absolute top-0 left-0 w-full h-full"
           style={{
-            background: `repeating-linear-gradient(${variant % 2 === 0 ? '45deg' : '135deg'}, transparent, transparent ${100 + variant * 20}px, hsl(70 100% 50% / 0.15) ${100 + variant * 20}px, hsl(70 100% 50% / 0.15) ${101 + variant * 20}px)`,
+            background: `repeating-linear-gradient(${variant % 2 === 0 ? '45deg' : '135deg'}, transparent, transparent ${100 + variant * 20}px, hsl(70 100% 50% / 0.25) ${100 + variant * 20}px, hsl(70 100% 50% / 0.25) ${101 + variant * 20}px)`,
           }}
           animate={{
             x: [0, 200 + variant * 20, 0],
@@ -113,7 +113,7 @@ export default function SectionBackground({ variant }: SectionBackgroundProps) {
         <motion.div
           className="absolute top-0 left-0 w-full h-full"
           style={{
-            background: `repeating-linear-gradient(${variant % 2 === 0 ? '-135deg' : '-45deg'}, transparent, transparent ${150 + variant * 15}px, hsl(70 100% 50% / 0.12) ${150 + variant * 15}px, hsl(70 100% 50% / 0.12) ${151 + variant * 15}px)`,
+            background: `repeating-linear-gradient(${variant % 2 === 0 ? '-135deg' : '-45deg'}, transparent, transparent ${150 + variant * 15}px, hsl(70 100% 50% / 0.2) ${150 + variant * 15}px, hsl(70 100% 50% / 0.2) ${151 + variant * 15}px)`,
           }}
           animate={{
             x: [0, -(200 + variant * 20), 0],
