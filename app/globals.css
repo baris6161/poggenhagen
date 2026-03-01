@@ -186,6 +186,24 @@
   50% { opacity: 0.7; }
 }
 
+@keyframes grid-move {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(60px, 60px);
+  }
+}
+
+@keyframes grid-move-reverse {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-120px, -120px);
+  }
+}
+
 .animate-glow-move {
   animation: glow-move 8s ease-in-out infinite;
 }
@@ -196,4 +214,12 @@
 
 .animate-pulse-glow {
   animation: pulse-glow 3s ease-in-out infinite;
+}
+
+.animate-grid-move {
+  animation: grid-move 20s linear infinite;
+}
+
+.animate-grid-move-reverse {
+  animation: grid-move-reverse 25s linear infinite;
 }

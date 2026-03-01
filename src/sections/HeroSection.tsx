@@ -18,6 +18,64 @@ export default function HeroSection() {
       <div className="glow-orb w-[500px] h-[500px] top-[-100px] left-[-100px] animate-glow-move" />
       <div className="glow-orb w-[400px] h-[400px] bottom-[-80px] right-[-80px] animate-glow-move-delayed" />
 
+      {/* Animated Grid Pattern Background - sehr subtil */}
+      <div className="absolute inset-0 z-0 opacity-[0.025]">
+        {/* Haupt-Grid */}
+        <div 
+          className="absolute inset-0 animate-grid-move" 
+          style={{
+            backgroundImage: `
+              linear-gradient(hsl(70 100% 50% / 0.15) 1px, transparent 1px),
+              linear-gradient(90deg, hsl(70 100% 50% / 0.15) 1px, transparent 1px)
+            `,
+            backgroundSize: '80px 80px',
+          }} 
+        />
+        {/* Sekundäres Grid (größer, langsamer) */}
+        <div 
+          className="absolute inset-0 animate-grid-move-reverse" 
+          style={{
+            backgroundImage: `
+              linear-gradient(hsl(70 100% 50% / 0.1) 1px, transparent 1px),
+              linear-gradient(90deg, hsl(70 100% 50% / 0.1) 1px, transparent 1px)
+            `,
+            backgroundSize: '160px 160px',
+          }} 
+        />
+      </div>
+
+      {/* Subtle animated diagonal lines */}
+      <div className="absolute inset-0 z-0 opacity-[0.015]">
+        <motion.div
+          className="absolute top-0 left-0 w-full h-full"
+          style={{
+            background: 'repeating-linear-gradient(45deg, transparent, transparent 120px, hsl(70 100% 50% / 0.2) 120px, hsl(70 100% 50% / 0.2) 121px)',
+          }}
+          animate={{
+            x: [0, 240, 0],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+        <motion.div
+          className="absolute top-0 left-0 w-full h-full"
+          style={{
+            background: 'repeating-linear-gradient(-45deg, transparent, transparent 180px, hsl(70 100% 50% / 0.15) 180px, hsl(70 100% 50% / 0.15) 181px)',
+          }}
+          animate={{
+            x: [0, -240, 0],
+          }}
+          transition={{
+            duration: 24,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        />
+      </div>
+
       <div className="container relative z-10 pt-20 pb-24">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
