@@ -5,7 +5,7 @@ export interface Player {
   name: string;
   position: Position;
   number?: number;
-  birthYear: number;
+  birthYear?: number;
   image?: string;
   previousClubs?: string[];
 }
