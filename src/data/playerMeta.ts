@@ -20,6 +20,7 @@ export const playerMeta: Record<string, Position> = {
   "Lasse Schröder": "Abwehr",
   "Lukas Mager": "Abwehr",
   "Malte Weidemann": "Abwehr",
+  "Baris Aktas": "Abwehr",
   
   // Mittelfeld
   "Steven Rohr": "Mittelfeld",
@@ -27,7 +28,6 @@ export const playerMeta: Record<string, Position> = {
   "Marius Meineke": "Mittelfeld",
   "Florian Lange": "Mittelfeld",
   "Theo Schlaphoff": "Mittelfeld",
-  "Baris Aktas": "Mittelfeld",
   "Kim Julien Wegner": "Mittelfeld",
   "Felix Brieskorn": "Mittelfeld",
   "Mel Struß": "Mittelfeld",
