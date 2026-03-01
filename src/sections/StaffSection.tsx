@@ -19,7 +19,7 @@ export default function StaffSection() {
               <div className="card-surface p-5 group">
                 {/* Staff Image */}
                 {member.image ? (
-                  <div className="w-32 h-32 rounded-full overflow-hidden mx-auto mb-4 group-hover:neon-glow transition-shadow relative">
+                  <div className="w-32 h-32 rounded-lg overflow-hidden mx-auto mb-4 group-hover:neon-glow transition-shadow relative">
                     <Image
                       src={member.image}
                       alt={member.name}
@@ -31,7 +31,7 @@ export default function StaffSection() {
                     />
                   </div>
                 ) : (
-                  <div className="w-32 h-32 rounded-full bg-secondary flex items-center justify-center mx-auto mb-4">
+                  <div className="w-32 h-32 rounded-lg bg-secondary flex items-center justify-center mx-auto mb-4">
                     <span className="font-display text-2xl font-bold text-muted-foreground">
                       {member.name.split(" ").map((n) => n[0]).join("").toUpperCase()}
                     </span>
