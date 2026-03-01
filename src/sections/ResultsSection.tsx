@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { getLastResults } from "@/data/matches";
+import { getLastResults, type Match } from "@/data/matches";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
 import SectionBackground from "@/components/SectionBackground";
 
 type Filter = "Alle" | "Heim" | "Auswärts";
 
-function getResultLabel(match: typeof lastResults[0]) {
+function getResultLabel(match: Match) {
   const isHome = match.isHome;
   const ourGoals = isHome ? match.result!.home : match.result!.away;
   const theirGoals = isHome ? match.result!.away : match.result!.home;
