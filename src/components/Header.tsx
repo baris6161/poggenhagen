@@ -11,6 +11,9 @@ export default function Header() {
   const [activeSection, setActiveSection] = useState("#hero");
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === "undefined") return;
+    
     const onScroll = () => {
       setIsScrolled(window.scrollY > 40);
       // find active section
@@ -29,6 +32,7 @@ export default function Header() {
 
   const handleNavClick = useCallback((href: string) => {
     setMobileOpen(false);
+    if (typeof window === "undefined") return;
     const el = document.getElementById(href.replace("#", ""));
     el?.scrollIntoView({ behavior: "smooth" });
   }, []);

@@ -4,7 +4,11 @@ import { siteConfig } from "@/config/site";
 import { Instagram, ArrowUp } from "lucide-react";
 
 export default function Footer() {
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const scrollToTop = () => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <footer id="kontakt" className="border-t border-border py-12">
