@@ -22,7 +22,7 @@ Offizielle Website der 1. Herren des TSV Poggenhagen.
 # Dependencies installieren
 npm install
 
-# Development Server starten
+# Development Server starten (erzeugt zuvor Favicon aus public/TSV-Poggenhagen.webp)
 npm run dev
 
 # Production Build
