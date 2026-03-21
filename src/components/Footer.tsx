@@ -2,6 +2,7 @@
 
 import { siteConfig } from "@/config/site";
 import { Instagram, ArrowUp } from "lucide-react";
+import Link from "next/link";
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -24,8 +25,9 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center gap-6">
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Impressum</a>
-            <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">Datenschutz</a>
+            <Link href="/impressum" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Impressum
+            </Link>
             <a
               href={siteConfig.instagramUrl}
               target="_blank"
