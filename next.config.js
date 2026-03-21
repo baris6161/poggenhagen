@@ -17,7 +17,7 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https: blob:",
   "font-src 'self' data:",
-  "connect-src 'self' https://vercel.live https://vitals.vercel-insights.com wss://*.vercel.live",
+  "connect-src 'self' https://vercel.live https://vitals.vercel-insights.com https://*.vercel-insights.com wss://*.vercel.live",
   "frame-src https:",
 ].join("; ");
 

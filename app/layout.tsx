@@ -7,6 +7,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { getCanonicalSiteUrl, defaultOgImagePath, seoDefaults } from "@/config/site";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const siteUrl = getCanonicalSiteUrl();
 const absoluteOgImage = new URL(defaultOgImagePath, `${siteUrl}/`).toString();
@@ -92,6 +94,8 @@ export default function RootLayout({
           <Footer />
           <Toaster />
           <Sonner />
+          <Analytics />
+          <SpeedInsights />
         </TooltipProvider>
       </body>
     </html>
