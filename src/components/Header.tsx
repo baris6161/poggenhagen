@@ -128,9 +128,9 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center"
+            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl overflow-y-auto"
           >
-            <nav className="flex flex-col items-center gap-6">
+            <nav className="min-h-full w-full flex flex-col items-center justify-center gap-4 py-24 px-6">
               {siteConfig.navItems.map((item, i) => (
                 <motion.a
                   key={item.href}
@@ -139,7 +139,7 @@ export default function Header() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.05 }}
-                  className="font-display text-4xl font-semibold text-foreground hover:text-primary transition-colors"
+                  className="font-display text-3xl sm:text-4xl font-semibold text-foreground hover:text-primary transition-colors text-center leading-tight"
                 >
                   {item.label}
                 </motion.a>
@@ -148,7 +148,7 @@ export default function Header() {
                 href={siteConfig.mainClubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-display text-4xl font-semibold text-primary hover:text-primary/80 transition-colors"
+                className="font-display text-3xl sm:text-4xl font-semibold text-primary hover:text-primary/80 transition-colors text-center leading-tight pt-2"
               >
                 Hauptverein
               </a>
@@ -156,7 +156,7 @@ export default function Header() {
                 href={siteConfig.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 text-primary"
+                className="mt-3 text-primary"
               >
                 <Instagram className="w-8 h-8" />
               </a>
