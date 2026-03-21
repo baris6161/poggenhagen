@@ -23,7 +23,6 @@ export default async function Icon() {
             background: "#0c0f0a",
           }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={logo} width={28} height={28} alt="" style={{ objectFit: "contain" }} />
         </div>
       ),
