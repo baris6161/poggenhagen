@@ -1,12 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { getLastResults, type Match } from "@/data/matches";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
 import SectionBackground from "@/components/SectionBackground";
-
-type Filter = "Alle" | "Heim" | "Auswärts";
 
 function getResultLabel(match: Match) {
   if (match.cancelled) return "A";
@@ -26,21 +23,12 @@ function resultColor(label: string) {
 }
 
 export default function ResultsSection() {
-  const [filter, setFilter] = useState<Filter>("Alle");
-  const filters: Filter[] = ["Alle", "Heim", "Auswärts"];
-  
   // Hole die letzten Ergebnisse (inklusive automatisch verschobener Spiele)
   const allResults = getLastResults();
   
   // Nur die letzten 5 Ergebnisse anzeigen
   const recentResults = allResults.slice(0, 5);
   
-  const filtered = recentResults.filter((m) => {
-    if (filter === "Heim") return m.isHome;
-    if (filter === "Auswärts") return !m.isHome;
-    return true;
-  });
-
   return (
     <section id="ergebnisse" className="relative py-20 md:py-28 overflow-hidden">
       <SectionBackground variant={5} />
@@ -59,23 +47,8 @@ export default function ResultsSection() {
             </div>
           </ScrollReveal>
         ) : (
-          <>
-            <ScrollReveal delay={0.1}>
-              <div className="flex gap-2 mb-8">
-                {filters.map((f) => (
-                  <button
-                    key={f}
-                    onClick={() => setFilter(f)}
-                    className={`filter-chip ${filter === f ? "active" : ""}`}
-                  >
-                    {f}
-                  </button>
-                ))}
-              </div>
-            </ScrollReveal>
-
             <div className="grid gap-4">
-              {filtered.map((match, i) => {
+              {recentResults.map((match, i) => {
                 const label = getResultLabel(match);
                 return (
                   <ScrollReveal key={match.id} delay={i * 0.08}>
@@ -106,7 +79,6 @@ export default function ResultsSection() {
                 );
               })}
             </div>
-          </>
         )}
       </div>
     </section>
