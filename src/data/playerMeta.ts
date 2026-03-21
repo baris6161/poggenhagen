@@ -39,5 +39,6 @@ export const playerMeta: Record<string, Position> = {
   "Tolga Tükkal": "Sturm", // Korrigiert von "Tolka" zu "Tolga"
   "Moritz Weingartner": "Sturm",
   "Luis-Alexis Villamonte-Reyes": "Sturm", // Bindestrich im Namen beibehalten
+  "Luis Alexis Villamonte Reyes": "Sturm", // Fallback für normalisierte Dateinamen ohne Bindestriche
   "Lennard Kern": "Sturm",
 };
