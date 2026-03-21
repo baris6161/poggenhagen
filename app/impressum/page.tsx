@@ -20,7 +20,6 @@ export default function ImpressumPage() {
               <p>Mecklenburger Strasse 2</p>
               <p>31535 Neustadt am Ruebenberge</p>
               <p>E-Mail: info@tsv-poggenhagen1946.de</p>
-              <p>Telefon: 05032 / 65323</p>
               <p>Steuernummer: 34/215/00497 (FA Nienburg)</p>
             </div>
           </div>
