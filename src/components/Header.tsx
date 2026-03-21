@@ -128,7 +128,7 @@ export default function Header() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl overflow-y-auto"
+            className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl"
           >
             <nav className="min-h-full w-full flex flex-col items-center justify-center gap-4 py-24 px-6">
               {siteConfig.navItems.map((item, i) => (
