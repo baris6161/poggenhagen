@@ -26,6 +26,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Build: aus public/TSV-Poggenhagen.webp erzeugt (scripts/generate-icon-svgs.cjs)
+# Build: aus public/pogge.png erzeugt (scripts/generate-icon-svgs.cjs)
 /app/icon.svg
 /app/apple-icon.svg

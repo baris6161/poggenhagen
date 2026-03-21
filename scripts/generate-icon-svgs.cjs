@@ -1,17 +1,17 @@
 /**
- * Statische app/icon.svg + app/apple-icon.svg mit eingebettetem Logo (data-URL).
+ * Statische app/icon.svg + app/apple-icon.svg aus public/pogge.png (data-URL).
  * Kein next/og-Prerender, keine sharp-Abhängigkeit.
  */
 const fs = require("fs");
 const path = require("path");
 
 const root = path.join(__dirname, "..");
-const src = path.join(root, "public", "TSV-Poggenhagen.webp");
+const src = path.join(root, "public", "pogge.png");
 const appDir = path.join(root, "app");
 
 function wrapSvg(viewBox, imgSize, offset) {
   const b64 = fs.readFileSync(src).toString("base64");
-  const dataUrl = `data:image/webp;base64,${b64}`;
+  const dataUrl = `data:image/png;base64,${b64}`;
   const o = offset;
   const s = imgSize;
   const vb = viewBox;
