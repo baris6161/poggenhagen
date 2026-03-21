@@ -4,8 +4,11 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { siteConfig } from "@/config/site";
 import { Menu, X, Instagram } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
+  const pathname = usePathname();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("#hero");
@@ -37,6 +40,17 @@ export default function Header() {
     el?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
+  const handleLogoClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (pathname !== "/") return;
+      e.preventDefault();
+      if (typeof window === "undefined") return;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setActiveSection("#hero");
+    },
+    [pathname],
+  );
+
   return (
     <>
       <header
@@ -45,9 +59,9 @@ export default function Header() {
         }`}
       >
         <div className="container flex items-center justify-between h-16 md:h-20">
-          <a
-            href="#hero"
-            onClick={(e) => { e.preventDefault(); handleNavClick("#hero"); }}
+          <Link
+            href="/"
+            onClick={handleLogoClick}
             className="flex items-center gap-2"
           >
             <span className="font-display text-2xl md:text-3xl font-bold text-foreground">
@@ -56,7 +70,7 @@ export default function Header() {
             <span className="hidden sm:inline text-xs text-muted-foreground font-body mt-1">
               1. Herren
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-6">
