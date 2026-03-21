@@ -79,14 +79,6 @@ export default function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-6">
-            <a
-              href={siteConfig.mainClubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Hauptverein
-            </a>
             {siteConfig.navItems.map((item) => (
               <a
                 key={item.href}
@@ -99,6 +91,14 @@ export default function Header() {
                 {item.label}
               </a>
             ))}
+            <a
+              href={siteConfig.mainClubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+            >
+              Hauptverein
+            </a>
             <a
               href={siteConfig.instagramUrl}
               target="_blank"
@@ -131,14 +131,6 @@ export default function Header() {
             className="fixed inset-0 z-40 bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center"
           >
             <nav className="flex flex-col items-center gap-6">
-              <a
-                href={siteConfig.mainClubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-display text-4xl font-semibold text-foreground hover:text-primary transition-colors"
-              >
-                Hauptverein
-              </a>
               {siteConfig.navItems.map((item, i) => (
                 <motion.a
                   key={item.href}
@@ -152,6 +144,14 @@ export default function Header() {
                   {item.label}
                 </motion.a>
               ))}
+              <a
+                href={siteConfig.mainClubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-display text-4xl font-semibold text-primary hover:text-primary/80 transition-colors"
+              >
+                Hauptverein
+              </a>
               <a
                 href={siteConfig.instagramUrl}
                 target="_blank"
