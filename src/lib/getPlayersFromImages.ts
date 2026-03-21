@@ -154,9 +154,8 @@ export async function getPlayersFromImages(): Promise<Player[]> {
       });
     }
 
-    // Debug: Zeige nicht gematchte Dateien
-    if (unmatchedFiles.length > 0) {
-      console.log("Nicht gematchte Spieler-Bilder:", unmatchedFiles);
+    if (process.env.NODE_ENV === "development" && unmatchedFiles.length > 0) {
+      console.warn("[kader] Nicht gematchte Bilder:", unmatchedFiles);
     }
 
     // Sortiere nach Position (Tor, Abwehr, Mittelfeld, Sturm) und dann nach Name
@@ -173,7 +172,9 @@ export async function getPlayersFromImages(): Promise<Player[]> {
       return a.name.localeCompare(b.name, "de");
     });
   } catch (error) {
-    console.error("Fehler beim Lesen der Spieler-Bilder:", error);
+    if (process.env.NODE_ENV === "development") {
+      console.error("Fehler beim Lesen der Spieler-Bilder:", error);
+    }
     return [];
   }
 }

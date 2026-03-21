@@ -10,6 +10,12 @@ Offizielle Website der 1. Herren des TSV Poggenhagen.
 - **Framer Motion** (Animationen)
 - **shadcn/ui** (UI Components)
 
+## Sicherheit (Kurz)
+
+- Keine Secrets mit `NEXT_PUBLIC_*` ausliefern; API-Keys nur in `.env.local` (nicht versioniert).
+- Nach `npm install` regelmäßig `npm audit` / `npm audit fix` ausführen (Transitive Pakete).
+- Produktion: Security-Header & CSP in `next.config.js`; `console.log` wird per Build entfernt (außer `error`/`warn`).
+
 ## Installation
 
 ```bash

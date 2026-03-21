@@ -64,7 +64,7 @@ export default function FussballWidget({
             }}
             onLoad={() => setIsLoading(false)}
             loading="lazy"
-            allow="clipboard-read; clipboard-write"
+            referrerPolicy="strict-origin-when-cross-origin"
           />
         </div>
       </motion.div>

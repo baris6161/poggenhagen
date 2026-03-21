@@ -50,6 +50,7 @@ export default function FussballIframe({ src, title = "Tabelle" }: FussballIfram
             }}
             onLoad={() => setIsLoading(false)}
             loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
           />
         </div>
       </motion.div>

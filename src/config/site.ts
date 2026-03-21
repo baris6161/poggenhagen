@@ -33,12 +33,6 @@ export const siteConfig = {
   },
   tableMode: "iframe" as "json" | "iframe",
   tableIframeUrl: "",
-  endpoints: {
-    fixtures: "/api/fixtures",
-    results: "/api/results",
-    table: "/api/table",
-    instagram: "/api/instagram",
-  },
   venue: {
     name: "Sportplatz Poggenhagen",
     address: "Ilschenheide 4, 31535 Neustadt am Rübenberge",
