@@ -9,6 +9,8 @@ export interface Match {
   result?: { home: number; away: number };
   matchday?: number;
   isFree?: boolean; // Für spielfrei
+  /** Spiel abgesetzt / Ausfall (ohne Ergebnis) */
+  cancelled?: boolean;
 }
 
 // Heimspiel Route-Link
@@ -28,6 +30,17 @@ export function getMapsUrl(match: Match): string {
 
 export const lastResults: Match[] = [
   {
+    id: "f3",
+    homeTeam: "TSV Mariensee-Wulfelade",
+    awayTeam: "TSV Poggenhagen",
+    date: "2026-03-15",
+    time: "14:00",
+    venue: "Mariensee-Wulfelade",
+    isHome: false,
+    matchday: 3,
+    cancelled: true,
+  },
+  {
     id: "f1",
     homeTeam: "Lohnde 96",
     awayTeam: "TSV Poggenhagen",
@@ -39,6 +52,16 @@ export const lastResults: Match[] = [
     matchday: 1,
   },
   {
+    id: "fs-muehlenfeld",
+    homeTeam: "TSV Poggenhagen",
+    awayTeam: "TSV Mühlenfeld II",
+    date: "2026-02-18",
+    time: "19:00",
+    venue: "Sportplatz Poggenhagen",
+    isHome: true,
+    cancelled: true,
+  },
+  {
     id: "r1",
     homeTeam: "SV 06 Lehrte",
     awayTeam: "TSV Poggenhagen",
@@ -47,7 +70,27 @@ export const lastResults: Match[] = [
     venue: "Lehrte",
     isHome: false,
     result: { home: 3, away: 3 },
-    matchday: undefined, // Freundschaftsspiel
+    matchday: undefined,
+  },
+  {
+    id: "fs-helstorf",
+    homeTeam: "SV Germania Helstorf",
+    awayTeam: "TSV Poggenhagen",
+    date: "2026-02-08",
+    time: "18:45",
+    venue: "Helstorf",
+    isHome: false,
+    cancelled: true,
+  },
+  {
+    id: "fs-autertal",
+    homeTeam: "TSV Poggenhagen",
+    awayTeam: "Autertaler SC",
+    date: "2026-01-25",
+    time: "14:00",
+    venue: "Sportplatz Poggenhagen",
+    isHome: true,
+    cancelled: true,
   },
   {
     id: "r2",
@@ -93,41 +136,9 @@ export const lastResults: Match[] = [
     result: { home: 2, away: 1 },
     matchday: 9,
   },
-  {
-    id: "r6",
-    homeTeam: "SG Letter 05",
-    awayTeam: "TSV Poggenhagen",
-    date: "2025-10-12",
-    time: "15:00",
-    venue: "Letter",
-    isHome: false,
-    result: { home: 1, away: 2 },
-    matchday: 8,
-  },
 ];
 
 export const fixtures: Match[] = [
-  {
-    id: "f2",
-    homeTeam: "TSV Poggenhagen",
-    awayTeam: "spielfrei",
-    date: "2026-03-08",
-    time: "",
-    venue: "-",
-    isHome: true,
-    matchday: 2,
-    isFree: true,
-  },
-  {
-    id: "f3",
-    homeTeam: "TSV Mariensee-Wulfelade",
-    awayTeam: "TSV Poggenhagen",
-    date: "2026-03-15",
-    time: "14:00",
-    venue: "Mariensee-Wulfelade",
-    isHome: false,
-    matchday: 3,
-  },
   {
     id: "f4",
     homeTeam: "TSV Poggenhagen",
@@ -149,6 +160,16 @@ export const fixtures: Match[] = [
     matchday: 5,
   },
   {
+    id: "f5b",
+    homeTeam: "1.FC Brelingen",
+    awayTeam: "TSV Poggenhagen",
+    date: "2026-04-04",
+    time: "16:00",
+    venue: "Brelingen",
+    isHome: false,
+    matchday: 6,
+  },
+  {
     id: "f6",
     homeTeam: "FC Mecklenhorst",
     awayTeam: "TSV Poggenhagen",
@@ -156,7 +177,7 @@ export const fixtures: Match[] = [
     time: "15:00",
     venue: "Mecklenhorst",
     isHome: false,
-    matchday: 6,
+    matchday: 7,
   },
   {
     id: "f7",
@@ -166,7 +187,7 @@ export const fixtures: Match[] = [
     time: "15:00",
     venue: "Sportplatz Poggenhagen",
     isHome: true,
-    matchday: 7,
+    matchday: 8,
   },
   {
     id: "f8",
@@ -176,7 +197,7 @@ export const fixtures: Match[] = [
     time: "15:00",
     venue: "Kolenfeld",
     isHome: false,
-    matchday: 8,
+    matchday: 9,
   },
   {
     id: "f9",
@@ -186,7 +207,7 @@ export const fixtures: Match[] = [
     time: "15:00",
     venue: "Sportplatz Poggenhagen",
     isHome: true,
-    matchday: 9,
+    matchday: 10,
   },
   {
     id: "f10",
@@ -196,7 +217,7 @@ export const fixtures: Match[] = [
     time: "15:00",
     venue: "Wedemark",
     isHome: false,
-    matchday: 10,
+    matchday: 11,
   },
   {
     id: "f11",
@@ -206,7 +227,7 @@ export const fixtures: Match[] = [
     time: "15:00",
     venue: "Berenbostel",
     isHome: false,
-    matchday: 11,
+    matchday: 12,
   },
   {
     id: "f12",
@@ -216,7 +237,7 @@ export const fixtures: Match[] = [
     time: "15:00",
     venue: "Sportplatz Poggenhagen",
     isHome: true,
-    matchday: 12,
+    matchday: 13,
   },
   {
     id: "f13",
@@ -226,7 +247,7 @@ export const fixtures: Match[] = [
     time: "15:00",
     venue: "Garbsen",
     isHome: false,
-    matchday: 13,
+    matchday: 14,
   },
   {
     id: "f14",
@@ -236,7 +257,7 @@ export const fixtures: Match[] = [
     time: "15:00",
     venue: "Mellendorf",
     isHome: false,
-    matchday: 14,
+    matchday: 15,
   },
   {
     id: "f15",
@@ -246,7 +267,7 @@ export const fixtures: Match[] = [
     time: "15:00",
     venue: "Sportplatz Poggenhagen",
     isHome: true,
-    matchday: 15,
+    matchday: 16,
   },
 ];
 
@@ -345,19 +366,19 @@ export interface TableEntry {
 }
 
 export const tableData: TableEntry[] = [
-  { rank: 1, team: "TSV Poggenhagen", played: 14, won: 10, drawn: 2, lost: 2, goalsFor: 46, goalsAgainst: 14, goalDiff: 32, points: 32 },
-  { rank: 2, team: "TSV Godshorn II", played: 14, won: 10, drawn: 1, lost: 3, goalsFor: 36, goalsAgainst: 14, goalDiff: 22, points: 31 },
-  { rank: 3, team: "Mellendorfer TV", played: 17, won: 9, drawn: 3, lost: 5, goalsFor: 48, goalsAgainst: 35, goalDiff: 13, points: 30 },
-  { rank: 4, team: "TSV Kolenfeld", played: 15, won: 8, drawn: 4, lost: 3, goalsFor: 48, goalsAgainst: 30, goalDiff: 18, points: 28 },
-  { rank: 5, team: "TSV Berenbostel", played: 16, won: 7, drawn: 3, lost: 6, goalsFor: 44, goalsAgainst: 32, goalDiff: 12, points: 24 },
-  { rank: 6, team: "SV Resse", played: 12, won: 7, drawn: 1, lost: 4, goalsFor: 37, goalsAgainst: 20, goalDiff: 17, points: 22 },
-  { rank: 7, team: "SC Wedemark", played: 12, won: 6, drawn: 3, lost: 3, goalsFor: 27, goalsAgainst: 15, goalDiff: 12, points: 21 },
-  { rank: 8, team: "1.FC Brelingen", played: 13, won: 6, drawn: 3, lost: 4, goalsFor: 35, goalsAgainst: 31, goalDiff: 4, points: 21 },
-  { rank: 9, team: "TSV Stelingen II", played: 14, won: 5, drawn: 4, lost: 5, goalsFor: 31, goalsAgainst: 34, goalDiff: -3, points: 19 },
-  { rank: 10, team: "Lohnde 96", played: 15, won: 4, drawn: 4, lost: 7, goalsFor: 45, goalsAgainst: 32, goalDiff: 13, points: 16 },
-  { rank: 11, team: "TSV Mariensee-Wulfelade", played: 15, won: 4, drawn: 3, lost: 8, goalsFor: 27, goalsAgainst: 35, goalDiff: -8, points: 15 },
-  { rank: 12, team: "SG Letter 05", played: 15, won: 4, drawn: 2, lost: 9, goalsFor: 20, goalsAgainst: 49, goalDiff: -29, points: 14 },
-  { rank: 13, team: "SV Frielingen", played: 13, won: 4, drawn: 1, lost: 8, goalsFor: 18, goalsAgainst: 40, goalDiff: -22, points: 13 },
-  { rank: 14, team: "SV Türkay Sport Garbsen", played: 15, won: 3, drawn: 2, lost: 10, goalsFor: 25, goalsAgainst: 58, goalDiff: -33, points: 11 },
-  { rank: 15, team: "FC Mecklenhorst", played: 12, won: 0, drawn: 2, lost: 10, goalsFor: 23, goalsAgainst: 71, goalDiff: -48, points: 2 },
+  { rank: 1, team: "Mellendorfer TV", played: 19, won: 11, drawn: 3, lost: 5, goalsFor: 64, goalsAgainst: 36, goalDiff: 28, points: 36 },
+  { rank: 2, team: "TSV Godshorn II", played: 16, won: 11, drawn: 2, lost: 3, goalsFor: 41, goalsAgainst: 18, goalDiff: 23, points: 35 },
+  { rank: 3, team: "TSV Poggenhagen", played: 14, won: 10, drawn: 2, lost: 2, goalsFor: 46, goalsAgainst: 14, goalDiff: 32, points: 32 },
+  { rank: 4, team: "TSV Kolenfeld", played: 16, won: 8, drawn: 4, lost: 4, goalsFor: 48, goalsAgainst: 38, goalDiff: 10, points: 28 },
+  { rank: 5, team: "SC Wedemark", played: 14, won: 8, drawn: 3, lost: 3, goalsFor: 34, goalsAgainst: 20, goalDiff: 14, points: 27 },
+  { rank: 6, team: "TSV Berenbostel", played: 18, won: 7, drawn: 3, lost: 8, goalsFor: 49, goalsAgainst: 45, goalDiff: 4, points: 24 },
+  { rank: 7, team: "1.FC Brelingen", played: 15, won: 7, drawn: 3, lost: 5, goalsFor: 39, goalsAgainst: 35, goalDiff: 4, points: 24 },
+  { rank: 8, team: "SV Resse", played: 13, won: 7, drawn: 1, lost: 5, goalsFor: 37, goalsAgainst: 21, goalDiff: 16, points: 22 },
+  { rank: 9, team: "TSV Stelingen II", played: 15, won: 6, drawn: 4, lost: 5, goalsFor: 37, goalsAgainst: 36, goalDiff: 1, points: 22 },
+  { rank: 10, team: "TSV Mariensee-Wulfelade", played: 16, won: 5, drawn: 3, lost: 8, goalsFor: 31, goalsAgainst: 38, goalDiff: -7, points: 18 },
+  { rank: 11, team: "SV Frielingen", played: 15, won: 5, drawn: 2, lost: 8, goalsFor: 22, goalsAgainst: 43, goalDiff: -21, points: 17 },
+  { rank: 12, team: "Lohnde 96", played: 16, won: 4, drawn: 4, lost: 8, goalsFor: 48, goalsAgainst: 36, goalDiff: 12, points: 16 },
+  { rank: 13, team: "SV Türkay Sport Garbsen", played: 17, won: 4, drawn: 2, lost: 11, goalsFor: 30, goalsAgainst: 61, goalDiff: -31, points: 14 },
+  { rank: 14, team: "SG Letter 05", played: 17, won: 4, drawn: 2, lost: 11, goalsFor: 23, goalsAgainst: 56, goalDiff: -33, points: 14 },
+  { rank: 15, team: "FC Mecklenhorst", played: 13, won: 0, drawn: 2, lost: 11, goalsFor: 25, goalsAgainst: 77, goalDiff: -52, points: 2 },
 ];

@@ -9,6 +9,7 @@ import SectionBackground from "@/components/SectionBackground";
 type Filter = "Alle" | "Heim" | "Auswärts";
 
 function getResultLabel(match: Match) {
+  if (match.cancelled) return "A";
   const isHome = match.isHome;
   const ourGoals = isHome ? match.result!.home : match.result!.away;
   const theirGoals = isHome ? match.result!.away : match.result!.home;
@@ -18,6 +19,7 @@ function getResultLabel(match: Match) {
 }
 
 function resultColor(label: string) {
+  if (label === "A") return "bg-muted text-muted-foreground";
   if (label === "S") return "bg-green-500/20 text-green-400";
   if (label === "N") return "bg-red-500/20 text-red-400";
   return "bg-yellow-500/20 text-yellow-400";
@@ -85,7 +87,13 @@ export default function ResultsSection() {
                         <div className="flex items-center gap-2 flex-wrap">
                           <span className="font-body font-medium text-foreground text-sm md:text-base">{match.homeTeam}</span>
                           <span className="font-display text-xl md:text-2xl font-bold text-primary">
-                            {match.result!.home} : {match.result!.away}
+                            {match.cancelled ? (
+                              <span className="text-muted-foreground font-body text-base md:text-lg">Ausfall</span>
+                            ) : (
+                              <>
+                                {match.result!.home} : {match.result!.away}
+                              </>
+                            )}
                           </span>
                           <span className="font-body font-medium text-foreground text-sm md:text-base">{match.awayTeam}</span>
                         </div>
