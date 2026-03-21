@@ -73,8 +73,6 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  // Next.js erkennt automatisch icon.png, icon.ico, apple-icon.png im app/ Ordner
-  // und generiert alle notwendigen Favicon-Größen automatisch
 };
 
 export default function RootLayout({
