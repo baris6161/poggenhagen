@@ -24,13 +24,13 @@ export const staff: StaffMember[] = [
   { 
     id: "s1", 
     name: "Andreas Kögler", 
-    role: "1. Trainer",
+    role: "Trainer",
     image: "/bilder/Andreas-Kögler.png"
   },
   { 
     id: "s2", 
     name: "David Bindhak", 
-    role: "1. Trainer",
+    role: "Trainer",
     image: "/bilder/David-Bindhak.webp"
   },
   { 
