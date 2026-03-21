@@ -30,7 +30,7 @@ export const staff: StaffMember[] = [
   { 
     id: "s2", 
     name: "David Bindhak", 
-    role: "Co-Trainer",
+    role: "1. Trainer",
     image: "/bilder/David-Bindhak.webp"
   },
   { 
