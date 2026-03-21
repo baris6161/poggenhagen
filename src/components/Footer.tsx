@@ -25,6 +25,14 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center gap-6">
+            <a
+              href={siteConfig.mainClubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              TSV Hauptseite
+            </a>
             <Link href="/impressum" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Impressum
             </Link>

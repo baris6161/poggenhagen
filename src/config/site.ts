@@ -21,6 +21,7 @@ export const seoDefaults = {
 export const siteConfig = {
   clubName: "TSV Poggenhagen",
   teamName: "1. Herren",
+  mainClubUrl: "http://www.tsv-poggenhagen1946.de/",
   league: "Kreisliga",
   region: "Neustadt",
   instagramHandle: "tsv.poggenhagen_1.herren",
