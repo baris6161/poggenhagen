@@ -68,7 +68,7 @@ export default function NextMatchSection() {
       <SectionBackground variant={1} />
       <div className="container relative z-10">
         <ScrollReveal>
-          <SectionHeading title="Nächstes Spiel" subtitle={`Spieltag ${match.matchday}`} />
+          <SectionHeading title="Nächstes Spiel" />
         </ScrollReveal>
 
         <ScrollReveal delay={0.15}>
