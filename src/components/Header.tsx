@@ -5,10 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { siteConfig } from "@/config/site";
 import { Menu, X, Instagram } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Header() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("#hero");
@@ -35,10 +36,14 @@ export default function Header() {
 
   const handleNavClick = useCallback((href: string) => {
     setMobileOpen(false);
+    if (pathname !== "/") {
+      router.push(`/${href}`);
+      return;
+    }
     if (typeof window === "undefined") return;
     const el = document.getElementById(href.replace("#", ""));
     el?.scrollIntoView({ behavior: "smooth" });
-  }, []);
+  }, [pathname, router]);
 
   const handleLogoClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
