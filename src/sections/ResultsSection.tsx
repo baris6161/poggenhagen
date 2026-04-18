@@ -22,6 +22,12 @@ function resultColor(label: string) {
   return "bg-yellow-500/20 text-yellow-400";
 }
 
+/** Farbe der Toranzeige: Verlust wie Badge, Sieg/Unentschieden unverändert Primary. */
+function resultScoreTextClass(label: string): string {
+  if (label === "N") return "text-red-400";
+  return "text-primary";
+}
+
 type Props = {
   recentResults?: Match[];
   dataSource?: "fussball.de" | "static";
@@ -77,9 +83,11 @@ export default function ResultsSection({
                           {match.awayTeam}
                         </p>
                         <div className="col-start-2 row-start-1 row-span-2 flex items-center justify-center self-stretch border-l border-border/40 pl-3 min-h-[2.75rem]">
-                          <span className="font-display text-xl font-bold text-primary tabular-nums text-center leading-none">
+                          <span
+                            className={`font-display text-xl font-bold tabular-nums text-center leading-none ${match.cancelled ? "text-muted-foreground" : resultScoreTextClass(label)}`}
+                          >
                             {match.cancelled ? (
-                              <span className="text-muted-foreground font-body text-xs font-semibold leading-tight block max-w-[4.5rem]">
+                              <span className="font-body text-xs font-semibold leading-tight block max-w-[4.5rem]">
                                 Ausfall
                               </span>
                             ) : (
@@ -98,9 +106,11 @@ export default function ResultsSection({
                           >
                             {match.homeTeam}
                           </span>
-                          <span className="font-display text-2xl font-bold text-primary tabular-nums">
+                          <span
+                            className={`font-display text-2xl font-bold tabular-nums ${match.cancelled ? "text-muted-foreground" : resultScoreTextClass(label)}`}
+                          >
                             {match.cancelled ? (
-                              <span className="text-muted-foreground font-body text-lg">Ausfall</span>
+                              <span className="font-body text-lg">Ausfall</span>
                             ) : (
                               <>
                                 {match.result!.home} : {match.result!.away}
