@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const DISMISS_KEY = "pogge-add-home-dismissed-until";
 const DISMISS_MS = 1000 * 60 * 60 * 24 * 7;
@@ -141,7 +142,14 @@ export default function AddToHomeScreen() {
       </div>
 
       <Dialog open={helpOpen} onOpenChange={setHelpOpen}>
-        <DialogContent className="max-w-md">
+        <DialogContent
+          className={cn(
+            "max-w-md",
+            /* Oben andocken: Schritte auf einen Blick, inkl. Safe Area; kleine Displays scrollbar */
+            "top-[max(0.75rem,env(safe-area-inset-top))] translate-y-0",
+            "max-h-[min(calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-1rem),90dvh)] overflow-y-auto",
+          )}
+        >
           <DialogHeader>
             <DialogTitle>
               {helpMode === "ios" ? "Zum Home-Bildschirm" : "Als App oder Verknüpfung"}
