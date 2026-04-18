@@ -340,3 +340,26 @@
 .animate-grid-move-3 {
   animation: grid-move-3 18s linear infinite;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-glow-move,
+  .animate-glow-move-delayed,
+  .animate-glow-move-2,
+  .animate-glow-move-3,
+  .animate-pulse-glow,
+  .animate-grid-move,
+  .animate-grid-move-reverse,
+  .animate-grid-move-2,
+  .animate-grid-move-3 {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .card-surface {
+    transition-duration: 0.01ms !important;
+  }
+}

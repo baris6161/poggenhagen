@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "audit": "npm audit --omit=dev"
+    "audit": "npm audit --omit=dev",
+    "perf:baseline": "next build"
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",

@@ -8,3 +8,7 @@ export const FUSSBALL_FETCH_HEADERS = {
   "User-Agent": "TSV-Poggenhagen-Website/1.0 (+https://www.tsv-poggenhagen1946.de)",
   Accept: "text/html,application/xhtml+xml",
 } as const;
+
+/** Harte Timeouts gegen hängende TTFB bei langsamem fussball.de */
+export const FUSSBALL_FETCH_TIMEOUT_MS_TEAM = 6000;
+export const FUSSBALL_FETCH_TIMEOUT_MS_MATCH = 5000;

@@ -1,4 +1,6 @@
+import { FUSSBALL_FETCH_HEADERS, FUSSBALL_FETCH_TIMEOUT_MS_MATCH } from "./constants";
 import { fussballDebug } from "./debug-log";
+import { fetchWithTimeout } from "./fetch-with-timeout";
 
 type Half = { events?: { type?: string; team?: string }[] };
 
@@ -65,17 +67,22 @@ export async function fetchGoalsFromMatchPage(
   fussballDebug("fetchGoalsFromMatchPage start", {
     matchUrl: matchUrl.slice(-48),
   });
-  const res = await fetch(matchUrl, {
-    ...init,
-    headers: {
-      ...init?.headers,
-      "User-Agent":
-        (init?.headers as Record<string, string>)?.["User-Agent"] ??
-        "TSV-Poggenhagen-Website/1.0",
-      Accept: "text/html",
+  const res = await fetchWithTimeout(
+    matchUrl,
+    {
+      ...init,
+      headers: {
+        ...FUSSBALL_FETCH_HEADERS,
+        ...init?.headers,
+        "User-Agent":
+          (init?.headers as Record<string, string>)?.["User-Agent"] ??
+          (FUSSBALL_FETCH_HEADERS as Record<string, string>)["User-Agent"],
+        Accept: "text/html",
+      },
+      next: init?.next,
     },
-    next: init?.next,
-  });
+    FUSSBALL_FETCH_TIMEOUT_MS_MATCH
+  );
   if (!res.ok) {
     fussballDebug("fetchGoalsFromMatchPage HTTP error", {
       status: res.status,

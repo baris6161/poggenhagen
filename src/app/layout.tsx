@@ -22,7 +22,7 @@ const siteUrl = getCanonicalSiteUrl();
 const absoluteOgImage = new URL(defaultOgImagePath, `${siteUrl}/`).toString();
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const teko = Teko({ subsets: ["latin"], variable: "--font-teko", weight: ["400", "500", "600", "700"] });
+const teko = Teko({ subsets: ["latin"], variable: "--font-teko", weight: ["600", "700"] });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk" });
 
 const isVercelPreview = process.env.VERCEL_ENV === "preview";

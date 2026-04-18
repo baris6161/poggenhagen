@@ -1,5 +1,11 @@
 import type { Match } from "@/data/matches";
-import { CLUB_NAME, FUSSBALL_FETCH_HEADERS, FUSSBALL_TEAM_PAGE_URL } from "./constants";
+import {
+  CLUB_NAME,
+  FUSSBALL_FETCH_HEADERS,
+  FUSSBALL_FETCH_TIMEOUT_MS_TEAM,
+  FUSSBALL_TEAM_PAGE_URL,
+} from "./constants";
+import { fetchWithTimeout } from "./fetch-with-timeout";
 import { fussballDebug } from "./debug-log";
 import { fetchGoalsFromMatchPage } from "./match-score";
 import {
@@ -49,9 +55,13 @@ export async function fetchFussballLiveDataset(): Promise<{
   lastResult: Match | null;
 }> {
   const url = teamPageUrl();
-  const res = await fetch(url, {
-    headers: { ...FUSSBALL_FETCH_HEADERS },
-  });
+  const res = await fetchWithTimeout(
+    url,
+    {
+      headers: { ...FUSSBALL_FETCH_HEADERS },
+    },
+    FUSSBALL_FETCH_TIMEOUT_MS_TEAM
+  );
   fussballDebug("team page fetch", { status: res.status, urlLen: url.length });
   if (!res.ok) {
     throw new Error(`FUSSBALL_TEAM_HTTP_${res.status}`);
