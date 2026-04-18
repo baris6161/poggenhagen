@@ -8,6 +8,12 @@ Live: [https://poggenhagen.vercel.app](https://poggenhagen.vercel.app)
 
 Eine Next.js Anwendung, die alles Wichtige zur Mannschaft auf einer Seite bündelt, statt Nutzer über mehrere Portale zu schicken. Visuell angelehnt an den Verein: dunkles Layout, Vereinsgelb, klare Typografie.
 
+## Responsive und mobile Nutzung
+
+Das Layout ist für **Desktop und Mobilgeräte** ausgelegt: gleiche Inhalte, angepasste Raster und Karten, Lesbarkeit auf schmalen Viewports und ruhige Tabellen mit horizontalem Scroll nur wo nötig. In der Praxis wird die Seite **häufig auf dem Handy** genutzt, deshalb liegen Interaktionen, Typo und Abstände dort besonders im Fokus.
+
+Im Bereich **Nächstes Spiel** (Anker im Hero und in der Navigation) sieht man das kommende Pflichtspiel mit Datum, Uhrzeit und Ort. Darüber hinaus gibt es zwei direkte Aktionen: **Route** öffnet eine passende Kartenführung (Sportplatz Poggenhagen bei Heimspielen, Kartensuche nach Gegnerort bei Auswärts), **In Kalender** erzeugt eine **ICS-Datei** zum Herunterladen, die sich in gängige Kalender-Apps importieren lässt.
+
 ## Darstellung
 
 Spielplan und Tabelle nutzen dieselbe Kartenoptik (`card-surface`). Im Spielplan sind Datum und Uhrzeit getrennte Spalten, die Begegnung bleibt auch bei langen Vereinsnamen lesbar. Bei den Ergebnissen markieren Farben und Layout auf dem Smartphone schnell Sieg, Niederlage oder Unentschieden, inklusive rotem Torstand bei einer Niederlage.
@@ -24,7 +30,13 @@ Kaderbilder liegen im Projekt als Dateien; Namen und Positionen werden über ein
 
 Stack: Next.js 15 mit App Router, TypeScript, Tailwind CSS, Framer Motion, shadcn/ui. Hosting auf Vercel inklusive Analytics und Speed Insights. Routen und Layout liegen unter `src/app`, gemeinsame UI und Logik unter `src/components` und `src/lib`.
 
-Die Seite ist als installierbare Web App ausgelegt: Web App Manifest, Anzeigename und Icon aus dem Vereinswappen, daraus im Build erzeugte Favicon-Assets. Auf schmalen Viewports erscheint ein Hinweisbanner zum Ablegen auf den Home-Bildschirm; die Schritt-für-Schritt-Anleitung öffnet sich in einem Dialog, der oben am Viewport andockt, damit Nutzer die Schritte parallel zum Mitmachen im Blick behalten. Wo Chrome den installierbaren PWA-Flow anbietet, kann direkt installiert werden. Wird die Seite als Web-App vom Home-Bildschirm gestartet, löst der Client in Intervallen und beim Zurückkehren in die App eine sanfte Aktualisierung der Server-Komponenten aus (Next.js `router.refresh()`). Der Server-Cache für den Fussball-Datensatz ist auf etwa 15 Minuten gestellt, damit Spielplan und Tabelle nachziehen, ohne die App zu schließen und ohne die Quelle zu häufig anzusprechen.
+### Web App und Home-Bildschirm
+
+Die Seite ist als **installierbare Web App** ausgelegt: Web App Manifest, Anzeigename und Icon aus dem Vereinswappen, daraus im Build erzeugte Favicon-Assets. Auf **schmalen Viewports** erscheint ein Hinweisbanner, die Vereinsseite auf den **Home-Bildschirm** zu legen. Dazu öffnet sich eine **Kurzanleitung** (iPhone: Menü, Teilen, Zum Home-Bildschirm, ggf. Als Web-App öffnen; Android: Installieren oder Eintrag im Browsermenü), der Hilfedialog sitzt **oben** am Bildschirm, damit man die Schritte beim Mitmachen im Blick behält. Wo Chrome den installierbaren PWA-Flow anbietet, kann direkt installiert werden.
+
+### Aktuelle Daten in der Web-App
+
+Wird die Seite **als Web-App vom Home-Bildschirm** gestartet (Standalone-Modus), löst der Client **in Intervallen** und **wenn die App wieder sichtbar wird** eine sanfte Aktualisierung der Server-Komponenten aus (`router.refresh()` in Next.js). Parallel dazu ist der **Server-Cache** für den Fussball-Datensatz auf etwa **15 Minuten** gestellt. So bleiben Spielplan, Tabelle und Ergebnisse mit vertretbarem Aufwand für die Quelle aktuell, **ohne** die App jedes Mal neu zu öffnen.
 
 Sicherheitsheader und Content Security Policy sind für die Produktion in der Next Konfiguration hinterlegt.
 
