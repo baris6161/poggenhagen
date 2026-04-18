@@ -63,9 +63,9 @@ export const siteConfig = {
     { label: "Nächstes Spiel", href: "#naechstes-spiel" },
     { label: "Spielplan", href: "#spielplan" },
     { label: "Ergebnisse", href: "#ergebnisse" },
+    { label: "Tabelle", href: "#tabelle" },
     { label: "Kader", href: "#kader" },
     { label: "Trainerstab", href: "#trainerstab" },
-    { label: "Tabelle", href: "#tabelle" },
     { label: "Instagram", href: "#instagram" },
   ],
 };

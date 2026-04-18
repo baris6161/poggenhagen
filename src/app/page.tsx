@@ -20,9 +20,9 @@ export default async function Home() {
         recentResults={bundle.lastResultsMerged.slice(0, 5)}
         dataSource={bundle.source}
       />
+      <TableSection tableData={bundle.tableData} />
       <SquadSectionWrapper />
       <StaffSection />
-      <TableSection tableData={bundle.tableData} />
       <InstagramSectionWrapper />
     </main>
   );
