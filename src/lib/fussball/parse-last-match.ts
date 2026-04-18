@@ -54,11 +54,14 @@ export function parseLastMatchLink(html: string): LastMatchLink | null {
     ?.trim();
   if (!home || !away) return null;
 
-  const meta = slice.match(
-    /<span>Letztes Spiel:\s*([^<]+)<\/span>[\s\S]*?<span>[^<]{0,120}?(\d{2}:\d{2})/
+  // Slice startet oft mitten im öffnenden <span> (indexOf auf „Letztes Spiel:“)
+  // → nicht nur /<span>Letztes Spiel:/ erwarten.
+  const dateM = slice.match(/Letztes Spiel:\s*([^<]+)<\/span>/);
+  const dateLabel = (dateM?.[1] ?? "").trim();
+  const timeM = slice.match(
+    /<span>\s*(\d{2}:\d{2})\s*(?:&#124;|\|)/i
   );
-  const dateLabel = (meta?.[1] ?? "").trim();
-  const time = meta?.[2] ?? "15:00";
+  const time = timeM?.[1] ?? "15:00";
 
   return {
     matchUrl,
