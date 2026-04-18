@@ -1,13 +1,15 @@
 /**
- * Statische app/icon.svg + app/apple-icon.svg aus public/pogge.png (data-URL).
+ * Statische app/icon.svg + app/apple-icon.svg aus public/wappen.png (Fallback pogge.png).
  * Kein next/og-Prerender, keine sharp-Abhängigkeit.
  */
 const fs = require("fs");
 const path = require("path");
 
 const root = path.join(__dirname, "..");
-const src = path.join(root, "public", "pogge.png");
-const appDir = path.join(root, "app");
+const wappen = path.join(root, "public", "wappen.png");
+const fallback = path.join(root, "public", "pogge.png");
+const src = fs.existsSync(wappen) ? wappen : fallback;
+const appDir = path.join(root, "src", "app");
 
 function wrapSvg(viewBox, imgSize, offset) {
   const b64 = fs.readFileSync(src).toString("base64");
@@ -30,7 +32,7 @@ function main() {
   }
   fs.writeFileSync(path.join(appDir, "icon.svg"), wrapSvg(32, 28, 2), "utf8");
   fs.writeFileSync(path.join(appDir, "apple-icon.svg"), wrapSvg(180, 168, 6), "utf8");
-  console.log("generate-icon-svgs: app/icon.svg, app/apple-icon.svg");
+  console.log("generate-icon-svgs: src/app/icon.svg, src/app/apple-icon.svg");
 }
 
 main();

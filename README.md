@@ -1,129 +1,43 @@
-# TSV Poggenhagen - 1. Herren
+# TSV Poggenhagen, 1. Herren
 
-Offizielle Website der 1. Herren des TSV Poggenhagen.
+Öffentliche Vereinsseite für die erste Herrenmannschaft: Spielplan, Tabelle, Ergebnisse, Kader und Anfahrt. Live betriebene Seite:
 
-## Technologien
+[https://poggenhagen.vercel.app](https://poggenhagen.vercel.app)
 
-- **Next.js 15** (App Router)
-- **TypeScript**
-- **Tailwind CSS**
-- **Framer Motion** (Animationen)
-- **shadcn/ui** (UI Components)
+## Was hier steckt
 
-## Sicherheit (Kurz)
+Die Seite bündelt alles, was Fans und Interessierte zur Mannschaft brauchen, ohne dass sich jemand durch mehrere Portale hangeln muss. Inhalt und Look sind auf den TSV zugeschnitten (dunkles Layout, Vereinsgelb, klare Typo).
 
-- Keine Secrets mit `NEXT_PUBLIC_*` ausliefern; API-Keys nur in `.env.local` (nicht versioniert).
-- Nach `npm install` regelmäßig `npm audit` / `npm audit fix` ausführen (Transitive Pakete).
-- Produktion: Security-Header & CSP in `next.config.js`; `console.log` wird per Build entfernt (außer `error`/`warn`).
+Auf dem Server holen wir bei jedem Seitenaufbau (mit Cache) Daten von fussball.de: Kreisliga-Tabelle, Spielplan und das zuletzt ausgetragene Pflichtspiel. Daraus werden „Nächste Spiele“ und das oberste Ergebnis gebaut. Ältere und Freundschaftsspiele liegen als Archiv in `src/data/matches.ts`, damit die Liste vollständig bleibt, auch wenn fussball.de nur ein letztes Spiel liefert.
 
-## Installation
+Spieler kommen aus Bildern unter `public/bilder/` plus Positionszuordnung in `src/data/playerMeta.ts`. Instagram kann über `src/data/instagram.json` gepflegt werden.
+
+## Technik
+
+Stack: **Next.js 15** (App Router), **TypeScript**, **Tailwind CSS**, **Framer Motion**, **shadcn/ui**. Deployment auf **Vercel** mit Analytics und Speed Insights.
+
+Die Seite ist als PWA ausgelegt: Web App Manifest, eigenes Startverhalten, Vereinswappen als Icon (`public/wappen.png`, daraus generierte `src/app/icon.svg` und `src/app/apple-icon.svg` per `npm run prebuild`). Auf dem Handy blenden wir einen Hinweis ein, die Seite zum Home-Bildschirm zu legen (iOS: Kurzanleitung in Safari, Android: Install-Prompt des Browsers, wo der Browser das unterstützt).
+
+## Lokal starten
 
 ```bash
-# Dependencies installieren
 npm install
-
-# Development Server starten (erzeugt zuvor Favicon aus public/pogge.png)
 npm run dev
+```
 
-# Production Build
+Vor dem Production-Build werden die Icons aus dem Wappen erzeugt (`prebuild`). Anschließend:
+
+```bash
 npm run build
 npm start
 ```
 
-## Spieler hinzufügen
-
-Spieler werden automatisch aus Bildern in `/public/bilder/` generiert.
-
-### Schritte:
-
-1. **Bild hochladen**
-   - Dateiname: `Vorname-Nachname.jpg` (oder `.png`, `.webp`, `.jpeg`)
-   - Beispiel: `Jannik-Brosch.jpg`
-   - Unterstützte Formate: `.jpg`, `.jpeg`, `.png`, `.webp`
-
-2. **Position definieren**
-   - Öffne `/src/data/playerMeta.ts`
-   - Füge den Spieler hinzu:
-     ```typescript
-     "Jannik Brosch": "Tor",
-     ```
-   - Verfügbare Positionen: `"Tor"`, `"Abwehr"`, `"Mittelfeld"`, `"Sturm"`
-
-3. **Wichtig**
-   - Nur Spieler mit **Bild UND Position-Mapping** werden angezeigt
-   - Dateiname muss exakt dem Namen in `playerMeta.ts` entsprechen (mit Leerzeichen statt Bindestrichen)
-
 ## Konfiguration
 
-### Fussball.de iFrame
+Canonical URL und Social-Vorschau: `src/config/site.ts` (`getCanonicalSiteUrl`, optional `NEXT_PUBLIC_SITE_URL` auf der eigenen Domain). Tabelle: entweder eingebettetes fussball.de Widget oder JSON-Modus, ebenfalls in `siteConfig`.
 
-In `/src/config/site.ts`:
+Keine Secrets mit `NEXT_PUBLIC_*` ausliefern. Sicherheitsheader und CSP stehen in `next.config.js`.
 
-```typescript
-tableMode: "iframe",
-tableIframeUrl: "https://www.fussball.de/...",
-```
+## Lizenz / Nutzung
 
-### Instagram Feed
-
-Posts in `/src/data/instagram.json` eintragen:
-
-```json
-[
-  {
-    "id": "1",
-    "imageUrl": "/instagram/post1.jpg",
-    "permalink": "https://instagram.com/p/xyz",
-    "caption": "Derbysieg! 🔥",
-    "timestampISO": "2026-01-15T18:30:00Z"
-  }
-]
-```
-
-Bilder in `/public/instagram/` ablegen.
-
-## Projektstruktur
-
-```
-├── app/                    # Next.js App Router
-│   ├── layout.tsx         # Root Layout
-│   ├── page.tsx           # Homepage
-│   └── globals.css        # Globale Styles
-├── src/
-│   ├── components/        # React Components
-│   ├── sections/          # Page Sections
-│   ├── data/             # Daten & Config
-│   │   ├── playerMeta.ts  # Spieler-Positionen Mapping
-│   │   └── instagram.json # Instagram Posts
-│   └── lib/              # Utilities
-│       └── getPlayersFromImages.ts
-└── public/
-    ├── bilder/           # Spieler-Bilder
-    └── instagram/        # Instagram-Bilder
-```
-
-## Design-System
-
-- **Primary Color**: Gelb (`hsl(70 100% 50%)`)
-- **Dark Neon Look**: Dunkler Hintergrund mit subtilen Neon-Glow-Effekten
-- **Fokus States**: Gelb (Primary)
-- **Border Radius**: Einheitlich `0.75rem` (var(--radius))
-- **Animationen**: Framer Motion für sanfte Übergänge
-
-## Features
-
-- ✅ Automatische Spieler-Generierung aus Bildern
-- ✅ Fussball.de iFrame Integration
-- ✅ Instagram Feed (JSON-basiert)
-- ✅ Responsive Design
-- ✅ Dark Neon Look
-- ✅ Performance-optimiert (next/image)
-- ✅ Smooth Animations
-
-## Deployment
-
-Das Projekt kann auf Vercel, Netlify oder anderen Next.js-kompatiblen Plattformen deployed werden.
-
-```bash
-npm run build
-```
+Private Vereinswebsite; Inhalte und Marken des TSV Poggenhagen bleiben beim Verein.

@@ -26,6 +26,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Build: aus public/pogge.png erzeugt (scripts/generate-icon-svgs.cjs)
-/app/icon.svg
-/app/apple-icon.svg
+# Build: aus public/wappen.png erzeugt (scripts/generate-icon-svgs.cjs)
+/src/app/icon.svg
+/src/app/apple-icon.svg

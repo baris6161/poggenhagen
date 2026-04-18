@@ -30,7 +30,45 @@ export function getMapsUrl(match: Match): string {
   return `https://www.google.com/maps/search/?api=1&query=${searchQuery}`;
 }
 
+/**
+ * Archiv für „Letzte Spiele“ (älter als das eine Live-Spiel von FUSSBALL.DE).
+ * Reihenfolge egal: getLastResults sortiert nach Datum absteigend.
+ * Ergebnisse Stand April 2026, Mecklenhorst und Brelingen aus Spielberichten auf fussball.de.
+ */
 export const lastResults: Match[] = [
+  {
+    id: "arch-godshorn-2526",
+    homeTeam: "TSV Poggenhagen",
+    awayTeam: "TSV Godshorn II",
+    date: "2026-04-12",
+    time: "15:00",
+    venue: "Sportplatz Poggenhagen",
+    isHome: true,
+    result: { home: 1, away: 2 },
+    matchday: 8,
+  },
+  {
+    id: "arch-mecklenhorst-2526",
+    homeTeam: "TSV Poggenhagen",
+    awayTeam: "FC Mecklenhorst",
+    date: "2026-04-06",
+    time: "15:00",
+    venue: "Sportplatz Poggenhagen",
+    isHome: true,
+    result: { home: 12, away: 1 },
+    matchday: 7,
+  },
+  {
+    id: "arch-brelingen-2526",
+    homeTeam: "1.FC Brelingen",
+    awayTeam: "TSV Poggenhagen",
+    date: "2026-04-04",
+    time: "16:00",
+    venue: "Brelingen",
+    isHome: false,
+    result: { home: 0, away: 6 },
+    matchday: 6,
+  },
   {
     id: "f4",
     homeTeam: "TSV Poggenhagen",

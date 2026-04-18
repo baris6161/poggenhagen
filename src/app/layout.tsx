@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import { getCanonicalSiteUrl, defaultOgImagePath, seoDefaults } from "@/config/site";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import AddToHomeScreen from "@/components/AddToHomeScreen";
 
 const siteUrl = getCanonicalSiteUrl();
 const absoluteOgImage = new URL(defaultOgImagePath, `${siteUrl}/`).toString();
@@ -75,6 +76,16 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  icons: {
+    icon: [{ url: "/wappen.png", type: "image/png", sizes: "32x32" }],
+    apple: [{ url: "/wappen.png", sizes: "180x180" }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: "TSV Poggenhagen 1. Herren",
+    statusBarStyle: "black-translucent",
+  },
+  themeColor: "#0c0f0a",
 };
 
 export default function RootLayout({
@@ -96,6 +107,7 @@ export default function RootLayout({
           <Sonner />
           <Analytics />
           <SpeedInsights />
+          <AddToHomeScreen />
         </TooltipProvider>
       </body>
     </html>
