@@ -1,4 +1,8 @@
-/** Canonical URL für Meta-Tags, Open Graph & WhatsApp-Vorschau. Auf Vercel: optional NEXT_PUBLIC_SITE_URL setzen (eigene Domain). */
+/**
+ * Canonical URL für Meta-Tags, Open Graph, Sitemap und WhatsApp-Vorschau.
+ * Eigene Domain: in Vercel `NEXT_PUBLIC_SITE_URL` auf die HTTPS-Root-URL setzen (ohne Schrägstrich am Ende).
+ * Google Search Console: optional `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` mit dem Meta-Tag-Inhalt aus der Konsole.
+ */
 export function getCanonicalSiteUrl(): string {
   const custom = process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "");
   if (custom) return custom;
@@ -11,12 +15,27 @@ export function getCanonicalSiteUrl(): string {
 export const defaultOgImagePath = "/TSV-Poggenhagen.webp";
 
 export const seoDefaults = {
-  /** Kurz & klar für Tab, Google & Link-Vorschauen */
-  title: "TSV Poggenhagen – 1. Herren | Kreisliga Neustadt",
-  /** ~155 Zeichen: Nutzen + Ort + Instagram (WhatsApp, Facebook, X) */
+  /** Tabtitel und Suchsnippet, ohne Gedankenstrich */
+  title: "TSV Poggenhagen 1. Herren | Fußball Kreisliga Neustadt am Rübenberge",
+  /** Kurzbezeichnung für Open Graph site_name und strukturierte Daten */
+  siteName: "TSV Poggenhagen 1. Herren",
+  /** Meta-Description: sachlich, ein Satz plus Präzisierung, Zielbereich ca. 150 bis 160 Zeichen */
   description:
-    "1. Herren des TSV Poggenhagen in der Kreisliga Neustadt: Spielplan, Tabelle, Ergebnisse, Kader & Trainerstab, Sportplatz. Instagram: @tsv.poggenhagen_1.herren.",
+    "Erste Herrenmannschaft des TSV Poggenhagen in der Kreisliga Neustadt am Rübenberge. Spielplan, Tabellenstand, Ergebnisse, Kader und Trainerteam. Heimspiele am Sportplatz Ilschenheide.",
 } as const;
+
+/** Für Meta keywords und interne Auszeichnung; Suchmaschinen gewichten das Feld gering. */
+export const seoKeywords = [
+  "TSV Poggenhagen",
+  "1. Herren",
+  "Herrenfußball",
+  "Fußball",
+  "Kreisliga Neustadt",
+  "Neustadt am Rübenberge",
+  "Ilschenheide",
+  "Sportplatz Poggenhagen",
+  "Landkreis Hannover",
+] as const;
 
 export const siteConfig = {
   clubName: "TSV Poggenhagen",

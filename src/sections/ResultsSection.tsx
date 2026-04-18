@@ -53,7 +53,7 @@ export default function ResultsSection({
               <p className="text-muted-foreground">Noch keine Ergebnisse verfügbar.</p>
               <p className="text-sm text-muted-foreground mt-2">
                 {dataSource === "fussball.de"
-                  ? "Aktuell können keine Ergebnisse von FUSSBALL.DE geladen werden — bitte später erneut versuchen."
+                  ? "Die Ergebnisse lassen sich bei FUSSBALL.DE derzeit nicht laden. Bitte später erneut versuchen."
                   : "Ergebnisse werden nach jedem Spieltag in src/data/matches.ts gepflegt oder über FUSSBALL.DE synchronisiert."}
               </p>
             </div>

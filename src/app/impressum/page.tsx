@@ -1,8 +1,23 @@
 import type { Metadata } from "next";
+import { seoDefaults } from "@/config/site";
 
 export const metadata: Metadata = {
   title: "Impressum",
-  description: "Impressum des TSV Poggenhagen von 1946 e. V.",
+  description:
+    "Impressum der Mannschaftsseite TSV Poggenhagen 1. Herren: Kontakt nach Paragraph 5 TMG, Haftung fuer Inhalte und Links, Urheberrecht.",
+  alternates: {
+    canonical: "/impressum",
+  },
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: `Impressum | ${seoDefaults.siteName}`,
+    description:
+      "Impressum der Mannschaftsseite TSV Poggenhagen 1. Herren: Kontakt nach Paragraph 5 TMG, Haftung fuer Inhalte und Links, Urheberrecht.",
+    url: "/impressum",
+    type: "website",
+    locale: "de_DE",
+    siteName: seoDefaults.siteName,
+  },
 };
 
 export default function ImpressumPage() {

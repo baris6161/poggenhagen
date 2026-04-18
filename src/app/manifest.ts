@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "TSV Poggenhagen 1. Herren",
     short_name: "TSV Poggenhagen",
     description:
-      "1. Herren: Spielplan, Tabelle, Ergebnisse, Kader. Kreisliga Neustadt am Rübenberge.",
+      "Erste Herren des TSV Poggenhagen, Kreisliga Neustadt am Rübenberge. Spielplan, Tabelle, Ergebnisse, Kader und Trainerteam.",
     start_url: "/",
     display: "standalone",
     background_color: "#0c0f0a",
