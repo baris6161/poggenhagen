@@ -1,43 +1,27 @@
 # TSV Poggenhagen, 1. Herren
 
-Öffentliche Vereinsseite für die erste Herrenmannschaft: Spielplan, Tabelle, Ergebnisse, Kader und Anfahrt. Live betriebene Seite:
+Öffentliche Vereinsseite für die erste Herrenmannschaft: Spielplan, Tabelle, Ergebnisse, Kader und Anfahrt.
 
-[https://poggenhagen.vercel.app](https://poggenhagen.vercel.app)
+Live: [https://poggenhagen.vercel.app](https://poggenhagen.vercel.app)
 
-## Was hier steckt
+## Was das Projekt ist
 
-Die Seite bündelt alles, was Fans und Interessierte zur Mannschaft brauchen, ohne dass sich jemand durch mehrere Portale hangeln muss. Inhalt und Look sind auf den TSV zugeschnitten (dunkles Layout, Vereinsgelb, klare Typo).
+Eine Next.js Anwendung, die alles Wichtige zur Mannschaft auf einer Seite bündelt, statt Nutzer über mehrere Portale zu schicken. Visuell angelehnt an den Verein: dunkles Layout, Vereinsgelb, klare Typografie.
 
-Auf dem Server holen wir bei jedem Seitenaufbau (mit Cache) Daten von fussball.de: Kreisliga-Tabelle, Spielplan und das zuletzt ausgetragene Pflichtspiel. Daraus werden „Nächste Spiele“ und das oberste Ergebnis gebaut. Ältere und Freundschaftsspiele liegen als Archiv in `src/data/matches.ts`, damit die Liste vollständig bleibt, auch wenn fussball.de nur ein letztes Spiel liefert.
+## Wie die Daten ankommen
 
-Spieler kommen aus Bildern unter `public/bilder/` plus Positionszuordnung in `src/data/playerMeta.ts`. Instagram kann über `src/data/instagram.json` gepflegt werden.
+Beim Rendern auf dem Server wird ein gebündelter Datensatz geladen und zwischengespeichert (Next.js Cache mit Revalidate und Tags, damit Cron oder manuelles Revalidieren die fussball.de Daten auffrischen kann, ohne bei jedem Seitenaufruf die Quelle zu fluten).
 
-## Technik
+Die öffentlichen Mannschaftsseiten auf fussball.de liefern Tabelle und Spielplan als HTML. Daraus werden im Code strukturierte Listen für die Tabelle und die Termine extrahiert. Zusätzlich wird das zuletzt ausgetragene Pflichtspiel aus dem Markup gelesen und mit einem lokalen Archiv zusammengeführt: fussball.de zeigt typischerweise nur das neueste Ergebnis prominent, ältere und Freundschaftsspiele bleiben deshalb als statische Ergänzung in der Codebasis, damit die Ergebnisliste vollständig wirkt.
 
-Stack: **Next.js 15** (App Router), **TypeScript**, **Tailwind CSS**, **Framer Motion**, **shadcn/ui**. Deployment auf **Vercel** mit Analytics und Speed Insights.
+Kaderbilder liegen im Projekt als Dateien; Namen und Positionen werden über eine kleine Zuordnung im Code zusammengeführt. Instagram Einträge können als strukturierte JSON Daten gepflegt werden, ohne dass die Seite dafür die Instagram API braucht.
 
-Die Seite ist als PWA ausgelegt: Web App Manifest, eigenes Startverhalten, Vereinswappen als Icon (`public/wappen.png`, daraus generierte `src/app/icon.svg` und `src/app/apple-icon.svg` per `npm run prebuild`). Auf dem Handy blenden wir einen Hinweis ein, die Seite zum Home-Bildschirm zu legen (iOS: Kurzanleitung in Safari, Android: Install-Prompt des Browsers, wo der Browser das unterstützt).
+## Technik und Betrieb
 
-## Lokal starten
+Stack: Next.js 15 mit App Router, TypeScript, Tailwind CSS, Framer Motion, shadcn/ui. Hosting auf Vercel inklusive Analytics und Speed Insights.
 
-```bash
-npm install
-npm run dev
-```
+Die Seite ist als installierbare Web App ausgelegt (Manifest, eigenes Icon aus dem Vereinswappen, Hinweis auf dem Smartphone zum Ablegen auf dem Home-Bildschirm, wo der Browser das unterstützt). Sicherheitsheader und Content Security Policy sind für die Produktion in der Next Konfiguration hinterlegt.
 
-Vor dem Production-Build werden die Icons aus dem Wappen erzeugt (`prebuild`). Anschließend:
+## Nutzung
 
-```bash
-npm run build
-npm start
-```
-
-## Konfiguration
-
-Canonical URL und Social-Vorschau: `src/config/site.ts` (`getCanonicalSiteUrl`, optional `NEXT_PUBLIC_SITE_URL` auf der eigenen Domain). Tabelle: entweder eingebettetes fussball.de Widget oder JSON-Modus, ebenfalls in `siteConfig`.
-
-Keine Secrets mit `NEXT_PUBLIC_*` ausliefern. Sicherheitsheader und CSP stehen in `next.config.js`.
-
-## Lizenz / Nutzung
-
-Private Vereinswebsite; Inhalte und Marken des TSV Poggenhagen bleiben beim Verein.
+Private Vereinswebsite. Inhalte und Kennzeichen des TSV Poggenhagen bleiben beim Verein.
