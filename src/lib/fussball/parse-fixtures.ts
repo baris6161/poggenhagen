@@ -28,6 +28,10 @@ function extractSpielId(href: string): string | null {
   return m ? m[1] : null;
 }
 
+function normalizeClubName(raw: string): string {
+  return raw.replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
+}
+
 /**
  * Nächste Spiele aus dem Spielplan-HTML (Mannschaftsseite oder Ajax-HTML).
  */
@@ -46,7 +50,7 @@ export function parseFixturesFromTeamHtml(html: string): Match[] {
 
     const clubNames = [
       ...block.matchAll(/<div class="club-name">\s*([^<]+?)\s*<\/div>/g),
-    ].map((m) => m[1].trim());
+    ].map((m) => normalizeClubName(m[1]));
     if (clubNames.length < 2) continue;
 
     const spielHref = block.match(
