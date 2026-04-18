@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "TSV Poggenhagen 1. Herren",
-    short_name: "TSV Pogge",
+    short_name: "TSV Poggenhagen",
     description:
       "1. Herren: Spielplan, Tabelle, Ergebnisse, Kader. Kreisliga Neustadt am Rübenberge.",
     start_url: "/",

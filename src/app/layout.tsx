@@ -82,7 +82,7 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    title: "TSV Poggenhagen 1. Herren",
+    title: "TSV Poggenhagen",
     statusBarStyle: "black-translucent",
   },
   themeColor: "#0c0f0a",

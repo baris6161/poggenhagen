@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Smartphone, Share2 } from "lucide-react";
+import { Smartphone } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -84,55 +84,51 @@ export default function AddToHomeScreen() {
     dismiss();
   }, [dismiss]);
 
+  const openIosHelp = useCallback(() => {
+    setHelpMode("ios");
+    setHelpOpen(true);
+  }, []);
+
+  const openGenericHelp = useCallback(() => {
+    setHelpMode("generic");
+    setHelpOpen(true);
+  }, []);
+
+  /** Ein Tipp: iOS Hilfe, Android mit Prompt = Install, sonst Hilfe. */
+  const onPrimaryBannerTap = useCallback(() => {
+    if (isAndroid() && androidInstallReady) {
+      void installAndroid();
+      return;
+    }
+    if (isIos()) {
+      openIosHelp();
+      return;
+    }
+    openGenericHelp();
+  }, [androidInstallReady, installAndroid, openGenericHelp, openIosHelp]);
+
   if (!visible || isStandalone()) return null;
+
+  const primaryLabel =
+    isAndroid() && androidInstallReady ? "App installieren" : "Vereinsseite aufs Handy legen";
 
   return (
     <>
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pointer-events-none">
         <div className="pointer-events-auto mx-auto max-w-lg rounded-xl border border-border bg-card/95 backdrop-blur shadow-lg p-3 flex flex-col gap-2">
-          <p className="text-sm text-foreground font-medium text-center">
-            Vereinsseite aufs Handy legen
-          </p>
-          <div className="flex gap-2 justify-center">
+          <Button
+            type="button"
+            variant="default"
+            size="sm"
+            className="h-auto min-h-11 w-full gap-2 whitespace-normal py-2.5 px-3 text-sm font-semibold leading-snug"
+            onClick={onPrimaryBannerTap}
+          >
             {isAndroid() && androidInstallReady ? (
-              <Button
-                type="button"
-                size="sm"
-                className="gap-2"
-                onClick={() => void installAndroid()}
-              >
-                <Smartphone className="h-4 w-4" />
-                Installieren
-              </Button>
-            ) : isIos() ? (
-              <Button
-                type="button"
-                size="sm"
-                variant="default"
-                className="gap-2"
-                onClick={() => {
-                  setHelpMode("ios");
-                  setHelpOpen(true);
-                }}
-              >
-                <Share2 className="h-4 w-4" />
-                So geht&apos;s (iPhone)
-              </Button>
-            ) : (
-              <Button
-                type="button"
-                size="sm"
-                variant="secondary"
-                className="gap-2"
-                onClick={() => {
-                  setHelpMode("generic");
-                  setHelpOpen(true);
-                }}
-              >
-                <Smartphone className="h-4 w-4" />
-                Anleitung
-              </Button>
-            )}
+              <Smartphone className="h-4 w-4 shrink-0" aria-hidden />
+            ) : null}
+            {primaryLabel}
+          </Button>
+          <div className="flex justify-center">
             <Button type="button" size="sm" variant="ghost" onClick={dismiss}>
               Später
             </Button>
@@ -144,35 +140,34 @@ export default function AddToHomeScreen() {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {helpMode === "ios" ? "Zum Home-Bildschirm (iPhone)" : "Als App oder Verknüpfung"}
+              {helpMode === "ios"
+                ? "Dann in Safari: Teilen, Zum Home-Bildschirm, Hinzufügen"
+                : "Als App oder Verknüpfung"}
             </DialogTitle>
             {helpMode === "ios" ? (
               <DialogDescription asChild>
-                <ol className="list-decimal pl-4 space-y-3 text-sm text-muted-foreground text-left pt-2">
-                  <li>
-                    Unten in Safari auf das <strong className="text-foreground">Teilen</strong>{" "}
-                    Symbol tippen (Quadrat mit Pfeil nach oben).
-                  </li>
-                  <li>
-                    In der Liste nach unten scrollen und{" "}
-                    <strong className="text-foreground">Zum Home-Bildschirm</strong> wählen.
-                  </li>
-                  <li>
-                    Oben rechts <strong className="text-foreground">Hinzufügen</strong> tippen. Fertig.
-                  </li>
-                </ol>
+                <div className="space-y-3 pt-2 text-left text-sm text-muted-foreground">
+                  <p>
+                    Apple erlaubt keinen direkten Sprung in den Systemdialog. Du musst einmal{" "}
+                    <strong className="text-foreground">Teilen</strong> öffnen, dann{" "}
+                    <strong className="text-foreground">Zum Home-Bildschirm</strong> wählen. Danach
+                    tippt du oben rechts auf{" "}
+                    <strong className="text-foreground">Hinzufügen</strong>.
+                  </p>
+                  <ol className="list-decimal space-y-2 pl-4">
+                    <li>Unten in Safari das Teilen-Symbol (Quadrat mit Pfeil nach oben).</li>
+                    <li>Nach unten scrollen: Zum Home-Bildschirm.</li>
+                    <li>Oben rechts Hinzufügen.</li>
+                  </ol>
+                </div>
               </DialogDescription>
             ) : (
-              <DialogDescription className="text-left text-sm text-muted-foreground pt-2 space-y-3">
+              <DialogDescription className="space-y-3 pt-2 text-left text-sm text-muted-foreground">
                 <p>
-                  In Chrome oder Samsung Internet das Menü öffnen (drei Punkte) und{" "}
-                  <strong className="text-foreground">App installieren</strong>,{" "}
-                  <strong className="text-foreground">Zum Startbildschirm hinzufügen</strong> oder
-                  ähnliches wählen. Je nach Gerät heißt der Punkt leicht anders.
-                </p>
-                <p>
-                  Wenn der Browser den Eintrag anbietet, erscheint im Banner oben auch der Button
-                  Installieren.
+                  Im Browser-Menü (meist drei Punkte) nach{" "}
+                  <strong className="text-foreground">App installieren</strong> oder{" "}
+                  <strong className="text-foreground">Zum Startbildschirm hinzufügen</strong> suchen.
+                  Wenn Chrome „Installieren“ anbietet, erscheint dafür im Banner ein eigener Button.
                 </p>
               </DialogDescription>
             )}
