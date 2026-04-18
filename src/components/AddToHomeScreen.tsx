@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Smartphone } from "lucide-react";
+import { Smartphone, Share2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -84,51 +84,55 @@ export default function AddToHomeScreen() {
     dismiss();
   }, [dismiss]);
 
-  const openIosHelp = useCallback(() => {
-    setHelpMode("ios");
-    setHelpOpen(true);
-  }, []);
-
-  const openGenericHelp = useCallback(() => {
-    setHelpMode("generic");
-    setHelpOpen(true);
-  }, []);
-
-  /** Ein Tipp: iOS Hilfe, Android mit Prompt = Install, sonst Hilfe. */
-  const onPrimaryBannerTap = useCallback(() => {
-    if (isAndroid() && androidInstallReady) {
-      void installAndroid();
-      return;
-    }
-    if (isIos()) {
-      openIosHelp();
-      return;
-    }
-    openGenericHelp();
-  }, [androidInstallReady, installAndroid, openGenericHelp, openIosHelp]);
-
   if (!visible || isStandalone()) return null;
-
-  const primaryLabel =
-    isAndroid() && androidInstallReady ? "App installieren" : "Vereinsseite aufs Handy legen";
 
   return (
     <>
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pointer-events-none">
         <div className="pointer-events-auto mx-auto max-w-lg rounded-xl border border-border bg-card/95 backdrop-blur shadow-lg p-3 flex flex-col gap-2">
-          <Button
-            type="button"
-            variant="default"
-            size="sm"
-            className="h-auto min-h-11 w-full gap-2 whitespace-normal py-2.5 px-3 text-sm font-semibold leading-snug"
-            onClick={onPrimaryBannerTap}
-          >
+          <p className="text-sm text-foreground font-medium text-center">
+            Vereinsseite aufs Handy legen
+          </p>
+          <div className="flex gap-2 justify-center flex-wrap">
             {isAndroid() && androidInstallReady ? (
-              <Smartphone className="h-4 w-4 shrink-0" aria-hidden />
-            ) : null}
-            {primaryLabel}
-          </Button>
-          <div className="flex justify-center">
+              <Button
+                type="button"
+                size="sm"
+                className="gap-2"
+                onClick={() => void installAndroid()}
+              >
+                <Smartphone className="h-4 w-4" />
+                Installieren
+              </Button>
+            ) : isIos() ? (
+              <Button
+                type="button"
+                size="sm"
+                variant="default"
+                className="gap-2"
+                onClick={() => {
+                  setHelpMode("ios");
+                  setHelpOpen(true);
+                }}
+              >
+                <Share2 className="h-4 w-4" />
+                So geht&apos;s (iPhone)
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                size="sm"
+                variant="secondary"
+                className="gap-2"
+                onClick={() => {
+                  setHelpMode("generic");
+                  setHelpOpen(true);
+                }}
+              >
+                <Smartphone className="h-4 w-4" />
+                Anleitung
+              </Button>
+            )}
             <Button type="button" size="sm" variant="ghost" onClick={dismiss}>
               Später
             </Button>
@@ -140,29 +144,32 @@ export default function AddToHomeScreen() {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {helpMode === "ios"
-                ? "Dann in Safari: Teilen, Zum Home-Bildschirm, Hinzufügen"
-                : "Als App oder Verknüpfung"}
+              {helpMode === "ios" ? "Zum Home-Bildschirm" : "Als App oder Verknüpfung"}
             </DialogTitle>
             {helpMode === "ios" ? (
               <DialogDescription asChild>
-                <div className="space-y-3 pt-2 text-left text-sm text-muted-foreground">
-                  <p>
-                    Apple erlaubt keinen direkten Sprung in den Systemdialog. Du musst einmal{" "}
-                    <strong className="text-foreground">Teilen</strong> öffnen, dann{" "}
-                    <strong className="text-foreground">Zum Home-Bildschirm</strong> wählen. Danach
-                    tippt du oben rechts auf{" "}
-                    <strong className="text-foreground">Hinzufügen</strong>.
-                  </p>
-                  <ol className="list-decimal space-y-2 pl-4">
-                    <li>Unten in Safari das Teilen-Symbol (Quadrat mit Pfeil nach oben).</li>
-                    <li>Nach unten scrollen: Zum Home-Bildschirm.</li>
-                    <li>Oben rechts Hinzufügen.</li>
-                  </ol>
-                </div>
+                <ol className="list-decimal pl-4 space-y-3 text-sm text-muted-foreground text-left pt-2">
+                  <li>
+                    Unten rechts auf die <strong className="text-foreground">Drei Punkte</strong>{" "}
+                    klicken.
+                  </li>
+                  <li>
+                    <strong className="text-foreground">&quot;Teilen&quot;</strong> klicken.
+                  </li>
+                  <li>
+                    Runterscrollen und auf{" "}
+                    <strong className="text-foreground">&quot;Zum Home-Bildschirm&quot;</strong>{" "}
+                    klicken.
+                  </li>
+                  <li>
+                    Oben rechts auf <strong className="text-foreground">&quot;Hinzufügen&quot;</strong>{" "}
+                    klicken. (<strong className="text-foreground">Als Web-App öffnen</strong>, wenn
+                    möglich, anschalten.)
+                  </li>
+                </ol>
               </DialogDescription>
             ) : (
-              <DialogDescription className="space-y-3 pt-2 text-left text-sm text-muted-foreground">
+              <DialogDescription className="text-left text-sm text-muted-foreground pt-2 space-y-3">
                 <p>
                   Im Browser-Menü (meist drei Punkte) nach{" "}
                   <strong className="text-foreground">App installieren</strong> oder{" "}
