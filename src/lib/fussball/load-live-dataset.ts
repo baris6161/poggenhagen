@@ -17,7 +17,20 @@ import { parseTableFromTeamHtml } from "./parse-table";
 import { venueForMatch } from "./venue";
 
 function teamPageUrl(): string {
-  return process.env.FUSSBALL_TEAM_URL?.trim() || FUSSBALL_TEAM_PAGE_URL;
+  const raw = process.env.FUSSBALL_TEAM_URL?.trim();
+  if (!raw) return FUSSBALL_TEAM_PAGE_URL;
+  try {
+    const u = new URL(raw);
+    if (u.protocol !== "https:") throw new Error("not_https");
+    const host = u.hostname.toLowerCase();
+    if (host !== "www.fussball.de" && host !== "fussball.de") {
+      throw new Error("host_not_allowed");
+    }
+    return raw;
+  } catch {
+    console.error("[fussball] FUSSBALL_TEAM_URL ungueltig oder nicht erlaubt, Fallback auf Standard-URL");
+    return FUSSBALL_TEAM_PAGE_URL;
+  }
 }
 
 function lastLinkToResultMatch(

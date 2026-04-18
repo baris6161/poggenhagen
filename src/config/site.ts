@@ -8,7 +8,7 @@ export function getCanonicalSiteUrl(): string {
   if (custom) return custom;
   const vercel = process.env.VERCEL_URL?.trim();
   if (vercel) return `https://${vercel.replace(/^https?:\/\//, "")}`;
-  return "https://poggenhagen-puce.vercel.app";
+  return "https://tsv-poggenhagen-erste.de";
 }
 
 /** Relativer Pfad zum Share-Bild; muss unter `public/` erreichbar sein. */

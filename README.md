@@ -2,7 +2,9 @@
 
 Öffentliche Vereinsseite für die erste Herrenmannschaft: Spielplan, Tabelle, Ergebnisse, Kader und Anfahrt.
 
-Live: [https://poggenhagen-puce.vercel.app](https://poggenhagen-puce.vercel.app)
+**Live:** [https://tsv-poggenhagen-erste.de/](https://tsv-poggenhagen-erste.de/)
+
+(Vorschau ohne gesetzte Domain nutzt weiterhin `VERCEL_URL` bzw. den Fallback in `getCanonicalSiteUrl()` in [src/config/site.ts](src/config/site.ts).)
 
 ## Was das Projekt ist
 
@@ -24,11 +26,24 @@ Beim Rendern auf dem Server wird ein gebündelter Datensatz geladen und zwischen
 
 Die öffentlichen Mannschaftsseiten auf fussball.de liefern Tabelle und Spielplan als HTML. Daraus werden im Code strukturierte Listen für die Tabelle und die Termine extrahiert. Zusätzlich wird das zuletzt ausgetragene Pflichtspiel aus dem Markup gelesen und mit einem lokalen Archiv zusammengeführt: fussball.de zeigt typischerweise nur das neueste Ergebnis prominent, ältere und Freundschaftsspiele bleiben deshalb als statische Ergänzung in der Codebasis, damit die Ergebnisliste vollständig wirkt.
 
+Optional kann `FUSSBALL_TEAM_URL` gesetzt werden; erlaubt sind nur **HTTPS-URLs** mit Hostname **fussball.de** bzw. **www.fussball.de** (andere Werte werden verworfen, es gilt die Standard-Mannschafts-URL im Code).
+
 Kaderbilder liegen im Projekt als Dateien; Namen und Positionen werden über eine kleine Zuordnung im Code zusammengeführt. Instagram Einträge können als strukturierte JSON Daten gepflegt werden, ohne dass die Seite dafür die Instagram API braucht.
 
 ## Technik und Betrieb
 
 Stack: Next.js 15 mit App Router, TypeScript, Tailwind CSS, Framer Motion, shadcn/ui. Hosting auf Vercel inklusive Analytics und Speed Insights. Routen und Layout liegen unter `src/app`, gemeinsame UI und Logik unter `src/components` und `src/lib`.
+
+### Umgebungsvariablen (Auszug)
+
+Siehe [.env.example](.env.example). Wichtig für die Live-Domain:
+
+- `NEXT_PUBLIC_SITE_URL` = `https://tsv-poggenhagen-erste.de` (ohne Schrägstrich am Ende), damit Canonical-URL, Open Graph und Sitemap zur echten Domain passen.
+- `CRON_SECRET` für den geschützten Endpunkt `/api/cron/revalidate-fussball` (Vercel Cron sendet `Authorization: Bearer …`). Token kryptografisch stark wählen.
+
+### Performance (Build-Referenz)
+
+Nach Änderungen am Bundle: `npm run perf:baseline` (führt `next build` aus und zeigt u. a. First Load JS pro Route).
 
 ### Web App und Home-Bildschirm
 
