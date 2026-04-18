@@ -4,7 +4,7 @@ import { seoDefaults } from "@/config/site";
 export const metadata: Metadata = {
   title: "Impressum",
   description:
-    "Impressum der Mannschaftsseite TSV Poggenhagen 1. Herren: Kontakt nach Paragraph 5 TMG, Haftung fuer Inhalte und Links, Urheberrecht.",
+    "Impressum der Mannschaftsseite TSV Poggenhagen 1. Herren: Kontakt nach § 5 TMG, Haftung fuer Inhalte und Links, Urheberrecht.",
   alternates: {
     canonical: "/impressum",
   },
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: `Impressum | ${seoDefaults.siteName}`,
     description:
-      "Impressum der Mannschaftsseite TSV Poggenhagen 1. Herren: Kontakt nach Paragraph 5 TMG, Haftung fuer Inhalte und Links, Urheberrecht.",
+      "Impressum der Mannschaftsseite TSV Poggenhagen 1. Herren: Kontakt nach § 5 TMG, Haftung fuer Inhalte und Links, Urheberrecht.",
     url: "/impressum",
     type: "website",
     locale: "de_DE",
