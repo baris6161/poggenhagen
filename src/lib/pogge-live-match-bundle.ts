@@ -88,9 +88,11 @@ async function loadFreshBundle(): Promise<PoggeMatchBundle> {
 
 /**
  * Gecachte Spiel-Daten (Tag `pogge-fussball` für Cron-/Manuell-Revalidate).
+ * Revalidate 15 Min: zusammen mit PWA `router.refresh()` bleiben Tabelle und Spielplan nutzbar aktuell,
+ * ohne fussball.de bei jedem Seitenaufruf zu treffen.
  */
 export const getCachedPoggeMatchBundle = unstable_cache(
   () => loadFreshBundle(),
   ["pogge-match-bundle-v1"],
-  { revalidate: 21600, tags: ["pogge-fussball"] }
+  { revalidate: 900, tags: ["pogge-fussball"] }
 );

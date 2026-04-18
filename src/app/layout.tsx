@@ -10,6 +10,7 @@ import { getCanonicalSiteUrl, defaultOgImagePath, seoDefaults } from "@/config/s
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import AddToHomeScreen from "@/components/AddToHomeScreen";
+import PwaDataRefresh from "@/components/PwaDataRefresh";
 
 const siteUrl = getCanonicalSiteUrl();
 const absoluteOgImage = new URL(defaultOgImagePath, `${siteUrl}/`).toString();
@@ -108,6 +109,7 @@ export default function RootLayout({
           <Analytics />
           <SpeedInsights />
           <AddToHomeScreen />
+          <PwaDataRefresh />
         </TooltipProvider>
       </body>
     </html>
