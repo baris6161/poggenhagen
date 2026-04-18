@@ -42,10 +42,10 @@ export const siteConfig = {
   navItems: [
     { label: "Start", href: "#hero" },
     { label: "Nächstes Spiel", href: "#naechstes-spiel" },
-    { label: "Kader", href: "#kader" },
-    { label: "Trainerstab", href: "#trainerstab" },
     { label: "Spielplan", href: "#spielplan" },
     { label: "Ergebnisse", href: "#ergebnisse" },
+    { label: "Kader", href: "#kader" },
+    { label: "Trainerstab", href: "#trainerstab" },
     { label: "Tabelle", href: "#tabelle" },
     { label: "Instagram", href: "#instagram" },
   ],

@@ -15,13 +15,13 @@ export default async function Home() {
     <main className="min-h-screen bg-background">
       <HeroSection />
       <NextMatchSection match={bundle.nextMatch} />
-      <SquadSectionWrapper />
-      <StaffSection />
       <ScheduleSection upcomingFixtures={bundle.scheduleUpcoming} />
       <ResultsSection
         recentResults={bundle.lastResultsMerged.slice(0, 5)}
         dataSource={bundle.source}
       />
+      <SquadSectionWrapper />
+      <StaffSection />
       <TableSection tableData={bundle.tableData} />
       <InstagramSectionWrapper />
     </main>
