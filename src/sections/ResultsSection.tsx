@@ -58,23 +58,28 @@ export default function ResultsSection({
                 const label = getResultLabel(match);
                 return (
                   <ScrollReveal key={match.id} delay={i * 0.08}>
-                    <div className="card-surface p-4 md:p-6 flex items-start md:items-center gap-4">
+                    <div className="card-surface p-4 md:p-6 flex items-center gap-3 md:gap-4">
                       <span
                         className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-display text-lg font-bold ${resultColor(label)}`}
                       >
                         {label}
                       </span>
-                      {/* Mobile: feste 3-Zeilen-Anordnung, kein flex-wrap-Chaos */}
-                      <div className="flex-1 min-w-0 md:hidden space-y-2">
+                      {/* Mobile: Heim / Gast links (eng), Ergebnis rechts vertikal zwischen beiden Zeilen */}
+                      <div className="grid flex-1 min-w-0 md:hidden grid-cols-[minmax(0,1fr)_auto] grid-rows-[auto_auto] gap-x-3 gap-y-1 items-center">
                         <p
-                          className={`font-body text-sm font-medium leading-snug break-words ${match.homeTeam.includes("Poggenhagen") ? "text-primary" : "text-foreground"}`}
+                          className={`col-start-1 row-start-1 font-body text-sm font-medium leading-snug break-words min-w-0 ${match.homeTeam.includes("Poggenhagen") ? "text-primary" : "text-foreground"}`}
                         >
                           {match.homeTeam}
                         </p>
-                        <div className="flex justify-center py-0.5">
-                          <span className="font-display text-2xl font-bold text-primary tabular-nums">
+                        <p
+                          className={`col-start-1 row-start-2 font-body text-sm font-medium leading-snug break-words min-w-0 ${match.awayTeam.includes("Poggenhagen") ? "text-primary" : "text-foreground"}`}
+                        >
+                          {match.awayTeam}
+                        </p>
+                        <div className="col-start-2 row-start-1 row-span-2 flex items-center justify-center self-stretch border-l border-border/40 pl-3 min-h-[2.75rem]">
+                          <span className="font-display text-xl font-bold text-primary tabular-nums text-center leading-none">
                             {match.cancelled ? (
-                              <span className="text-muted-foreground font-body text-base font-medium">
+                              <span className="text-muted-foreground font-body text-xs font-semibold leading-tight block max-w-[4.5rem]">
                                 Ausfall
                               </span>
                             ) : (
@@ -84,11 +89,6 @@ export default function ResultsSection({
                             )}
                           </span>
                         </div>
-                        <p
-                          className={`font-body text-sm font-medium leading-snug break-words ${match.awayTeam.includes("Poggenhagen") ? "text-primary" : "text-foreground"}`}
-                        >
-                          {match.awayTeam}
-                        </p>
                       </div>
                       {/* Desktop: eine Zeile wie bisher */}
                       <div className="hidden md:block flex-1 min-w-0">
