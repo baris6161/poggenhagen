@@ -36,7 +36,7 @@ export const staff: StaffMember[] = [
   { 
     id: "s3", 
     name: "Sven Potornyai", 
-    role: "Torwarttrainer/Betreuer",
+    role: "Torwarttrainer",
     image: "/bilder/Sven-Potornyai.png"
   },
 ];
