@@ -4,7 +4,7 @@ export function getCanonicalSiteUrl(): string {
   if (custom) return custom;
   const vercel = process.env.VERCEL_URL?.trim();
   if (vercel) return `https://${vercel.replace(/^https?:\/\//, "")}`;
-  return "https://poggenhagen.vercel.app";
+  return "https://poggenhagen-puce.vercel.app";
 }
 
 /** Relativer Pfad zum Share-Bild; muss unter `public/` erreichbar sein. */

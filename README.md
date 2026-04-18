@@ -2,7 +2,7 @@
 
 Öffentliche Vereinsseite für die erste Herrenmannschaft: Spielplan, Tabelle, Ergebnisse, Kader und Anfahrt.
 
-Live: [https://poggenhagen.vercel.app](https://poggenhagen.vercel.app)
+Live: [https://poggenhagen-puce.vercel.app](https://poggenhagen-puce.vercel.app)
 
 ## Was das Projekt ist
 
