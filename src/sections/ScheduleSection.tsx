@@ -51,41 +51,44 @@ export default function ScheduleSection({ upcomingFixtures: upcomingProp }: Prop
           <SectionHeading title="Spielplan" subtitle="Kommende Spiele" />
         </ScrollReveal>
 
-        {/* Desktop Table */}
+        {/* Desktop Table (gleicher card-surface-Rahmen wie Tabelle) */}
         <ScrollReveal delay={0.1}>
-          <div className="hidden md:block overflow-x-auto">
-            <table className="w-full min-w-[640px] text-left">
+          <div className="hidden md:block card-surface overflow-x-auto">
+            <table className="w-full min-w-[640px] text-left text-sm">
               <thead>
-                <tr className="border-b border-border text-muted-foreground text-sm">
-                  <th className="pb-3 font-medium pr-3 whitespace-nowrap">Datum</th>
-                  <th className="pb-3 font-medium pr-3 whitespace-nowrap">Uhrzeit</th>
-                  <th className="pb-3 font-medium pr-3 min-w-[12rem]">Begegnung</th>
-                  <th className="pb-3 font-medium pr-3">Ort</th>
-                  <th className="pb-3 font-medium text-right whitespace-nowrap w-12">H/A</th>
+                <tr className="border-b border-border text-muted-foreground">
+                  <th className="p-3 md:p-4 font-medium whitespace-nowrap">Datum</th>
+                  <th className="p-3 md:p-4 font-medium whitespace-nowrap">Uhrzeit</th>
+                  <th className="p-3 md:p-4 font-medium min-w-[12rem]">Begegnung</th>
+                  <th className="p-3 md:p-4 font-medium">Ort</th>
+                  <th className="p-3 md:p-4 font-medium text-right whitespace-nowrap w-12">H/A</th>
                 </tr>
               </thead>
               <tbody>
                 {upcomingFixtures.map((m) => (
-                  <tr key={m.id} className="border-b border-border/30 hover:bg-card/50 transition-colors">
-                    <td className="py-4 text-foreground text-sm whitespace-nowrap pr-3 align-top">
+                  <tr
+                    key={m.id}
+                    className="border-b border-border/20 transition-colors hover:bg-card/80 last:border-b-0"
+                  >
+                    <td className="p-3 md:p-4 text-foreground whitespace-nowrap align-top">
                       {m.isFree ? (
                         <span className="text-muted-foreground">–</span>
                       ) : (
                         formatFixtureDate(m.date)
                       )}
                     </td>
-                    <td className="py-4 text-foreground text-sm whitespace-nowrap pr-3 align-top tabular-nums">
+                    <td className="p-3 md:p-4 text-foreground whitespace-nowrap align-top tabular-nums">
                       {m.isFree ? <span className="text-muted-foreground">–</span> : formatFixtureTime(m.time)}
                     </td>
-                    <td className="py-4 pr-3 align-top min-w-0">
+                    <td className="p-3 md:p-4 align-top min-w-0">
                       {m.isFree ? (
                         <span className="text-muted-foreground italic">Spielfrei</span>
                       ) : (
                         <Matchup homeTeam={m.homeTeam} awayTeam={m.awayTeam} />
                       )}
                     </td>
-                    <td className="py-4 text-sm text-muted-foreground align-top pr-3">{m.venue}</td>
-                    <td className="py-4 text-right align-top whitespace-nowrap">
+                    <td className="p-3 md:p-4 text-muted-foreground align-top">{m.venue}</td>
+                    <td className="p-3 md:p-4 text-right align-top whitespace-nowrap">
                       {m.isFree ? (
                         <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">FREI</span>
                       ) : (
@@ -110,7 +113,7 @@ export default function ScheduleSection({ upcomingFixtures: upcomingProp }: Prop
             const timeWithUnit = timeLabel === "–" ? timeLabel : `${timeLabel} Uhr`;
             return (
               <ScrollReveal key={m.id} delay={i * 0.08}>
-                <div className="card-surface p-4">
+                <div className="card-surface p-4 md:p-6">
                   <div className="flex justify-end items-start mb-2">
                     {m.isFree ? (
                       <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">
