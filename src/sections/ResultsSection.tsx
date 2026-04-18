@@ -58,27 +58,69 @@ export default function ResultsSection({
                 const label = getResultLabel(match);
                 return (
                   <ScrollReveal key={match.id} delay={i * 0.08}>
-                    <div className="card-surface p-4 md:p-6 flex items-center gap-4">
-                      <span className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-display text-lg font-bold ${resultColor(label)}`}>
+                    <div className="card-surface p-4 md:p-6 flex items-start md:items-center gap-4">
+                      <span
+                        className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-display text-lg font-bold ${resultColor(label)}`}
+                      >
                         {label}
                       </span>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-body font-medium text-foreground text-sm md:text-base">{match.homeTeam}</span>
-                          <span className="font-display text-xl md:text-2xl font-bold text-primary">
+                      {/* Mobile: feste 3-Zeilen-Anordnung, kein flex-wrap-Chaos */}
+                      <div className="flex-1 min-w-0 md:hidden space-y-2">
+                        <p
+                          className={`font-body text-sm font-medium leading-snug break-words ${match.homeTeam.includes("Poggenhagen") ? "text-primary" : "text-foreground"}`}
+                        >
+                          {match.homeTeam}
+                        </p>
+                        <div className="flex justify-center py-0.5">
+                          <span className="font-display text-2xl font-bold text-primary tabular-nums">
                             {match.cancelled ? (
-                              <span className="text-muted-foreground font-body text-base md:text-lg">Ausfall</span>
+                              <span className="text-muted-foreground font-body text-base font-medium">
+                                Ausfall
+                              </span>
                             ) : (
                               <>
                                 {match.result!.home} : {match.result!.away}
                               </>
                             )}
                           </span>
-                          <span className="font-body font-medium text-foreground text-sm md:text-base">{match.awayTeam}</span>
+                        </div>
+                        <p
+                          className={`font-body text-sm font-medium leading-snug break-words ${match.awayTeam.includes("Poggenhagen") ? "text-primary" : "text-foreground"}`}
+                        >
+                          {match.awayTeam}
+                        </p>
+                      </div>
+                      {/* Desktop: eine Zeile wie bisher */}
+                      <div className="hidden md:block flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span
+                            className={`font-body font-medium text-base ${match.homeTeam.includes("Poggenhagen") ? "text-primary" : "text-foreground"}`}
+                          >
+                            {match.homeTeam}
+                          </span>
+                          <span className="font-display text-2xl font-bold text-primary tabular-nums">
+                            {match.cancelled ? (
+                              <span className="text-muted-foreground font-body text-lg">Ausfall</span>
+                            ) : (
+                              <>
+                                {match.result!.home} : {match.result!.away}
+                              </>
+                            )}
+                          </span>
+                          <span
+                            className={`font-body font-medium text-base ${match.awayTeam.includes("Poggenhagen") ? "text-primary" : "text-foreground"}`}
+                          >
+                            {match.awayTeam}
+                          </span>
                         </div>
                       </div>
-                      <span className="text-xs text-muted-foreground hidden sm:block text-right whitespace-nowrap">
-                        {new Date(match.date).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" })} · {match.venue}
+                      <span className="text-xs text-muted-foreground hidden sm:block text-right whitespace-nowrap shrink-0">
+                        {new Date(match.date).toLocaleDateString("de-DE", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        })}{" "}
+                        · {match.venue}
                       </span>
                     </div>
                   </ScrollReveal>
