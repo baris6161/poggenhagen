@@ -1,12 +1,15 @@
 "use client";
 
-import { tableData } from "@/data/matches";
+import { tableData as staticTableData, type TableEntry } from "@/data/matches";
 import { siteConfig } from "@/config/site";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
 import SectionBackground from "@/components/SectionBackground";
 
-export default function TableSection() {
+type Props = { tableData?: TableEntry[] };
+
+export default function TableSection({ tableData: tableProp }: Props) {
+  const tableData = tableProp ?? staticTableData;
   return (
     <section id="tabelle" className="relative py-20 md:py-28 overflow-hidden">
       <SectionBackground variant={6} />
@@ -36,7 +39,7 @@ export default function TableSection() {
                   const isUs = row.team.includes("Poggenhagen");
                   return (
                     <tr
-                      key={row.rank}
+                      key={`${row.rank}-${row.team}`}
                       className={`border-b border-border/20 transition-colors hover:bg-card/80 ${isUs ? "bg-primary/5" : ""}`}
                     >
                       <td className="p-3 md:p-4 font-display text-lg font-bold text-muted-foreground">{row.rank}</td>

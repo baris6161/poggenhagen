@@ -1,14 +1,18 @@
 "use client";
 
-import { getNextFixtures } from "@/data/matches";
+import { getNextFixtures, type Match } from "@/data/matches";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
 import SectionBackground from "@/components/SectionBackground";
 import { Calendar, MapPin } from "lucide-react";
 
-export default function ScheduleSection() {
-  // Zeige nur die nächsten 5 Spiele
-  const upcomingFixtures = getNextFixtures(5);
+type Props = {
+  /** Wenn gesetzt (z. B. von FUSSBALL.DE), werden diese Zeilen statt lokaler Daten genutzt. */
+  upcomingFixtures?: Match[];
+};
+
+export default function ScheduleSection({ upcomingFixtures: upcomingProp }: Props) {
+  const upcomingFixtures = upcomingProp ?? getNextFixtures(5);
 
   return (
     <section id="spielplan" className="relative py-20 md:py-28 overflow-hidden">
@@ -34,7 +38,9 @@ export default function ScheduleSection() {
               <tbody>
                 {upcomingFixtures.map((m) => (
                   <tr key={m.id} className="border-b border-border/30 hover:bg-card/50 transition-colors">
-                    <td className="py-4 text-muted-foreground text-sm">{m.matchday}</td>
+                    <td className="py-4 text-muted-foreground text-sm">
+                      {m.matchday ?? "–"}
+                    </td>
                     <td className="py-4 text-foreground text-sm">
                       {m.isFree ? (
                         <span className="text-muted-foreground">-</span>
@@ -82,7 +88,9 @@ export default function ScheduleSection() {
             <ScrollReveal key={m.id} delay={i * 0.08}>
               <div className="card-surface p-4">
                 <div className="flex justify-between items-start mb-3">
-                  <span className="text-xs text-muted-foreground">Spieltag {m.matchday}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {m.matchday != null ? `Spieltag ${m.matchday}` : "Ligaspiel"}
+                  </span>
                   {m.isFree ? (
                     <span className="text-xs px-2 py-1 rounded-full bg-muted text-muted-foreground">SPIELFREI</span>
                   ) : (

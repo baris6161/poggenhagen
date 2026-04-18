@@ -1,3 +1,5 @@
+import { matchSignature } from "@/lib/match-signature";
+
 export interface Match {
   id: string;
   homeTeam: string;
@@ -290,17 +292,52 @@ function isMatchMoreThanOneDayOld(match: Match): boolean {
   return diffDays > 1;
 }
 
+/** Sortierte Ergebnisliste (neueste zuerst). */
+export function getLastResultsData(results: Match[]): Match[] {
+  return [...results].sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    return dateB - dateA;
+  });
+}
+
 /**
  * Gibt die letzten Ergebnisse zurück, sortiert nach Datum (neueste zuerst)
  * Spiele, die mehr als 1 Tag alt sind und ein Ergebnis haben, werden automatisch angezeigt
  */
 export function getLastResults(): Match[] {
-  // Sortiere nach Datum (neueste zuerst)
-  return [...lastResults].sort((a, b) => {
-    const dateA = new Date(a.date).getTime();
-    const dateB = new Date(b.date).getTime();
-    return dateB - dateA;
+  return getLastResultsData(lastResults);
+}
+
+/**
+ * Findet die nächsten Spiele (ohne bereits gespielte), sortiert nach Datum.
+ * `resultList` soll dieselbe Quelle wie die Ergebnisanzeige nutzen (z. B. FUSSBALL.DE + Archiv).
+ */
+export function getNextFixturesData(
+  fixtureList: Match[],
+  resultList: Match[],
+  count: number = 5
+): Match[] {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
+  const playedMatchIds = new Set(resultList.map((r) => r.id));
+  const playedSignatures = new Set(resultList.map((r) => matchSignature(r)));
+
+  const upcomingFixtures = fixtureList.filter((f) => {
+    if (f.isFree) return false;
+    if (playedMatchIds.has(f.id)) return false;
+    if (playedSignatures.has(matchSignature(f))) return false;
+
+    const matchDate = new Date(f.date);
+    matchDate.setHours(0, 0, 0, 0);
+
+    if (isMatchMoreThanOneDayOld(f)) return false;
+
+    return matchDate >= now;
   });
+
+  return upcomingFixtures.slice(0, count);
 }
 
 /**
@@ -309,45 +346,29 @@ export function getLastResults(): Match[] {
  * Spiele, die mehr als 1 Tag alt sind, werden automatisch als gespielt behandelt
  */
 export function getNextFixtures(count: number = 5): Match[] {
-  const now = new Date();
-  now.setHours(0, 0, 0, 0);
-  
-  // Sammle alle gespielten Spiele (mit Ergebnis)
-  const playedMatchIds = new Set(lastResults.map(r => r.id));
-  
-  // Filtere: Nur zukünftige Spiele ohne Ergebnis
-  const upcomingFixtures = fixtures.filter(f => {
-    // Überspringe spielfrei
-    if (f.isFree) return false;
-    
-    // Überspringe bereits gespielte Spiele (haben Ergebnis in lastResults)
-    if (playedMatchIds.has(f.id)) return false;
-    
-    const matchDate = new Date(f.date);
-    matchDate.setHours(0, 0, 0, 0);
-    
-    // Überspringe Spiele, die mehr als 1 Tag alt sind (werden automatisch als gespielt behandelt)
-    if (isMatchMoreThanOneDayOld(f)) return false;
-    
-    // Nur Spiele heute oder in der Zukunft
-    return matchDate >= now;
-  });
-  
-  // Nimm die ersten N Spiele
-  return upcomingFixtures.slice(0, count);
+  return getNextFixturesData(
+    fixtures,
+    getLastResultsData(lastResults),
+    count
+  );
 }
 
 /**
  * Findet das nächste Spiel (zeigt das nächste Spiel ab heute an)
  */
-export function getNextMatch(): Match {
-  const nextFixtures = getNextFixtures(1);
+export function getNextMatchData(
+  fixtureList: Match[],
+  resultList: Match[]
+): Match {
+  const nextFixtures = getNextFixturesData(fixtureList, resultList, 1);
   if (nextFixtures.length > 0) {
     return nextFixtures[0];
   }
-  
-  // Fallback: Erstes Spiel aus fixtures
-  return fixtures.find(f => !f.isFree) || fixtures[0];
+  return fixtureList.find((f) => !f.isFree) || fixtureList[0];
+}
+
+export function getNextMatch(): Match {
+  return getNextMatchData(fixtures, getLastResultsData(lastResults));
 }
 
 // Exportiere nextMatch als Funktion, die beim Import aufgerufen wird

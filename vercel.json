@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/revalidate-fussball",
+      "schedule": "0 6 * * 1"
+    },
+    {
+      "path": "/api/cron/revalidate-fussball",
+      "schedule": "0 16 * * 5"
+    }
+  ]
+}

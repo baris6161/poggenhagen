@@ -22,12 +22,16 @@ function resultColor(label: string) {
   return "bg-yellow-500/20 text-yellow-400";
 }
 
-export default function ResultsSection() {
-  // Hole die letzten Ergebnisse (inklusive automatisch verschobener Spiele)
-  const allResults = getLastResults();
-  
-  // Nur die letzten 5 Ergebnisse anzeigen
-  const recentResults = allResults.slice(0, 5);
+type Props = {
+  recentResults?: Match[];
+  dataSource?: "fussball.de" | "static";
+};
+
+export default function ResultsSection({
+  recentResults: recentProp,
+  dataSource,
+}: Props) {
+  const recentResults = recentProp ?? getLastResults().slice(0, 5);
   
   return (
     <section id="ergebnisse" className="relative py-20 md:py-28 overflow-hidden">
@@ -42,7 +46,9 @@ export default function ResultsSection() {
             <div className="card-surface p-8 text-center">
               <p className="text-muted-foreground">Noch keine Ergebnisse verfügbar.</p>
               <p className="text-sm text-muted-foreground mt-2">
-                Ergebnisse werden nach jedem Spieltag in <code className="text-primary">src/data/matches.ts</code> eingetragen.
+                {dataSource === "fussball.de"
+                  ? "Aktuell können keine Ergebnisse von FUSSBALL.DE geladen werden — bitte später erneut versuchen."
+                  : "Ergebnisse werden nach jedem Spieltag in src/data/matches.ts gepflegt oder über FUSSBALL.DE synchronisiert."}
               </p>
             </div>
           </ScrollReveal>

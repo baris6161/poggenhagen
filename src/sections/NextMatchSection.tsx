@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getNextMatch, getMapsUrl } from "@/data/matches";
+import { getNextMatch, getMapsUrl, type Match } from "@/data/matches";
 import { Calendar, MapPin, Clock, Download, Navigation } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import SectionHeading from "@/components/SectionHeading";
@@ -55,8 +55,10 @@ function useCountdown(targetDate: string, targetTime: string) {
   return diff;
 }
 
-export default function NextMatchSection() {
-  const match = getNextMatch();
+type Props = { match?: Match };
+
+export default function NextMatchSection({ match: matchProp }: Props) {
+  const match = matchProp ?? getNextMatch();
   const countdown = useCountdown(match.date, match.time);
   const mapsUrl = getMapsUrl(match);
   const dateFormatted = new Date(match.date).toLocaleDateString("de-DE", {

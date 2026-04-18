@@ -6,17 +6,23 @@ import ScheduleSection from "@/sections/ScheduleSection";
 import ResultsSection from "@/sections/ResultsSection";
 import TableSection from "@/sections/TableSection";
 import InstagramSectionWrapper from "@/sections/InstagramSectionWrapper";
+import { getCachedPoggeMatchBundle } from "@/lib/pogge-live-match-bundle";
 
-export default function Home() {
+export default async function Home() {
+  const bundle = await getCachedPoggeMatchBundle();
+
   return (
     <main className="min-h-screen bg-background">
       <HeroSection />
-      <NextMatchSection />
+      <NextMatchSection match={bundle.nextMatch} />
       <SquadSectionWrapper />
       <StaffSection />
-      <ScheduleSection />
-      <ResultsSection />
-      <TableSection />
+      <ScheduleSection upcomingFixtures={bundle.scheduleUpcoming} />
+      <ResultsSection
+        recentResults={bundle.lastResultsMerged.slice(0, 5)}
+        dataSource={bundle.source}
+      />
+      <TableSection tableData={bundle.tableData} />
       <InstagramSectionWrapper />
     </main>
   );
