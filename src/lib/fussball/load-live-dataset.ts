@@ -59,6 +59,27 @@ function lastLinkToResultMatch(
   };
 }
 
+/** Diagnostik zum letzten `fetchFussballLiveDataset`-Lauf (ohne volle URLs). */
+export type FussballFetchMeta = {
+  teamPageHttpStatus: number;
+  teamPageHtmlChars: number;
+  lastLinkParsed: boolean;
+  goalsFromMatchPage: boolean;
+  /** Letztes URL-Segment der Spielseite (Match-ID), z. B. für Abgleich */
+  lastMatchIdTail: string | null;
+};
+
+function safeMatchIdFromUrl(matchUrl: string): string | null {
+  try {
+    const path = new URL(matchUrl).pathname.replace(/\/+$/, "");
+    const seg = path.split("/").filter(Boolean).pop();
+    return seg ?? null;
+  } catch {
+    const parts = matchUrl.split("/").filter(Boolean);
+    return parts.pop() ?? null;
+  }
+}
+
 /**
  * Lädt Mannschaftsseite + bei Bedarf die Spielseite des letzten Spiels (Tor-Events).
  */
@@ -66,6 +87,7 @@ export async function fetchFussballLiveDataset(): Promise<{
   fixtures: Match[];
   tableData: ReturnType<typeof parseTableFromTeamHtml>;
   lastResult: Match | null;
+  fetchMeta: FussballFetchMeta;
 }> {
   const url = teamPageUrl();
   const res = await fetchWithTimeout(
@@ -101,6 +123,7 @@ export async function fetchFussballLiveDataset(): Promise<{
   }
 
   let lastResult: Match | null = null;
+  let goalsFromMatchPage = false;
   if (lastLink) {
     const goals = await fetchGoalsFromMatchPage(lastLink.matchUrl, {
       headers: { ...FUSSBALL_FETCH_HEADERS },
@@ -111,6 +134,7 @@ export async function fetchFussballLiveDataset(): Promise<{
       });
     }
     if (goals) {
+      goalsFromMatchPage = true;
       lastResult = lastLinkToResultMatch(lastLink, goals);
       if (!lastResult) {
         fussballDebug("lastLinkToResultMatch returned null after goals", {
@@ -124,5 +148,13 @@ export async function fetchFussballLiveDataset(): Promise<{
     lastResult: lastResult != null,
   });
 
-  return { fixtures, tableData, lastResult };
+  const fetchMeta: FussballFetchMeta = {
+    teamPageHttpStatus: res.status,
+    teamPageHtmlChars: html.length,
+    lastLinkParsed: lastLink != null,
+    goalsFromMatchPage,
+    lastMatchIdTail: lastLink ? safeMatchIdFromUrl(lastLink.matchUrl) : null,
+  };
+
+  return { fixtures, tableData, lastResult, fetchMeta };
 }

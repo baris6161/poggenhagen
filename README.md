@@ -40,6 +40,20 @@ Siehe [.env.example](.env.example). Wichtig für die Live-Domain:
 
 - `NEXT_PUBLIC_SITE_URL` = `https://tsv-poggenhagen-erste.de` (ohne Schrägstrich am Ende), damit Canonical-URL, Open Graph und Sitemap zur echten Domain passen.
 - `CRON_SECRET` für den geschützten Endpunkt `/api/cron/revalidate-fussball` (Vercel Cron sendet `Authorization: Bearer …`). Token kryptografisch stark wählen.
+- Optional: `DISCORD_ADMIN_WEBHOOK_URL` — siehe Abschnitt **Discord-Adminlogs** unten.
+
+### Discord-Adminlogs (optional, Betrieb)
+
+Wenn `DISCORD_ADMIN_WEBHOOK_URL` in Vercel oder `.env.local` gesetzt ist (nur Server, **niemals** committen), postet die Anwendung Statusmeldungen in einen Discord-Kanal — nützlich für Monitoring und Git-Release-Notes („was ist neu am Betrieb“):
+
+| Ereignis | Inhalt (kurz) |
+|----------|----------------|
+| Bundle neu von fussball.de | Embed: Quelle, `NODE_ENV`, Anzahl Fixtures / Tabellenzeilen, HTTP-Status und Größe der Mannschafts-HTML, ob „Letztes Spiel“-Link und Spielseiten-Tore geparst wurden, Match-ID-Suffix, Live-Torstand falls vorhanden, berechnetes **Nächstes Spiel**, Anzahl upcoming / merged Ergebnisse |
+| `DISABLE_FUSSBALL_SYNC=1` | Hinweis „Static“, Kurzinfo zu nächstem Spiel und Archiv |
+| Live-Fetch oder Parse fehlgeschlagen | Fehler + Cause, Fallback-„Nächstes Spiel“ (static) |
+| Cron `GET /api/cron/revalidate-fussball` (nach Auth) | Kurzmeldung: Cache-Tag `pogge-fussball` invalidiert |
+
+Es gibt **kein** Discord-Posting bei reinem **Cache-Hit** ohne Revalidate (vermeidet Spam pro Seitenaufruf). Bei versehentlich veröffentlichter Webhook-URL den Webhook in Discord **löschen und neu anlegen**.
 
 ### Performance (Build-Referenz)
 

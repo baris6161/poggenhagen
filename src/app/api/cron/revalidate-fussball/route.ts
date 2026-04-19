@@ -1,5 +1,6 @@
 import { timingSafeEqual } from "node:crypto";
 import { revalidateTag } from "next/cache";
+import { sendDiscordAdminCronRevalidated } from "@/lib/admin/discord-admin-log";
 
 function timingSafeBearerMatch(authHeader: string | null, secret: string): boolean {
   if (!authHeader || !authHeader.startsWith("Bearer ")) return false;
@@ -24,5 +25,6 @@ export async function GET(request: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
   revalidateTag("pogge-fussball");
+  await sendDiscordAdminCronRevalidated();
   return Response.json({ ok: true, at: new Date().toISOString() });
 }
