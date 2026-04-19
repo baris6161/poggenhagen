@@ -39,7 +39,7 @@ Stack: Next.js 15 mit App Router, TypeScript, Tailwind CSS, Framer Motion, shadc
 Siehe [.env.example](.env.example). Wichtig für die Live-Domain:
 
 - `NEXT_PUBLIC_SITE_URL` = `https://tsv-poggenhagen-erste.de` (ohne Schrägstrich am Ende), damit Canonical-URL, Open Graph und Sitemap zur echten Domain passen.
-- `CRON_SECRET` für den geschützten Endpunkt `/api/cron/revalidate-fussball` (Vercel Cron sendet `Authorization: Bearer …`). Token kryptografisch stark wählen.
+- `CRON_SECRET` für die geschützten Endpunkte `/api/cron/revalidate-fussball` und `/api/admin/verify-discord-webhook` (jeweils `Authorization: Bearer …`). Token kryptografisch stark wählen.
 - Optional: `DISCORD_ADMIN_WEBHOOK_URL` — siehe Abschnitt **Discord-Adminlogs** unten.
 
 ### Discord-Adminlogs (optional, Betrieb)
@@ -52,6 +52,15 @@ Wenn `DISCORD_ADMIN_WEBHOOK_URL` in Vercel oder `.env.local` gesetzt ist (nur Se
 | `DISABLE_FUSSBALL_SYNC=1` | Hinweis „Static“, Kurzinfo zu nächstem Spiel und Archiv |
 | Live-Fetch oder Parse fehlgeschlagen | Fehler + Cause, Fallback-„Nächstes Spiel“ (static) |
 | Cron `GET /api/cron/revalidate-fussball` (nach Auth) | Kurzmeldung: Cache-Tag `pogge-fussball` invalidiert |
+| Manuell `GET /api/admin/verify-discord-webhook` (nach Auth, gleicher Bearer wie Cron) | Kurzes Embed **„Pogge: Webhook-Verbindung OK“** — prüft Discord **ohne** Fussball-Bundle; HTTP **200** + JSON bei Erfolg, **503** wenn keine Webhook-URL gesetzt, **502** wenn Discord ablehnt |
+
+**Webhook gezielt testen** (nach Setzen von `DISCORD_ADMIN_WEBHOOK_URL` in Vercel, nach Deploy):
+
+```bash
+curl -sS -H "Authorization: Bearer DEIN_CRON_SECRET" "https://tsv-poggenhagen-erste.de/api/admin/verify-discord-webhook"
+```
+
+Erwartung: JSON `{"ok":true,"discordStatus":204,...}` (oder 200) und im Kanal eine grüne Test-Nachricht mit Zeitstempel.
 
 Es gibt **kein** Discord-Posting bei reinem **Cache-Hit** ohne Revalidate (vermeidet Spam pro Seitenaufruf). Bei versehentlich veröffentlichter Webhook-URL den Webhook in Discord **löschen und neu anlegen**.
 

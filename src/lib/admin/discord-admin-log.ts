@@ -25,6 +25,45 @@ type DiscordWebhookBody = {
   }>;
 };
 
+type PostResult = { ok: boolean; status: number; error?: string };
+
+async function postDiscordWebhookPayload(
+  body: DiscordWebhookBody,
+  logLabel: string
+): Promise<PostResult> {
+  const url = webhookUrl();
+  if (!url) return { ok: false, status: 0, error: "no_webhook_url" };
+
+  const controller = new AbortController();
+  const t = setTimeout(() => controller.abort(), WEBHOOK_TIMEOUT_MS);
+  try {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+    if (!res.ok) {
+      const text = await res.text().catch(() => "");
+      console.warn(
+        "[pogge:discord-admin]",
+        logLabel,
+        "webhook HTTP",
+        res.status,
+        truncate(text, 300)
+      );
+      return { ok: false, status: res.status, error: truncate(text, 200) };
+    }
+    return { ok: true, status: res.status };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : String(e);
+    console.warn("[pogge:discord-admin]", logLabel, "webhook failed", msg);
+    return { ok: false, status: 0, error: msg };
+  } finally {
+    clearTimeout(t);
+  }
+}
+
 /**
  * POST an Discord-Webhook. Schlägt still fehl (kein throw), blockiert max. ~2 s.
  * Ohne `DISCORD_ADMIN_WEBHOOK_URL`: no-op.
@@ -35,8 +74,7 @@ export async function sendDiscordAdminLog(input: {
   fields: DiscordEmbedField[];
   content?: string;
 }): Promise<void> {
-  const url = webhookUrl();
-  if (!url) return;
+  if (!webhookUrl()) return;
 
   const body: DiscordWebhookBody = {
     content: input.content,
@@ -54,28 +92,7 @@ export async function sendDiscordAdminLog(input: {
     ],
   };
 
-  const controller = new AbortController();
-  const t = setTimeout(() => controller.abort(), WEBHOOK_TIMEOUT_MS);
-  try {
-    const res = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-      signal: controller.signal,
-    });
-    if (!res.ok) {
-      console.warn(
-        "[pogge:discord-admin] webhook HTTP",
-        res.status,
-        await res.text().catch(() => "")
-      );
-    }
-  } catch (e) {
-    const msg = e instanceof Error ? e.message : String(e);
-    console.warn("[pogge:discord-admin] webhook failed", msg);
-  } finally {
-    clearTimeout(t);
-  }
+  await postDiscordWebhookPayload(body, "sendDiscordAdminLog");
 }
 
 /** Kurzer Eintrag nach erfolgreichem Cron-Revalidate (ohne Secrets). */
@@ -89,4 +106,48 @@ export async function sendDiscordAdminCronRevalidated(): Promise<void> {
       { name: "Umgebung", value: process.env.NODE_ENV ?? "?", inline: true },
     ],
   });
+}
+
+export type DiscordWebhookTestResult = {
+  configured: boolean;
+  ok: boolean;
+  status: number;
+  error?: string;
+};
+
+/**
+ * Einmaliger Test-POST (manuelle Verbindungsprüfung). Kein throw.
+ * `configured: false` wenn keine Webhook-URL gesetzt ist.
+ */
+export async function sendDiscordAdminWebhookTest(): Promise<DiscordWebhookTestResult> {
+  if (!webhookUrl()) {
+    return { configured: false, ok: false, status: 0, error: "no_webhook_url" };
+  }
+
+  const vercelUrl = process.env.VERCEL_URL?.trim();
+  const fields: DiscordEmbedField[] = [
+    { name: "Zeit", value: new Date().toISOString(), inline: true },
+    { name: "NODE_ENV", value: process.env.NODE_ENV ?? "?", inline: true },
+  ];
+  if (vercelUrl) {
+    fields.push({
+      name: "VERCEL_URL",
+      value: vercelUrl.length > 900 ? `${vercelUrl.slice(0, 897)}…` : vercelUrl,
+    });
+  }
+
+  const body: DiscordWebhookBody = {
+    embeds: [
+      {
+        title: "Pogge: Webhook-Verbindung OK",
+        description: "Manueller Verbindungstest (`/api/admin/verify-discord-webhook`).",
+        color: 0x57f287,
+        fields,
+        timestamp: new Date().toISOString(),
+      },
+    ],
+  };
+
+  const r = await postDiscordWebhookPayload(body, "webhookTest");
+  return { configured: true, ok: r.ok, status: r.status, error: r.error };
 }

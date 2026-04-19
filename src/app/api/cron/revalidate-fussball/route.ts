@@ -1,18 +1,6 @@
-import { timingSafeEqual } from "node:crypto";
 import { revalidateTag } from "next/cache";
+import { timingSafeBearerMatch } from "@/lib/admin/bearer-secret";
 import { sendDiscordAdminCronRevalidated } from "@/lib/admin/discord-admin-log";
-
-function timingSafeBearerMatch(authHeader: string | null, secret: string): boolean {
-  if (!authHeader || !authHeader.startsWith("Bearer ")) return false;
-  const received = authHeader.slice("Bearer ".length);
-  const expected = secret;
-  if (received.length !== expected.length) return false;
-  try {
-    return timingSafeEqual(Buffer.from(received, "utf8"), Buffer.from(expected, "utf8"));
-  } catch {
-    return false;
-  }
-}
 
 /**
  * Vercel Cron: Cache der FUSSBALL.DE-Daten invalidieren (siehe vercel.json).
