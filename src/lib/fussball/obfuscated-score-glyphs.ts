@@ -1,10 +1,25 @@
 /**
- * fussball.de zeigt Ergebnisse oft als Webfont-Glyphen (PUA) mit `data-obfuscation`.
- * Ohne Browser-Font gibt es keine ASCII-Ziffern — Mapping aus kalibrierten Beispielen (Stand 2026-04).
- * Bei unbekanntem Codepoint: null (kein Fallback).
+ * fussball.de zeigt Ergebnisse als Webfont-Glyphen (PUA) mit `data-obfuscation`.
+ * Dieselbe Codepoint-Ziffer kann je nach Obfuscation-Key eine andere Zahl sein —
+ * daher zuerst keyed lookup, sonst Legacy-Global-Map (nur wenn kein Key im HTML).
  *
- * Erweitern: weitere Codepoints ergänzen, sobald ein Spiel nicht dekodiert wird.
+ * Neuen Key: `data-obfuscation` aus dem HTML + Codepoints aus score-left/right
+ * in GLYPH_BY_OBFUSCATION ergänzen.
  */
+const GLYPH_BY_OBFUSCATION: Readonly<
+  Record<string, Readonly<Record<number, number>>>
+> = {
+  // Unit-Tests / frühere Live-Samples
+  "5tmjf3yg": { 0xe677: 0, 0xe69f: 2 },
+  hgjsr0rp: { 0xe666: 0, 0xe65f: 2 },
+  "8uakhw01": { 0xe679: 0, 0xe6af: 2 },
+  zsct19kb: { 0xe679: 0, 0xe680: 2 },
+  // Live fussball.de 2026-04 (Kolenfeld–Poggenhagen 0:2) — rotierende Keys
+  ok0f6v3e: { 0xe698: 0, 0xe6a8: 2 },
+  "8m1yupvd": { 0xe66f: 0, 0xe6ab: 2 },
+};
+
+/** Fallback nur sinnvoll, wenn kein `data-obfuscation` oder Key noch nicht in GLYPH_BY_OBFUSCATION. */
 const GLYPH_CODEPOINT_TO_DIGIT: Readonly<Record<number, number>> = {
   // 0
   0xe652: 0,
@@ -13,7 +28,7 @@ const GLYPH_CODEPOINT_TO_DIGIT: Readonly<Record<number, number>> = {
   0xe666: 0,
   0xe676: 0,
   0xe677: 0,
-  0xe679: 0, // Team-/Spielseite z. B. Kolenfeld–Poggenhagen 0:2 (Obfuscation 8uakhw01 / zsct19kb, 2026-04)
+  0xe679: 0,
   0xe65b: 0,
   0xe6ba: 0,
   // 1
@@ -26,8 +41,8 @@ const GLYPH_CODEPOINT_TO_DIGIT: Readonly<Record<number, number>> = {
   0xe65f: 2,
   0xe69f: 2,
   0xe68c: 2,
-  0xe6af: 2, // Mannschaftsseite match-score (Kolenfeld 0:2)
-  0xe680: 2, // Spielseite end-result (gleiches Spiel, anderes Obfuscation-Token)
+  0xe6af: 2,
+  0xe680: 2,
   // 3
   0xe6a9: 3,
   0xe6bb: 3,
@@ -52,11 +67,40 @@ function extractCodepointsFromScoreInner(inner: string): number[] {
   return codes;
 }
 
-function digitsFromCodepoints(cps: number[]): number | null {
+/** `data-obfuscation` aus dem öffnenden `<span … class="…score-left…">`. */
+function extractObfuscationKeyFromScoreRowInner(inner: string): string | null {
+  const idx = inner.search(/\bclass="[^"]*\bscore-left\b[^"]*"/i);
+  if (idx < 0) return null;
+  const spanStart = inner.lastIndexOf("<span", idx);
+  if (spanStart < 0) return null;
+  const spanEnd = inner.indexOf(">", spanStart);
+  if (spanEnd < 0) return null;
+  const openTag = inner.slice(spanStart, spanEnd + 1);
+  return openTag.match(/\bdata-obfuscation="([^"]+)"/i)?.[1] ?? null;
+}
+
+function digitForGlyph(
+  cp: number,
+  obfuscationKey: string | null
+): number | undefined {
+  const table =
+    obfuscationKey != null ? GLYPH_BY_OBFUSCATION[obfuscationKey] : undefined;
+  if (table) {
+    const v = table[cp];
+    if (v !== undefined) return v;
+    return undefined;
+  }
+  return GLYPH_CODEPOINT_TO_DIGIT[cp];
+}
+
+function digitsFromCodepoints(
+  cps: number[],
+  obfuscationKey: string | null
+): number | null {
   if (cps.length === 0) return null;
   let s = "";
   for (const cp of cps) {
-    const d = GLYPH_CODEPOINT_TO_DIGIT[cp];
+    const d = digitForGlyph(cp, obfuscationKey);
     if (d === undefined) return null;
     s += String(d);
   }
@@ -76,8 +120,15 @@ function parseObfuscatedScoreFromRowInner(inner: string): {
   );
   if (!leftM || !rightM) return null;
 
-  const home = digitsFromCodepoints(extractCodepointsFromScoreInner(leftM[1]));
-  const away = digitsFromCodepoints(extractCodepointsFromScoreInner(rightM[1]));
+  const obfuscationKey = extractObfuscationKeyFromScoreRowInner(inner);
+  const home = digitsFromCodepoints(
+    extractCodepointsFromScoreInner(leftM[1]),
+    obfuscationKey
+  );
+  const away = digitsFromCodepoints(
+    extractCodepointsFromScoreInner(rightM[1]),
+    obfuscationKey
+  );
   if (home === null || away === null) return null;
   return { home, away };
 }

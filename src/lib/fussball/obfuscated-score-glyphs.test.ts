@@ -54,3 +54,15 @@ test("parseObfuscatedResultScoreFromMatchPageHtml: Live-Obfuscation zsct19kb (E6
   const r = parseObfuscatedResultScoreFromMatchPageHtml(snippet);
   assert.deepEqual(r, { home: 0, away: 2 });
 });
+
+test("parseObfuscatedMatchScoreFromHtmlFragment: keyed ok0f6v3e (E698:E6A8 = 0:2, fussball.de Team-Quickview)", () => {
+  const snippet = `<div class="match-score"><span data-obfuscation="ok0f6v3e" class="score-left">&#xE698;</span><span class="colon">:</span><span data-obfuscation="ok0f6v3e" class="score-right">&#xE6A8;</span></div>`;
+  const r = parseObfuscatedMatchScoreFromHtmlFragment(snippet);
+  assert.deepEqual(r, { home: 0, away: 2 });
+});
+
+test("parseObfuscatedResultScoreFromMatchPageHtml: keyed 8m1yupvd (E66F:E6AB = 0:2, E66F nicht global-1)", () => {
+  const snippet = `<div class="result"><span class="end-result"><span data-obfuscation="8m1yupvd" class="score-left">&#xE66F;</span><span class="colon">:</span><span data-obfuscation="8m1yupvd" class="score-right">&#xE6AB;</span></span><span class="half-result">[0 : 1]</span></div>`;
+  const r = parseObfuscatedResultScoreFromMatchPageHtml(snippet);
+  assert.deepEqual(r, { home: 0, away: 2 });
+});
