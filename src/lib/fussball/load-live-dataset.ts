@@ -7,7 +7,10 @@ import {
 } from "./constants";
 import { fetchWithTimeout } from "./fetch-with-timeout";
 import { fussballDebug } from "./debug-log";
-import { fetchGoalsFromMatchPage } from "./match-score";
+import {
+  fetchGoalsFromMatchPage,
+  type FetchMatchGoalsOutcome,
+} from "./match-score";
 import {
   parseGermanShortDateToIso,
   parseLastMatchLink,
@@ -112,6 +115,8 @@ export type FussballFetchMeta = {
   teamGlyphMappingHint: string | null;
   /** Copy-Paste-Hinweis Spielseite `div.result` (kurz) */
   matchGlyphMappingHint: string | null;
+  /** Kurztext, wenn letztes Spiel-Link da ist, aber kein `lastResult` (Logs/Discord). */
+  lastResultMissDetail: string | null;
 };
 
 function safeMatchIdFromUrl(matchUrl: string): string | null {
@@ -203,11 +208,13 @@ export async function fetchFussballLiveDataset(): Promise<{
   let halfResultDiagnostic: string | null = null;
   let envOverrideActive = false;
   let matchGlyphPeek: MatchScoreGlyphPeek | null = null;
+  let lastMatchPageOutcome: FetchMatchGoalsOutcome | undefined;
 
   if (lastLink) {
     const matchOutcome = await fetchGoalsFromMatchPage(lastLink.matchUrl, {
       headers: { ...FUSSBALL_FETCH_HEADERS },
     });
+    lastMatchPageOutcome = matchOutcome;
     matchObfuscationKey = matchOutcome.matchObfuscationKey;
     halfResultDiagnostic = matchOutcome.halfResultDiagnostic;
     matchGlyphPeek = matchOutcome.matchGlyphPeek;
@@ -256,6 +263,30 @@ export async function fetchFussballLiveDataset(): Promise<{
     lastResultScoreSource,
   });
 
+  let lastResultMissDetail: string | null = null;
+  if (lastLink && !lastResult) {
+    const trace = lastMatchPageOutcome?.scoreLookupTrace;
+    const hadOverrideEnv = parseLastResultOverrideFromEnv() != null;
+    console.warn("[pogge:fussball] lastResult missing after live fetch", {
+      homeTeam: lastLink.homeTeam,
+      awayTeam: lastLink.awayTeam,
+      dateLabel: lastLink.dateLabel,
+      matchUrlTail: lastLink.matchUrl.slice(-48),
+      hadTeamSummaryScore: !!lastLink.summaryScore,
+      hadEnvOverrideJson: hadOverrideEnv,
+      scoreLookupTrace: trace ?? null,
+    });
+    lastResultMissDetail = [
+      `${lastLink.homeTeam} vs ${lastLink.awayTeam}`,
+      lastLink.dateLabel,
+      `teamSummary=${lastLink.summaryScore ? "y" : "n"}`,
+      `overrideEnv=${hadOverrideEnv ? "y" : "n"}`,
+      trace ? JSON.stringify(trace) : "no_trace",
+    ]
+      .join(" | ")
+      .slice(0, 950);
+  }
+
   const glyphDiagSummary = buildGlyphDiagSummary(
     teamPeek?.obfuscationKey ?? null,
     teamPeek?.leftHex ?? null,
@@ -280,6 +311,7 @@ export async function fetchFussballLiveDataset(): Promise<{
     envOverrideActive,
     teamGlyphMappingHint: teamPeek?.mappingSuggestion?.slice(0, 420) ?? null,
     matchGlyphMappingHint: matchGlyphPeek?.mappingSuggestion?.slice(0, 420) ?? null,
+    lastResultMissDetail,
   };
 
   return { fixtures, tableData, lastResult, fetchMeta };

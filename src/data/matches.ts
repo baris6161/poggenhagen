@@ -37,6 +37,17 @@ export function getMapsUrl(match: Match): string {
  */
 export const lastResults: Match[] = [
   {
+    id: "arch-kolenfeld-2526",
+    homeTeam: "TSV Kolenfeld",
+    awayTeam: "TSV Poggenhagen",
+    date: "2026-04-19",
+    time: "15:00",
+    venue: "Kolenfeld",
+    isHome: false,
+    result: { home: 0, away: 2 },
+    matchday: 9,
+  },
+  {
     id: "arch-godshorn-2526",
     homeTeam: "TSV Poggenhagen",
     awayTeam: "TSV Godshorn II",

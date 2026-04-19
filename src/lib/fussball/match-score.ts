@@ -72,29 +72,58 @@ export function countGoalsFromMatchEvents(data: MatchEventsPayload | null): {
   return { home, away };
 }
 
+/** Kompakte Diagnose, wenn kein Torstand von der Spielseite ermittelt werden konnte. */
+export type ScoreLookupTrace = {
+  matchUrlTail: string;
+  htmlLen: number;
+  hasDataMatchEventsAttr: boolean;
+  matchEventsParsed: boolean;
+  matchEventsHadGoals: boolean;
+  glyphScoreOk: boolean;
+  titleScoreOk: boolean;
+  jsonLdScoreOk: boolean;
+  embedScoreOk: boolean;
+};
+
 export type FetchMatchGoalsOutcome = {
   goals: { home: number; away: number } | null;
   source: ScoreSource;
   matchObfuscationKey: string | null;
   halfResultDiagnostic: string | null;
   matchGlyphPeek: MatchScoreGlyphPeek | null;
+  /** Nur gesetzt, wenn `goals` null (Spielseite ohne verwertbaren Stand). */
+  scoreLookupTrace?: ScoreLookupTrace;
 };
 
 export async function fetchGoalsFromMatchPage(
   matchUrl: string,
   init?: RequestInit
 ): Promise<FetchMatchGoalsOutcome> {
+  const noHtmlTrace = (): ScoreLookupTrace => ({
+    matchUrlTail: matchUrl.slice(-48),
+    htmlLen: 0,
+    hasDataMatchEventsAttr: false,
+    matchEventsParsed: false,
+    matchEventsHadGoals: false,
+    glyphScoreOk: false,
+    titleScoreOk: false,
+    jsonLdScoreOk: false,
+    embedScoreOk: false,
+  });
+
   const empty = (
     source: ScoreSource,
     peekKey: string | null = null,
     half: string | null = null,
-    peekFull: MatchScoreGlyphPeek | null = null
+    peekFull: MatchScoreGlyphPeek | null = null,
+    trace?: ScoreLookupTrace
   ): FetchMatchGoalsOutcome => ({
     goals: null,
     source,
     matchObfuscationKey: peekKey,
     halfResultDiagnostic: half,
     matchGlyphPeek: peekFull,
+    ...(trace ? { scoreLookupTrace: trace } : {}),
   });
 
   fussballDebug("fetchGoalsFromMatchPage start", {
@@ -121,7 +150,7 @@ export async function fetchGoalsFromMatchPage(
       status: res.status,
       matchUrl: matchUrl.slice(-48),
     });
-    return empty("none", null, null, null);
+    return empty("none", null, null, null, noHtmlTrace());
   }
   const html = await res.text();
   const peek = peekResultDivGlyphDiagnosticsFromMatchPageHtml(html);
@@ -205,11 +234,24 @@ export async function fetchGoalsFromMatchPage(
     };
   }
 
+  const scoreLookupTrace: ScoreLookupTrace = {
+    matchUrlTail: matchUrl.slice(-48),
+    htmlLen: html.length,
+    hasDataMatchEventsAttr: hasAttr,
+    matchEventsParsed: data != null,
+    matchEventsHadGoals: fromEvents != null,
+    glyphScoreOk: obfuscated != null,
+    titleScoreOk: fromTitle != null,
+    jsonLdScoreOk: fromLd != null,
+    embedScoreOk: fromEmbed != null,
+  };
+
   return {
     goals: null,
     source: "none",
     matchObfuscationKey: peekKey,
     halfResultDiagnostic: halfDiag,
     matchGlyphPeek: peekFull,
+    scoreLookupTrace,
   };
 }

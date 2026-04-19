@@ -203,6 +203,14 @@ async function loadFreshBundle(): Promise<PoggeMatchBundle> {
           name: "Live lastResult / Torstand",
           value: lastScore,
         },
+        ...(warnLast
+          ? [
+              {
+                name: "lastResult Diagnose (Spielseite)",
+                value: (m.lastResultMissDetail ?? "—").slice(0, 1020),
+              },
+            ]
+          : []),
         {
           name: "Glyphen-Diagnose",
           value: m.glyphDiagSummary ?? "—",
