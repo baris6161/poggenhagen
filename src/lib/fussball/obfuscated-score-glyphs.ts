@@ -6,6 +6,15 @@
  * Neuen Key: `data-obfuscation` aus dem HTML + Codepoints aus score-left/right
  * in GLYPH_BY_OBFUSCATION ergänzen.
  */
+export type MatchScoreGlyphPeek = {
+  obfuscationKey: string | null;
+  leftHex: string;
+  rightHex: string;
+  keyHasTable: boolean;
+  /** Copy-paste-Hinweis für GLYPH_BY_OBFUSCATION oder Kurzstatus */
+  mappingSuggestion: string;
+};
+
 const GLYPH_BY_OBFUSCATION: Readonly<
   Record<string, Readonly<Record<number, number>>>
 > = {
@@ -51,6 +60,11 @@ const GLYPH_CODEPOINT_TO_DIGIT: Readonly<Record<number, number>> = {
   0xe69e: 4,
   // 5–9: bei Bedarf nachziehen
 };
+
+export function obfuscationKeyHasGlyphTable(key: string | null): boolean {
+  if (key == null || key === "") return false;
+  return Object.prototype.hasOwnProperty.call(GLYPH_BY_OBFUSCATION, key);
+}
 
 function extractCodepointsFromScoreInner(inner: string): number[] {
   const codes: number[] = [];
@@ -153,4 +167,82 @@ export function parseObfuscatedResultScoreFromMatchPageHtml(
   );
   if (!resultBlock) return null;
   return parseObfuscatedScoreFromRowInner(resultBlock[1]);
+}
+
+function toHexPlus(cps: number[]): string {
+  return cps.map((c) => c.toString(16).toUpperCase()).join("+");
+}
+
+/** Erstes `div.match-score` im Fragment (Mannschafts-Quickview). */
+export function peekMatchScoreGlyphDiagnosticsFromQuickviewHtml(
+  htmlFragment: string
+): MatchScoreGlyphPeek | null {
+  const scoreBlock = htmlFragment.match(
+    /<div[^>]*class="[^"]*match-score[^"]*"[^>]*>([\s\S]*?)<\/div>/i
+  );
+  if (!scoreBlock) return null;
+  const inner = scoreBlock[1];
+  const leftM = inner.match(
+    /<span[^>]*class="[^"]*score-left[^"]*"[^>]*>([\s\S]*?)<\/span>/i
+  );
+  const rightM = inner.match(
+    /<span[^>]*class="[^"]*score-right[^"]*"[^>]*>([\s\S]*?)<\/span>/i
+  );
+  if (!leftM || !rightM) return null;
+  const obfuscationKey = extractObfuscationKeyFromScoreRowInner(inner);
+  const lcps = extractCodepointsFromScoreInner(leftM[1]);
+  const rcps = extractCodepointsFromScoreInner(rightM[1]);
+  const keyHasTable = obfuscationKeyHasGlyphTable(obfuscationKey);
+  let mappingSuggestion = "";
+  if (obfuscationKey && (lcps.length > 0 || rcps.length > 0)) {
+    const lHex = lcps.map((c) => `0x${c.toString(16)}`).join(", ");
+    const rHex = rcps.map((c) => `0x${c.toString(16)}`).join(", ");
+    mappingSuggestion = keyHasTable
+      ? "Key in GLYPH_BY_OBFUSCATION — ggf. fehlende Codepoints ergänzen"
+      : `"${obfuscationKey}": { ${lHex}: ?, ${rHex}: ? },`;
+  }
+  return {
+    obfuscationKey,
+    leftHex: toHexPlus(lcps),
+    rightHex: toHexPlus(rcps),
+    keyHasTable,
+    mappingSuggestion: mappingSuggestion.slice(0, 480),
+  };
+}
+
+/** Erstes `div.result` auf der Spielseite (Glyphen-Diagnose). */
+export function peekResultDivGlyphDiagnosticsFromMatchPageHtml(
+  html: string
+): MatchScoreGlyphPeek | null {
+  const resultBlock = html.match(
+    /<div[^>]*class="[^"]*\bresult\b[^"]*"[^>]*>([\s\S]*?)<\/div>/i
+  );
+  if (!resultBlock) return null;
+  const inner = resultBlock[1];
+  const leftM = inner.match(
+    /<span[^>]*class="[^"]*score-left[^"]*"[^>]*>([\s\S]*?)<\/span>/i
+  );
+  const rightM = inner.match(
+    /<span[^>]*class="[^"]*score-right[^"]*"[^>]*>([\s\S]*?)<\/span>/i
+  );
+  if (!leftM || !rightM) return null;
+  const obfuscationKey = extractObfuscationKeyFromScoreRowInner(inner);
+  const lcps = extractCodepointsFromScoreInner(leftM[1]);
+  const rcps = extractCodepointsFromScoreInner(rightM[1]);
+  const keyHasTable = obfuscationKeyHasGlyphTable(obfuscationKey);
+  let mappingSuggestion = "";
+  if (obfuscationKey && (lcps.length > 0 || rcps.length > 0)) {
+    const lHex = lcps.map((c) => `0x${c.toString(16)}`).join(", ");
+    const rHex = rcps.map((c) => `0x${c.toString(16)}`).join(", ");
+    mappingSuggestion = keyHasTable
+      ? "Key in GLYPH_BY_OBFUSCATION — ggf. fehlende Codepoints ergänzen"
+      : `"${obfuscationKey}": { ${lHex}: ?, ${rHex}: ? },`;
+  }
+  return {
+    obfuscationKey,
+    leftHex: toHexPlus(lcps),
+    rightHex: toHexPlus(rcps),
+    keyHasTable,
+    mappingSuggestion: mappingSuggestion.slice(0, 480),
+  };
 }

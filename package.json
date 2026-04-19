@@ -10,7 +10,7 @@
     "lint": "next lint",
     "audit": "npm audit --omit=dev",
     "perf:baseline": "next build",
-    "test:unit": "tsx --test src/lib/fussball/obfuscated-score-glyphs.test.ts"
+    "test:unit": "tsx --test src/lib/fussball/obfuscated-score-glyphs.test.ts src/lib/fussball/parse-match-page-score-fallbacks.test.ts"
   },
   "dependencies": {
     "@vercel/analytics": "^1.5.0",

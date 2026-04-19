@@ -11,10 +11,14 @@ import { fetchGoalsFromMatchPage } from "./match-score";
 import {
   parseGermanShortDateToIso,
   parseLastMatchLink,
+  getLetztesSpielQuickview,
 } from "./parse-last-match";
 import { parseFixturesFromTeamHtml } from "./parse-fixtures";
 import { parseTableFromTeamHtml } from "./parse-table";
 import { venueForMatch } from "./venue";
+import type { MatchScoreGlyphPeek } from "./obfuscated-score-glyphs";
+import { peekMatchScoreGlyphDiagnosticsFromQuickviewHtml } from "./obfuscated-score-glyphs";
+import type { ScoreSource } from "./score-source";
 
 function teamPageUrl(): string {
   const raw = process.env.FUSSBALL_TEAM_URL?.trim();
@@ -59,17 +63,55 @@ function lastLinkToResultMatch(
   };
 }
 
+/**
+ * Notfall-Override ohne Deploy: JSON `{"home":0,"away":2}` — nur wenn `lastResult`
+ * sonst null und `parseLastMatchLink` ok.
+ * In Vercel als Umgebungsvariable setzen; danach wieder entfernen.
+ */
+function parseLastResultOverrideFromEnv(): { home: number; away: number } | null {
+  const raw = process.env.POGGE_LAST_RESULT_OVERRIDE?.trim();
+  if (!raw) return null;
+  try {
+    const o = JSON.parse(raw) as unknown;
+    if (typeof o !== "object" || o == null) return null;
+    const r = o as Record<string, unknown>;
+    const home = Number(r.home);
+    const away = Number(r.away);
+    if (!Number.isFinite(home) || !Number.isFinite(away)) return null;
+    if (home < 0 || home > 99 || away < 0 || away > 99) return null;
+    return { home, away };
+  } catch {
+    return null;
+  }
+}
+
 /** Diagnostik zum letzten `fetchFussballLiveDataset`-Lauf (ohne volle URLs). */
 export type FussballFetchMeta = {
   teamPageHttpStatus: number;
   teamPageHtmlChars: number;
   lastLinkParsed: boolean;
-  /** Tore aus Spielseite (Tor-Events oder Glyphen-Fallback im `div.result`) */
+  /** Torstand von der Spielseite (beliebige Fallback-Stufe in fetchGoalsFromMatchPage) */
   goalsFromMatchPage: boolean;
   /** Torstand nur aus Mannschaftsseite (`div.match-score`), weil Spielseite kein verwertbares Ergebnis lieferte */
   goalsFromTeamPageSummary: boolean;
   /** Letztes URL-Segment der Spielseite (Match-ID), z. B. für Abgleich */
   lastMatchIdTail: string | null;
+  /** Finale Quelle für `lastResult` */
+  lastResultScoreSource: ScoreSource;
+  /** `data-obfuscation` der Team-Quickview `match-score` */
+  teamObfuscationKey: string | null;
+  /** `data-obfuscation` im `div.result` der Spielseite (wenn HTML geholt) */
+  matchObfuscationKey: string | null;
+  /** Kurz: Keys + Hex-Glyphen für Discord */
+  glyphDiagSummary: string | null;
+  /** Halbzeit-Snippet nur zur Diagnose, kein Endergebnis */
+  halfResultDiagnostic: string | null;
+  /** `POGGE_LAST_RESULT_OVERRIDE` aktiv und genutzt */
+  envOverrideActive: boolean;
+  /** Copy-Paste-Hinweis Team-Quickview-Glyphen (kurz) */
+  teamGlyphMappingHint: string | null;
+  /** Copy-Paste-Hinweis Spielseite `div.result` (kurz) */
+  matchGlyphMappingHint: string | null;
 };
 
 function safeMatchIdFromUrl(matchUrl: string): string | null {
@@ -81,6 +123,29 @@ function safeMatchIdFromUrl(matchUrl: string): string | null {
     const parts = matchUrl.split("/").filter(Boolean);
     return parts.pop() ?? null;
   }
+}
+
+function buildGlyphDiagSummary(
+  teamKey: string | null,
+  teamLeft: string | null,
+  teamRight: string | null,
+  matchKey: string | null,
+  matchLeft: string | null,
+  matchRight: string | null
+): string | null {
+  const parts: string[] = [];
+  if (teamKey != null || teamLeft || teamRight) {
+    parts.push(
+      `Team key=${teamKey ?? "—"} L=${teamLeft ?? "—"} R=${teamRight ?? "—"}`
+    );
+  }
+  if (matchKey != null || matchLeft || matchRight) {
+    parts.push(
+      `Spiel key=${matchKey ?? "—"} L=${matchLeft ?? "—"} R=${matchRight ?? "—"}`
+    );
+  }
+  const s = parts.join(" | ");
+  return s.length > 0 ? s.slice(0, 900) : null;
 }
 
 /**
@@ -110,6 +175,11 @@ export async function fetchFussballLiveDataset(): Promise<{
   const tableData = parseTableFromTeamHtml(html);
   const lastLink = parseLastMatchLink(html);
 
+  const quick = getLetztesSpielQuickview(html);
+  const teamPeek = quick
+    ? peekMatchScoreGlyphDiagnosticsFromQuickviewHtml(quick.slice)
+    : null;
+
   fussballDebug("team page parsed", {
     htmlLen: html.length,
     fixtures: fixtures.length,
@@ -128,13 +198,24 @@ export async function fetchFussballLiveDataset(): Promise<{
   let lastResult: Match | null = null;
   let goalsFromMatchPage = false;
   let goalsFromTeamPageSummary = false;
+  let lastResultScoreSource: ScoreSource = "none";
+  let matchObfuscationKey: string | null = null;
+  let halfResultDiagnostic: string | null = null;
+  let envOverrideActive = false;
+  let matchGlyphPeek: MatchScoreGlyphPeek | null = null;
+
   if (lastLink) {
-    const goals = await fetchGoalsFromMatchPage(lastLink.matchUrl, {
+    const matchOutcome = await fetchGoalsFromMatchPage(lastLink.matchUrl, {
       headers: { ...FUSSBALL_FETCH_HEADERS },
     });
-    if (goals) {
+    matchObfuscationKey = matchOutcome.matchObfuscationKey;
+    halfResultDiagnostic = matchOutcome.halfResultDiagnostic;
+    matchGlyphPeek = matchOutcome.matchGlyphPeek;
+
+    if (matchOutcome.goals) {
       goalsFromMatchPage = true;
-      lastResult = lastLinkToResultMatch(lastLink, goals);
+      lastResultScoreSource = matchOutcome.source;
+      lastResult = lastLinkToResultMatch(lastLink, matchOutcome.goals);
       if (!lastResult) {
         fussballDebug("lastLinkToResultMatch returned null after goals", {
           dateLabel: lastLink.dateLabel,
@@ -146,11 +227,25 @@ export async function fetchFussballLiveDataset(): Promise<{
       });
       if (lastLink.summaryScore) {
         goalsFromTeamPageSummary = true;
+        lastResultScoreSource = "team_summary_glyphs";
         lastResult = lastLinkToResultMatch(lastLink, lastLink.summaryScore);
         if (!lastResult) {
           fussballDebug("lastLinkToResultMatch null after team summaryScore", {
             dateLabel: lastLink.dateLabel,
           });
+        }
+      } else {
+        const ov = parseLastResultOverrideFromEnv();
+        if (ov) {
+          lastResult = lastLinkToResultMatch(lastLink, ov);
+          if (lastResult) {
+            envOverrideActive = true;
+            lastResultScoreSource = "env_override";
+          } else {
+            fussballDebug("lastLinkToResultMatch null after env override", {
+              dateLabel: lastLink.dateLabel,
+            });
+          }
         }
       }
     }
@@ -158,7 +253,17 @@ export async function fetchFussballLiveDataset(): Promise<{
 
   fussballDebug("fetchFussballLiveDataset done", {
     lastResult: lastResult != null,
+    lastResultScoreSource,
   });
+
+  const glyphDiagSummary = buildGlyphDiagSummary(
+    teamPeek?.obfuscationKey ?? null,
+    teamPeek?.leftHex ?? null,
+    teamPeek?.rightHex ?? null,
+    matchGlyphPeek?.obfuscationKey ?? matchObfuscationKey,
+    matchGlyphPeek?.leftHex ?? null,
+    matchGlyphPeek?.rightHex ?? null
+  );
 
   const fetchMeta: FussballFetchMeta = {
     teamPageHttpStatus: res.status,
@@ -167,6 +272,14 @@ export async function fetchFussballLiveDataset(): Promise<{
     goalsFromMatchPage,
     goalsFromTeamPageSummary,
     lastMatchIdTail: lastLink ? safeMatchIdFromUrl(lastLink.matchUrl) : null,
+    lastResultScoreSource,
+    teamObfuscationKey: teamPeek?.obfuscationKey ?? null,
+    matchObfuscationKey,
+    glyphDiagSummary,
+    halfResultDiagnostic,
+    envOverrideActive,
+    teamGlyphMappingHint: teamPeek?.mappingSuggestion?.slice(0, 420) ?? null,
+    matchGlyphMappingHint: matchGlyphPeek?.mappingSuggestion?.slice(0, 420) ?? null,
   };
 
   return { fixtures, tableData, lastResult, fetchMeta };

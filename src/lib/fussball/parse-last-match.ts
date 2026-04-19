@@ -45,16 +45,25 @@ function extractLetztesSpielQuickview(
   return { matchUrl: normalizeFussballUrl(m[1]), anchorStart, anchorEnd };
 }
 
-export function parseLastMatchLink(html: string): LastMatchLink | null {
+/** HTML nur der Quickview-Karte „Letztes Spiel“ (ein umschließendes `<a>…</a>`). */
+export function getLetztesSpielQuickview(html: string): {
+  matchUrl: string;
+  slice: string;
+} | null {
   const marker = "Letztes Spiel:";
   const markerIdx = html.indexOf(marker);
   if (markerIdx < 0) return null;
-
   const quickview = extractLetztesSpielQuickview(html, markerIdx);
   if (!quickview) return null;
   const { matchUrl, anchorStart, anchorEnd } = quickview;
-
   const slice = html.slice(anchorStart, Math.min(anchorEnd, html.length));
+  return { matchUrl, slice };
+}
+
+export function parseLastMatchLink(html: string): LastMatchLink | null {
+  const got = getLetztesSpielQuickview(html);
+  if (!got) return null;
+  const { matchUrl, slice } = got;
   const home = slice
     .match(/<span class="team-home">([^<]+)<\/span>/)?.[1]
     ?.trim();

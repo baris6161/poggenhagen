@@ -1,7 +1,18 @@
 import { FUSSBALL_FETCH_HEADERS, FUSSBALL_FETCH_TIMEOUT_MS_MATCH } from "./constants";
 import { fussballDebug } from "./debug-log";
 import { fetchWithTimeout } from "./fetch-with-timeout";
-import { parseObfuscatedResultScoreFromMatchPageHtml } from "./obfuscated-score-glyphs";
+import type { MatchScoreGlyphPeek } from "./obfuscated-score-glyphs";
+import {
+  parseObfuscatedResultScoreFromMatchPageHtml,
+  peekResultDivGlyphDiagnosticsFromMatchPageHtml,
+} from "./obfuscated-score-glyphs";
+import {
+  extractHalfResultBracketText,
+  parseScoreFromJsonLd,
+  parseScoreFromMetaTitles,
+  parseScoreNearEdSpielIdSnippet,
+} from "./parse-match-page-score-fallbacks";
+import type { ScoreSource } from "./score-source";
 
 type Half = { events?: { type?: string; team?: string }[] };
 
@@ -61,10 +72,31 @@ export function countGoalsFromMatchEvents(data: MatchEventsPayload | null): {
   return { home, away };
 }
 
+export type FetchMatchGoalsOutcome = {
+  goals: { home: number; away: number } | null;
+  source: ScoreSource;
+  matchObfuscationKey: string | null;
+  halfResultDiagnostic: string | null;
+  matchGlyphPeek: MatchScoreGlyphPeek | null;
+};
+
 export async function fetchGoalsFromMatchPage(
   matchUrl: string,
   init?: RequestInit
-): Promise<{ home: number; away: number } | null> {
+): Promise<FetchMatchGoalsOutcome> {
+  const empty = (
+    source: ScoreSource,
+    peekKey: string | null = null,
+    half: string | null = null,
+    peekFull: MatchScoreGlyphPeek | null = null
+  ): FetchMatchGoalsOutcome => ({
+    goals: null,
+    source,
+    matchObfuscationKey: peekKey,
+    halfResultDiagnostic: half,
+    matchGlyphPeek: peekFull,
+  });
+
   fussballDebug("fetchGoalsFromMatchPage start", {
     matchUrl: matchUrl.slice(-48),
   });
@@ -89,9 +121,14 @@ export async function fetchGoalsFromMatchPage(
       status: res.status,
       matchUrl: matchUrl.slice(-48),
     });
-    return null;
+    return empty("none", null, null, null);
   }
   const html = await res.text();
+  const peek = peekResultDivGlyphDiagnosticsFromMatchPageHtml(html);
+  const peekKey = peek?.obfuscationKey ?? null;
+  const halfDiag = extractHalfResultBracketText(html);
+  const peekFull = peek;
+
   const hasAttr = html.includes('data-match-events="');
   if (!hasAttr) {
     fussballDebug("fetchGoalsFromMatchPage no data-match-events", {
@@ -100,8 +137,17 @@ export async function fetchGoalsFromMatchPage(
     });
   }
   const data = parseMatchEventsAttr(html);
-  const goals = countGoalsFromMatchEvents(data);
-  if (goals) return goals;
+  const fromEvents = countGoalsFromMatchEvents(data);
+  if (fromEvents) {
+    fussballDebug("fetchGoalsFromMatchPage match-events", fromEvents);
+    return {
+      goals: fromEvents,
+      source: "match_events",
+      matchObfuscationKey: peekKey,
+      halfResultDiagnostic: halfDiag,
+      matchGlyphPeek: peekFull,
+    };
+  }
 
   fussballDebug("fetchGoalsFromMatchPage no goals from match-events", {
     parsedData: data != null,
@@ -114,8 +160,56 @@ export async function fetchGoalsFromMatchPage(
       home: obfuscated.home,
       away: obfuscated.away,
     });
-    return obfuscated;
+    return {
+      goals: obfuscated,
+      source: "match_page_glyphs",
+      matchObfuscationKey: peekKey,
+      halfResultDiagnostic: halfDiag,
+      matchGlyphPeek: peekFull,
+    };
   }
 
-  return null;
+  const fromTitle = parseScoreFromMetaTitles(html);
+  if (fromTitle) {
+    fussballDebug("fetchGoalsFromMatchPage meta title", fromTitle);
+    return {
+      goals: fromTitle,
+      source: "match_page_title",
+      matchObfuscationKey: peekKey,
+      halfResultDiagnostic: halfDiag,
+      matchGlyphPeek: peekFull,
+    };
+  }
+
+  const fromLd = parseScoreFromJsonLd(html);
+  if (fromLd) {
+    fussballDebug("fetchGoalsFromMatchPage JSON-LD", fromLd);
+    return {
+      goals: fromLd,
+      source: "match_page_json",
+      matchObfuscationKey: peekKey,
+      halfResultDiagnostic: halfDiag,
+      matchGlyphPeek: peekFull,
+    };
+  }
+
+  const fromEmbed = parseScoreNearEdSpielIdSnippet(html);
+  if (fromEmbed) {
+    fussballDebug("fetchGoalsFromMatchPage embed snippet", fromEmbed);
+    return {
+      goals: fromEmbed,
+      source: "match_page_embed",
+      matchObfuscationKey: peekKey,
+      halfResultDiagnostic: halfDiag,
+      matchGlyphPeek: peekFull,
+    };
+  }
+
+  return {
+    goals: null,
+    source: "none",
+    matchObfuscationKey: peekKey,
+    halfResultDiagnostic: halfDiag,
+    matchGlyphPeek: peekFull,
+  };
 }

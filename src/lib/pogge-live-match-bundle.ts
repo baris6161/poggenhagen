@@ -113,14 +113,30 @@ async function loadFreshBundle(): Promise<PoggeMatchBundle> {
         ? `${last.result.home}:${last.result.away} (${last.homeTeam} : ${last.awayTeam})`
         : "— (kein lastResult)";
 
+    const m = live.fetchMeta;
+    const warnLast = m.lastLinkParsed && live.lastResult == null;
+    const mappingBlock = [
+      m.teamGlyphMappingHint && `Team:\n${m.teamGlyphMappingHint}`,
+      m.matchGlyphMappingHint && `Spiel:\n${m.matchGlyphMappingHint}`,
+    ]
+      .filter(Boolean)
+      .join("\n\n");
+
     await sendDiscordAdminLog({
-      title: "Pogge Bundle: fussball.de OK",
-      color: 0x57f287,
+      title: warnLast
+        ? "Pogge Bundle: fussball.de OK — lastResult fehlt"
+        : "Pogge Bundle: fussball.de OK",
+      color: warnLast ? 0xfee75c : 0x57f287,
       fields: [
         { name: "Quelle", value: "fussball.de", inline: true },
         {
           name: "NODE_ENV",
           value: process.env.NODE_ENV ?? "?",
+          inline: true,
+        },
+        {
+          name: "lastResult Quelle",
+          value: m.lastResultScoreSource,
           inline: true,
         },
         {
@@ -135,37 +151,65 @@ async function loadFreshBundle(): Promise<PoggeMatchBundle> {
         },
         {
           name: "Team-Seite HTTP",
-          value: String(live.fetchMeta.teamPageHttpStatus),
+          value: String(m.teamPageHttpStatus),
           inline: true,
         },
         {
           name: "Team-HTML Zeichen",
-          value: String(live.fetchMeta.teamPageHtmlChars),
+          value: String(m.teamPageHtmlChars),
           inline: true,
         },
         {
           name: "Letztes Spiel-Link geparst",
-          value: live.fetchMeta.lastLinkParsed ? "ja" : "nein",
+          value: m.lastLinkParsed ? "ja" : "nein",
           inline: true,
         },
         {
-          name: "Tore von Spielseite",
-          value: live.fetchMeta.goalsFromMatchPage ? "ja" : "nein",
+          name: "Spielseite Tor (Fetch)",
+          value: m.goalsFromMatchPage ? "ja" : "nein",
           inline: true,
         },
         {
-          name: "Teamseite match-score (Glyphen)",
-          value: live.fetchMeta.goalsFromTeamPageSummary ? "ja (Fallback)" : "nein",
+          name: "Teamseite match-score",
+          value: m.goalsFromTeamPageSummary ? "ja (Fallback)" : "nein",
+          inline: true,
+        },
+        {
+          name: "ENV Override genutzt",
+          value: m.envOverrideActive ? "ja (POGGE_LAST_RESULT_OVERRIDE)" : "nein",
+          inline: true,
+        },
+        {
+          name: "Team-Glyph-Key",
+          value: m.teamObfuscationKey ?? "—",
+          inline: true,
+        },
+        {
+          name: "Spiel-Glyph-Key",
+          value: m.matchObfuscationKey ?? "—",
           inline: true,
         },
         {
           name: "Match-ID (Tail)",
-          value: live.fetchMeta.lastMatchIdTail ?? "—",
+          value: m.lastMatchIdTail ?? "—",
+          inline: true,
+        },
+        {
+          name: "Halbzeit (Info)",
+          value: m.halfResultDiagnostic ?? "—",
           inline: true,
         },
         {
           name: "Live lastResult / Torstand",
           value: lastScore,
+        },
+        {
+          name: "Glyphen-Diagnose",
+          value: m.glyphDiagSummary ?? "—",
+        },
+        {
+          name: "Mapping-Hinweis (Repo)",
+          value: mappingBlock.length > 0 ? mappingBlock : "—",
         },
         {
           name: "Nächstes Spiel (berechnet)",
