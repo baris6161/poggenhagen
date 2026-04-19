@@ -21,6 +21,14 @@ test("parseScoreFromMetaTitles: widersprüchliche Werte → null", () => {
   assert.equal(parseScoreFromMetaTitles(html), null);
 });
 
+test("parseScoreFromMetaTitles: Datum DD.MM.JJJJ wird nicht als Torstand (19:4) gelesen", () => {
+  const html = `<head>
+<title>TSV Kolenfeld vs TSV Poggenhagen | Kreisliga — Spiel am 19.04.2026</title>
+<meta property="og:title" content="TSV Kolenfeld vs TSV Poggenhagen | Kreisliga — Spiel am 19.04.2026" />
+</head>`;
+  assert.equal(parseScoreFromMetaTitles(html), null);
+});
+
 test("parseScoreFromJsonLd: homeScore/awayScore", () => {
   const html = `<script type="application/ld+json">
 {"@type":"SportsEvent","homeScore":2,"awayScore":2}

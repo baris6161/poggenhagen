@@ -3,11 +3,16 @@
  * Webfont-Glyphen im `div.result` nicht greifen.
  */
 
-const SCORE_TITLE_RE = /(\d{1,2})\s*[:.\-–]\s*(\d{1,2})/;
-
+/**
+ * Nur `:` oder (selten) ` - ` als Trenner — **kein Punkt**, sonst matcht
+ * ein Datum `19.04.2026` fälschlich als Torstand 19:4.
+ */
 function normalizeTitleScoreLine(s: string): string | null {
   const t = s.replace(/\s+/g, " ").trim();
-  const m = t.match(SCORE_TITLE_RE);
+  let m = t.match(/(\d{1,2})\s*:\s*(\d{1,2})\b/);
+  if (!m) {
+    m = t.match(/(\d{1,2})\s+[-–]\s+(\d{1,2})\b/);
+  }
   if (!m) return null;
   const home = parseInt(m[1], 10);
   const away = parseInt(m[2], 10);
@@ -65,7 +70,6 @@ function tryPairFromObject(o: unknown): { home: number; away: number } | null {
   const pairs: [string, string][] = [
     ["homeScore", "awayScore"],
     ["heimtore", "gasttore"],
-    ["home", "away"],
   ];
   for (const [hk, ak] of pairs) {
     const h = r[hk];
