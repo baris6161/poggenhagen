@@ -1,6 +1,7 @@
 import { FUSSBALL_FETCH_HEADERS, FUSSBALL_FETCH_TIMEOUT_MS_MATCH } from "./constants";
 import { fussballDebug } from "./debug-log";
 import { fetchWithTimeout } from "./fetch-with-timeout";
+import { parseObfuscatedResultScoreFromMatchPageHtml } from "./obfuscated-score-glyphs";
 
 type Half = { events?: { type?: string; team?: string }[] };
 
@@ -100,11 +101,21 @@ export async function fetchGoalsFromMatchPage(
   }
   const data = parseMatchEventsAttr(html);
   const goals = countGoalsFromMatchEvents(data);
-  if (!goals) {
-    fussballDebug("fetchGoalsFromMatchPage no goals counted", {
-      parsedData: data != null,
-      hasAttr,
+  if (goals) return goals;
+
+  fussballDebug("fetchGoalsFromMatchPage no goals from match-events", {
+    parsedData: data != null,
+    hasAttr,
+  });
+
+  const obfuscated = parseObfuscatedResultScoreFromMatchPageHtml(html);
+  if (obfuscated) {
+    fussballDebug("fetchGoalsFromMatchPage using obfuscated div.result", {
+      home: obfuscated.home,
+      away: obfuscated.away,
     });
+    return obfuscated;
   }
-  return goals;
+
+  return null;
 }

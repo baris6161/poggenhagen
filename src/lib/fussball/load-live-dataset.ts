@@ -64,7 +64,10 @@ export type FussballFetchMeta = {
   teamPageHttpStatus: number;
   teamPageHtmlChars: number;
   lastLinkParsed: boolean;
+  /** Tore aus Spielseite (Tor-Events oder Glyphen-Fallback im `div.result`) */
   goalsFromMatchPage: boolean;
+  /** Torstand nur aus Mannschaftsseite (`div.match-score`), weil Spielseite kein verwertbares Ergebnis lieferte */
+  goalsFromTeamPageSummary: boolean;
   /** Letztes URL-Segment der Spielseite (Match-ID), z. B. für Abgleich */
   lastMatchIdTail: string | null;
 };
@@ -124,15 +127,11 @@ export async function fetchFussballLiveDataset(): Promise<{
 
   let lastResult: Match | null = null;
   let goalsFromMatchPage = false;
+  let goalsFromTeamPageSummary = false;
   if (lastLink) {
     const goals = await fetchGoalsFromMatchPage(lastLink.matchUrl, {
       headers: { ...FUSSBALL_FETCH_HEADERS },
     });
-    if (!goals) {
-      fussballDebug("no goals from match page", {
-        matchUrlTail: lastLink.matchUrl.slice(-40),
-      });
-    }
     if (goals) {
       goalsFromMatchPage = true;
       lastResult = lastLinkToResultMatch(lastLink, goals);
@@ -140,6 +139,19 @@ export async function fetchFussballLiveDataset(): Promise<{
         fussballDebug("lastLinkToResultMatch returned null after goals", {
           dateLabel: lastLink.dateLabel,
         });
+      }
+    } else {
+      fussballDebug("no goals from match page", {
+        matchUrlTail: lastLink.matchUrl.slice(-40),
+      });
+      if (lastLink.summaryScore) {
+        goalsFromTeamPageSummary = true;
+        lastResult = lastLinkToResultMatch(lastLink, lastLink.summaryScore);
+        if (!lastResult) {
+          fussballDebug("lastLinkToResultMatch null after team summaryScore", {
+            dateLabel: lastLink.dateLabel,
+          });
+        }
       }
     }
   }
@@ -153,6 +165,7 @@ export async function fetchFussballLiveDataset(): Promise<{
     teamPageHtmlChars: html.length,
     lastLinkParsed: lastLink != null,
     goalsFromMatchPage,
+    goalsFromTeamPageSummary,
     lastMatchIdTail: lastLink ? safeMatchIdFromUrl(lastLink.matchUrl) : null,
   };
 

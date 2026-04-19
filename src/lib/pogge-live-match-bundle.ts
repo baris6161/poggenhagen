@@ -154,6 +154,11 @@ async function loadFreshBundle(): Promise<PoggeMatchBundle> {
           inline: true,
         },
         {
+          name: "Teamseite match-score (Glyphen)",
+          value: live.fetchMeta.goalsFromTeamPageSummary ? "ja (Fallback)" : "nein",
+          inline: true,
+        },
+        {
           name: "Match-ID (Tail)",
           value: live.fetchMeta.lastMatchIdTail ?? "—",
           inline: true,

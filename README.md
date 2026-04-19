@@ -26,6 +26,8 @@ Beim Rendern auf dem Server wird ein gebündelter Datensatz geladen und zwischen
 
 Die öffentlichen Mannschaftsseiten auf fussball.de liefern Tabelle und Spielplan als HTML. Daraus werden im Code strukturierte Listen für die Tabelle und die Termine extrahiert. Zusätzlich wird das zuletzt ausgetragene Pflichtspiel aus dem Markup gelesen und mit einem lokalen Archiv zusammengeführt: fussball.de zeigt typischerweise nur das neueste Ergebnis prominent, ältere und Freundschaftsspiele bleiben deshalb als statische Ergänzung in der Codebasis, damit die Ergebnisliste vollständig wirkt.
 
+Der **Torstand** des zuletzt gespielten Pflichtspiels kommt primär von der **Spielseite** (wenn noch vorhanden: JSON in `data-match-events`; sonst Glyphen im `div.result`). Fehlt dort alles Verwertbare, wird der Stand aus dem **Mannschafts-Slider** (`div.match-score`, Webfont-Glyphen mit bekanntem Zeichen-Mapping) als Fallback genutzt — siehe `src/lib/fussball/obfuscated-score-glyphs.ts` (Mapping bei neuen Glyphen ggf. erweitern).
+
 Optional kann `FUSSBALL_TEAM_URL` gesetzt werden; erlaubt sind nur **HTTPS-URLs** mit Hostname **fussball.de** bzw. **www.fussball.de** (andere Werte werden verworfen, es gilt die Standard-Mannschafts-URL im Code).
 
 Kaderbilder liegen im Projekt als Dateien; Namen und Positionen werden über eine kleine Zuordnung im Code zusammengeführt. Instagram Einträge können als strukturierte JSON Daten gepflegt werden, ohne dass die Seite dafür die Instagram API braucht.
@@ -48,7 +50,7 @@ Wenn `DISCORD_ADMIN_WEBHOOK_URL` in Vercel oder `.env.local` gesetzt ist (nur Se
 
 | Ereignis | Inhalt (kurz) |
 |----------|----------------|
-| Bundle neu von fussball.de | Embed: Quelle, `NODE_ENV`, Anzahl Fixtures / Tabellenzeilen, HTTP-Status und Größe der Mannschafts-HTML, ob „Letztes Spiel“-Link und Spielseiten-Tore geparst wurden, Match-ID-Suffix, Live-Torstand falls vorhanden, berechnetes **Nächstes Spiel**, Anzahl upcoming / merged Ergebnisse |
+| Bundle neu von fussball.de | Embed: Quelle, `NODE_ENV`, Anzahl Fixtures / Tabellenzeilen, HTTP-Status und Größe der Mannschafts-HTML, ob „Letztes Spiel“-Link und Spielseiten-Tore geparst wurden, ob Torstand aus **Team-Slider-Glyphen** (Fallback) kam, Match-ID-Suffix, Live-Torstand falls vorhanden, berechnetes **Nächstes Spiel**, Anzahl upcoming / merged Ergebnisse |
 | `DISABLE_FUSSBALL_SYNC=1` | Hinweis „Static“, Kurzinfo zu nächstem Spiel und Archiv |
 | Live-Fetch oder Parse fehlgeschlagen | Fehler + Cause, Fallback-„Nächstes Spiel“ (static) |
 | Cron `GET /api/cron/revalidate-fussball` (nach Auth) | Kurzmeldung: Cache-Tag `pogge-fussball` invalidiert |
@@ -67,6 +69,10 @@ Es gibt **kein** Discord-Posting bei reinem **Cache-Hit** ohne Revalidate (verme
 ### Performance (Build-Referenz)
 
 Nach Änderungen am Bundle: `npm run perf:baseline` (führt `next build` aus und zeigt u. a. First Load JS pro Route).
+
+### Unit-Tests (optional)
+
+`npm run test:unit` — prüft u. a. den fussball.de-Glyphen-Torstand-Parser (`obfuscated-score-glyphs`).
 
 ### Web App und Home-Bildschirm
 

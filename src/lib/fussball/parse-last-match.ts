@@ -1,3 +1,5 @@
+import { parseObfuscatedMatchScoreFromHtmlFragment } from "./obfuscated-score-glyphs";
+
 /**
  * Link und Teamnamen des „Letzten Spiels“ (oberer Slider auf der Mannschaftsseite).
  */
@@ -9,6 +11,8 @@ export type LastMatchLink = {
   dateLabel: string;
   /** z. B. „15:00“ */
   time: string;
+  /** Torstand aus `div.match-score` (Webfont-Glyphen), falls dekodierbar */
+  summaryScore?: { home: number; away: number };
 };
 
 /** fussball.de oft mit `//www…` im href — für `fetch` immer https. */
@@ -63,12 +67,15 @@ export function parseLastMatchLink(html: string): LastMatchLink | null {
   );
   const time = timeM?.[1] ?? "15:00";
 
+  const summaryScore = parseObfuscatedMatchScoreFromHtmlFragment(slice) ?? undefined;
+
   return {
     matchUrl,
     homeTeam: home,
     awayTeam: away,
     dateLabel,
     time,
+    ...(summaryScore ? { summaryScore } : {}),
   };
 }
 
