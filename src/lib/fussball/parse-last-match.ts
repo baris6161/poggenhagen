@@ -27,18 +27,22 @@ export function normalizeFussballUrl(href: string): string {
 const HREF_IN_OPEN_A_RE =
   /^<a href="((?:https:\/\/|\/\/)(?:www\.)?fussball\.de\/spiel\/[^"]+\/spiel\/[0-9A-Z]+|\/spiel\/[^"]+\/spiel\/[0-9A-Z]+)"/i;
 
-/**
- * Der Spiel-Link steht im Markup VOR dem Text „Letztes Spiel:“ (innerhalb desselben <a>).
- * Nicht den ersten href NACH dem Marker nehmen — das wäre oft „Nächstes Spiel“.
- */
-function extractLetztesSpielMatchUrl(html: string, markerIdx: number): string | null {
-  const anchorIdx = html.lastIndexOf('<a href="', markerIdx);
-  if (anchorIdx < 0 || anchorIdx < markerIdx - 4000) {
+/** Quickview-Karte „Letztes Spiel“: `<a>` beginnt vor dem Marker; darin liegen Teams + `match-score`. */
+function extractLetztesSpielQuickview(
+  html: string,
+  markerIdx: number
+): { matchUrl: string; anchorStart: number; anchorEnd: number } | null {
+  const anchorStart = html.lastIndexOf('<a href="', markerIdx);
+  if (anchorStart < 0 || anchorStart < markerIdx - 4000) {
     return null;
   }
-  const frag = html.slice(anchorIdx, anchorIdx + 700);
+  const frag = html.slice(anchorStart, anchorStart + 700);
   const m = frag.match(HREF_IN_OPEN_A_RE);
-  return m?.[1] ? normalizeFussballUrl(m[1]) : null;
+  if (!m?.[1]) return null;
+  const closeIdx = html.indexOf("</a>", anchorStart + 20);
+  const anchorEnd =
+    closeIdx > 0 && closeIdx < anchorStart + 5000 ? closeIdx + 4 : anchorStart + 2500;
+  return { matchUrl: normalizeFussballUrl(m[1]), anchorStart, anchorEnd };
 }
 
 export function parseLastMatchLink(html: string): LastMatchLink | null {
@@ -46,10 +50,11 @@ export function parseLastMatchLink(html: string): LastMatchLink | null {
   const markerIdx = html.indexOf(marker);
   if (markerIdx < 0) return null;
 
-  const matchUrl = extractLetztesSpielMatchUrl(html, markerIdx);
-  if (!matchUrl) return null;
+  const quickview = extractLetztesSpielQuickview(html, markerIdx);
+  if (!quickview) return null;
+  const { matchUrl, anchorStart, anchorEnd } = quickview;
 
-  const slice = html.slice(markerIdx, markerIdx + 3500);
+  const slice = html.slice(anchorStart, Math.min(anchorEnd, html.length));
   const home = slice
     .match(/<span class="team-home">([^<]+)<\/span>/)?.[1]
     ?.trim();

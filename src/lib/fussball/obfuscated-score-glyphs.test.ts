@@ -41,3 +41,16 @@ test("parseLastMatchLink: summaryScore aus eingebettetem match-score", () => {
   assert.equal(link?.summaryScore?.home, 0);
   assert.equal(link?.summaryScore?.away, 2);
 });
+
+test("parseObfuscatedMatchScoreFromHtmlFragment: Live-Obfuscation 8uakhw01 (E679:E6AF = 0:2)", () => {
+  const snippet = `
+<div class="match-score"><span data-obfuscation="8uakhw01" class="score-left">&#xE679;</span><span class="colon">:</span><span data-obfuscation="8uakhw01" class="score-right">&#xE6AF;</span></div>`;
+  const r = parseObfuscatedMatchScoreFromHtmlFragment(snippet);
+  assert.deepEqual(r, { home: 0, away: 2 });
+});
+
+test("parseObfuscatedResultScoreFromMatchPageHtml: Live-Obfuscation zsct19kb (E679:E680 = 0:2)", () => {
+  const snippet = `<div class="result"><span class="end-result"><span data-obfuscation="zsct19kb" class="score-left">&#xE679;</span><span class="colon">:</span><span data-obfuscation="zsct19kb" class="score-right">&#xE680;</span></span><span class="half-result">[0 : 1]</span></div>`;
+  const r = parseObfuscatedResultScoreFromMatchPageHtml(snippet);
+  assert.deepEqual(r, { home: 0, away: 2 });
+});

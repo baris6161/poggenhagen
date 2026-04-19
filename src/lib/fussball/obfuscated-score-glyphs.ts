@@ -13,6 +13,7 @@ const GLYPH_CODEPOINT_TO_DIGIT: Readonly<Record<number, number>> = {
   0xe666: 0,
   0xe676: 0,
   0xe677: 0,
+  0xe679: 0, // Team-/Spielseite z. B. Kolenfeld–Poggenhagen 0:2 (Obfuscation 8uakhw01 / zsct19kb, 2026-04)
   0xe65b: 0,
   0xe6ba: 0,
   // 1
@@ -25,6 +26,8 @@ const GLYPH_CODEPOINT_TO_DIGIT: Readonly<Record<number, number>> = {
   0xe65f: 2,
   0xe69f: 2,
   0xe68c: 2,
+  0xe6af: 2, // Mannschaftsseite match-score (Kolenfeld 0:2)
+  0xe680: 2, // Spielseite end-result (gleiches Spiel, anderes Obfuscation-Token)
   // 3
   0xe6a9: 3,
   0xe6bb: 3,
